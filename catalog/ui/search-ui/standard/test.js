@@ -13,7 +13,7 @@
 var express = require('express'),
     http = require('http'),
     faye = require('faye'),
-    fs = require('node-fs'),
+    fs = require('fs'),
     path = require('path'),
     server = require('./server-impl');
 
@@ -32,10 +32,10 @@ app.use(express.static(__dirname + '/src/main/webapp'));
 
 //if we're mocking, it is being run by grunt
 console.log('setting up mock query endpoint');
-app.all('/services/catalog/sources', server.mockRequest);
-app.all('/services/store/config', server.mockRequest);
-app.all('/services/platform/config/ui', server.mockRequest);
-app.all('/services/user', server.mockRequest);
+app.all('/services/catalog/sources', server.mockRequest('sources.json'));
+app.all('/services/store/config', server.mockRequest('config.json'));
+app.all('/services/platform/config/ui', server.mockRequest('ui.json'));
+app.all('/services/user', server.mockRequest('user.json'));
 
 var bayeux = new faye.NodeAdapter({mount: '/cometd', timeout: 60});
 app.listen = function() {
@@ -58,7 +58,7 @@ app.listen = function() {
         if (message && message.id && message.id.match(/[a-f0-9]*-/)) {
             bayeux.getClient()
                 .publish('/' + message.id,
-                JSON.parse(fs.readFileSync(path.resolve('.', 'src/test/resources', message.cql.indexOf('notfound') === -1 ? 'query.json' : 'query2.json'), {'encoding': 'utf8'})));
+                JSON.parse(fs.readFileSync(path.resolve('src/test/resources', message.cql.indexOf('notfound') === -1 ? 'query.json' : 'query2.json'), {'encoding': 'utf8'})));
         }
     });
 

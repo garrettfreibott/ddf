@@ -9,13 +9,19 @@ var chaiAsPromised = require('chai-as-promised');
 var wd = require('wd');
 var fs = require('fs');
 var path = require('path');
-var url = argv.url || 'http://localhost:8888/';
+var url = "http://localhost:8888/";
 var newline = '\n';
 var indentation = '';
 var stackTrace = [];
 var browser;
 var failureScreenshotPath = path.join(__dirname, '../../../..', 'target/webapp/images/failures');
 var screenshotPath = path.join(__dirname, '../../../..', 'target/webapp/images');
+
+try {
+    fs.mkdirSync(screenshotPath);
+    fs.mkdirSync(failureScreenshotPath);
+} catch (e) {}
+
 /*
  Called when a test fails.  It constructs a screenshot name by removing problematic characters from
  the full test name.  It then prints out the stack trace of commands and saves a screenshot to the
@@ -51,10 +57,6 @@ function handleCommand(eventType, command, response) {
     if (stackTrace[stackTrace.length - 1] !== message && stackTrace[stackTrace.length-2] !== message)
         stackTrace.push(message);
 }
-
-fs.mkdir(screenshotPath, function () {
-    fs.mkdir(failureScreenshotPath);
-});
 
 wd.addPromiseChainMethod(
     'logToConsole',
@@ -126,6 +128,7 @@ exports.setup = function() {
      we are (we can get the fullTitle through a function, but we can't access the parent ourselves).
      */
     beforeEach(function () {
+
         stackTrace = [];
         var numOfIndents = this.currentTest.fullTitle().split(':').length;
         var indent = '  ';

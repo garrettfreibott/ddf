@@ -4,7 +4,7 @@
 
 var shared = require('./shared');
 
-var asserters = shared.asserters;
+//var asserters = shared.asserters;
 
 for (var i = 0; i < shared.iterations; i++) {
     describe('Contextual:', function () {
@@ -15,6 +15,7 @@ for (var i = 0; i < shared.iterations; i++) {
                     .waitForElementByCssSelector('canvas.ol-unselectable', shared.timeout);
             });
 
+            /*
             it("should allow saving searches", function () {
                 return this.browser
                     .waitForElementByCssSelector('form#searchForm input[name="q"]', shared.timeout)
@@ -26,30 +27,11 @@ for (var i = 0; i < shared.iterations; i++) {
                     .elementById('cancel').click();
             });
 
-            it("should allow search", function () {
-                return this.browser
-                    .waitForElementByCssSelector('form#searchForm input[name="q"]', shared.timeout)
-                    .takeScreenshot().saveScreenshot(shared.getPathForScreenshot('search-form.png'))
-                    .elementByCssSelector('input[name="q"]').type('*')
-                    // getLocationInView does not work in Firefox and IE
-                    .safeExecute('document.querySelectorAll("#searchButton")[0].scrollIntoView(true)')
-                    .elementById('searchButton').click();
-            });
-
-            it("should display results", function () {
-                return this.browser
-                    .waitForElementsByCssSelector('div#progressRegion:empty', shared.timeout)
-                    .waitForElementByCssSelector('.result-count i', asserters.textInclude('results'), shared.timeout)
-                    .waitForElementsByCssSelector('a.metacard-link', shared.timeout)
-                    .waitForConditionInBrowser('document.querySelectorAll("a.metacard-link").length >= 10', shared.timeout)
-                    .takeScreenshot().saveScreenshot(shared.getPathForScreenshot('results-list.png'));
-            });
 
             it("should return different results after editing search keyword", function () {
                 return this.browser
-                    .waitForElementByClassName('backNavText').click()
-                    .waitForConditionInBrowser('document.querySelector("#searchButton").getBoundingClientRect().left > 0')
                     .waitForElementByCssSelector('form#searchForm input[name="q"]', shared.timeout)
+                    .waitForConditionInBrowser('document.querySelector("#searchButton").getBoundingClientRect().left > 0')
                     .elementByCssSelector('input[name="q"]').clear().type('notfound')
                     .safeExecute('document.querySelectorAll("#searchButton")[0].scrollIntoView(true)')
                     .elementById('searchButton').click()
@@ -124,6 +106,7 @@ for (var i = 0; i < shared.iterations; i++) {
                     .waitForElementById('nextRecord', asserters.isDisplayed, shared.timeout).click()
                     .waitForElementByCssSelector('#prevRecord:not(.disabled)');
             });
+            */
         });
     });
 }
