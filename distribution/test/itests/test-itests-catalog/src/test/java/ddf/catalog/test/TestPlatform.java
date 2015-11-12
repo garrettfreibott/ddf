@@ -246,7 +246,6 @@ public class TestPlatform extends AbstractIntegrationTest {
         managedServiceStartupConfig.assertFileMovedToProcessedDirectory();
     }
 
-    @Ignore
     @Test
     public void testCreateNewManagedServiceConfigurationFile() throws IOException {
         managedServiceNewConfig.addConfigurationFileAndWait(configAdmin);
@@ -259,7 +258,6 @@ public class TestPlatform extends AbstractIntegrationTest {
         managedServiceFactoryStartupConfig.assertFileMovedToProcessedDirectory();
     }
 
-    @Ignore
     @Test
     public void testCreateNewManagedServiceFactoryConfigurationFile() throws IOException {
         managedServiceFactoryNewConfig.addConfigurationFileAndWait(configAdmin);

@@ -37,6 +37,8 @@ public class ConfigurationFileDirectory implements ChangeListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfigurationFileDirectory.class);
 
+    private static final int NOTIFY_DELAY = 1000;
+
     private DirectoryStream<Path> directoryStream;
 
     private Path processedDirectory;
@@ -110,12 +112,21 @@ public class ConfigurationFileDirectory implements ChangeListener {
 
     @Override
     public void notify(Path file) {
+        trySleep(NOTIFY_DELAY);
         try {
             ConfigurationFile configFile = configurationFileFactory.createConfigurationFile(file);
             configFile.createConfig();
             moveConfigurationFile(file, processedDirectory);
         } catch (ConfigurationFileException e) {
             moveConfigurationFile(file, failedDirectory);
+        }
+    }
+
+    private void trySleep(int mseconds) {
+        try {
+            Thread.sleep(mseconds);
+        } catch (InterruptedException e) {
+            LOGGER.warn("Sleep interrupted.", e);
         }
     }
 
