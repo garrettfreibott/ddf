@@ -31,7 +31,7 @@ import org.junit.runners.Parameterized;
 import com.google.common.collect.ImmutableMap;
 
 @RunWith(Parameterized.class)
-public class PropertyConverterConversionParametrizedTest {
+public class PropertyConverterConversionExceptionParameterizedTest {
 
     private static final String NEW_LINE = "\r\n";
 
@@ -52,8 +52,11 @@ public class PropertyConverterConversionParametrizedTest {
 
     @Parameterized.Parameters(name = "line: {0}")
     public static Iterable<Object[]> data() {
-        return Arrays.asList(new Object[][] {{"key1=F\"1.1\"", "key1=F", "\"1.1\""},
-                {"key1=f\"1.1\"", "key1=f", "\"1.1\""}});
+        return Arrays.asList(new Object[][] {{"key1=F[abc]", "key1=F", "[abc]"},
+                {"key1=f[abc]", "key1=f", "[abc]"}, {"key1=F(abc)", "key1=F", "(abc)"},
+                {"key1=f(abc)", "key1=f", "(abc)"}, {"key_1=F[abc]", "key_1=F", "[abc]"},
+                {"key.abc=F[abc]", "key.abc=F", "[abc]"},
+                {"key-abc=F[abc]", "key-abc=F", "[abc]"}});
     }
 
     @Before
@@ -64,7 +67,7 @@ public class PropertyConverterConversionParametrizedTest {
         propertyConverter.setValueConverters(valueConverters);
     }
 
-    @Test
+    @Test(expected = RuntimeException.class)
     public void testConversion() {
 
         propertyConverter.accept(line);

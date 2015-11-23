@@ -44,7 +44,11 @@ public class FelixPersistenceStrategy implements PersistenceStrategy {
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
         PropertyConverter propertyConverter = createPropertyConverter(filteredOutput);
-        reader.lines().forEach(propertyConverter);
+        try {
+            reader.lines().forEach(propertyConverter);
+        } catch (RuntimeException e) {
+            throw new IOException("Unable to convert all config file properties.", e);
+        }
 
         LOGGER.debug("Calling ConfigurationHandler with {}", filteredOutput.toString());
 

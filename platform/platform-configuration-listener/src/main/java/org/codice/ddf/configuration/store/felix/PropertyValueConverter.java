@@ -32,6 +32,7 @@ abstract class PropertyValueConverter {
 
     private static final String VECTOR_REGEX = "\\(\\s*(\"[^\"]*\")(\\s*,\\s*\"[^\"]*\")*\\s*\\)";
 
+
     private static final Pattern PROPERTY_VALUE_PATTERN = Pattern
             .compile(String.format("%s|%s|%s", SINGLE_VALUE_REGEX, ARRAY_REGEX, VECTOR_REGEX));
 

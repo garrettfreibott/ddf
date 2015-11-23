@@ -18,6 +18,9 @@ import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.validation.constraints.NotNull;
+
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,6 +88,13 @@ class PropertyConverter implements Consumer<String> {
                 newLine.append(propertyType);
             }
 
+            if (!PropertyValueValidator
+                    .isValidSyntax(cleanValues(propertyValue), cleanValues(propertyType))) {
+                LOGGER.error("Property value \"{}\" is not a valid value of type \"{}\"",
+                        propertyValue, propertyType);
+                throw new RuntimeException("Invalid type-value pair in configuration file.");
+            }
+
             if (propertyType != null && !propertyValue.isEmpty() && valueConverters
                     .containsKey(propertyType.toLowerCase())) {
                 valueConverters.get(propertyType.toLowerCase()).convert(propertyValue, newLine);
@@ -103,5 +113,21 @@ class PropertyConverter implements Consumer<String> {
     // For unit testing purposes
     void setValueConverters(Map<String, PropertyValueConverter> valueConverters) {
         PropertyConverter.valueConverters = valueConverters;
+    }
+
+    /**
+     * Trims and removes any brackets, parenthesis, and quotations from a value
+     * @param value String to clean
+     * @return The cleaned string, or null is null is given
+     */
+    private String cleanValues(String value) {
+        if (value == null){
+            return null;
+        } else {
+            return StringUtils.trim(value)
+                    .replaceAll("\"", "")
+                    .replaceAll("\\[", "").replaceAll("\\]", "")
+                    .replaceAll("\\(", "").replaceAll("\\)", "");
+        }
     }
 }
