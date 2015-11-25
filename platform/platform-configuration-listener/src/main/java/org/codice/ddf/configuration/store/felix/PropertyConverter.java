@@ -18,8 +18,6 @@ import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.validation.constraints.NotNull;
-
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -118,7 +116,7 @@ class PropertyConverter implements Consumer<String> {
     /**
      * Trims and removes any brackets, parenthesis, and quotations from a value
      * @param value String to clean
-     * @return The cleaned string, or null is null is given
+     * @return The cleaned string, or returns null if null is given
      */
     private String cleanValues(String value) {
         if (value == null){

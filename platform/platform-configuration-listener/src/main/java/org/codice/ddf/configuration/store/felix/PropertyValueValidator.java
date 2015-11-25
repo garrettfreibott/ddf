@@ -30,7 +30,7 @@ public class PropertyValueValidator {
     private static final Pattern PATTERN = Pattern.compile(",");
 
     /**
-     * Checks the is the given string is valid syntax for the given configuration value type
+     * Checks if the given string is valid syntax for the given configuration value type
      * Strings ('') will always return true
      *
      * @param value The value to check
@@ -48,15 +48,14 @@ public class PropertyValueValidator {
     }
 
     /**
-     * Returns a predicate for validating type
+     * Returns a predicate for validating type syntax
      *
-     * @param type
-     * @return
+     * @param type String with single character (b,i,l,d,f) specifying type validator to return
+     * @return a predicate to validate the given type
      */
     private static Predicate<String> getTypeValidator(String type) {
         char typeChar = Character.toLowerCase(type.charAt(0));
 
-        Predicate<String> func;
         switch (typeChar) {
         case 'b':
             return PropertyValueValidator::isBooleanSyntax;
@@ -84,7 +83,7 @@ public class PropertyValueValidator {
         if (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false")) {
             return true;
         }
-        LOGGER.error("Unable to parse \"\" as type boolean.", value);
+        LOGGER.error("Unable to parse \"{}\" as type boolean.", value);
         return false;
     }
 
