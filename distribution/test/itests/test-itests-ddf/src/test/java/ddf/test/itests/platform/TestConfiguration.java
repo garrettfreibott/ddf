@@ -116,6 +116,8 @@ public class TestConfiguration extends AbstractIntegrationTest {
 
     private static final String SEARCH_COMMAND = "catalog:search";
 
+    private static Path symbolicLink;
+
 
     private static ManagedServiceConfigFile managedServiceStartupConfig =
             new ManagedServiceConfigFile("ddf.test.itests.platform.TestPlatform.startup");
@@ -150,6 +152,9 @@ public class TestConfiguration extends AbstractIntegrationTest {
         symbolicLink = Paths.get(ddfHome)
                 .resolve("link");
         basePort = getBasePort();
+        symbolicLink = Paths.get(ddfHome)
+                .resolve("link");
+
     }
 
     public void resetInitialState() throws Exception {
