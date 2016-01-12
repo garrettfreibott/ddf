@@ -112,6 +112,8 @@ public class TestConfiguration extends AbstractIntegrationTest {
 
     private static KarafConsole console;
 
+    private static Path symbolicLink;
+
     private static final String SEARCH_COMMAND = "catalog:search";
 
 
@@ -145,6 +147,8 @@ public class TestConfiguration extends AbstractIntegrationTest {
         getAdminConfig().setLogLevels();
         getServiceManager().waitForAllBundles();
         console = new KarafConsole(bundleCtx);
+        symbolicLink = Paths.get(ddfHome)
+                .resolve("link");
         basePort = getBasePort();
     }
 
@@ -152,6 +156,7 @@ public class TestConfiguration extends AbstractIntegrationTest {
 
         FileUtils.deleteQuietly(getExportDirectory().toFile());
         FileUtils.deleteQuietly(new File(TEST_FILE));
+        FileUtils.deleteQuietly(symbolicLink.toFile());
 
         FileUtils.cleanDirectory(getPathToProcessedDirectory().toFile());
         FileUtils.cleanDirectory(getPathToFailedDirectory().toFile());
@@ -332,7 +337,7 @@ public class TestConfiguration extends AbstractIntegrationTest {
     }
 
     /**
-     * Tests that absolute paths pointing outside ddfHome causes a warning
+     * Tests that absolute path pointing outside ddfHome causes a warning
      *
      * @throws Exception
      */
@@ -353,7 +358,7 @@ public class TestConfiguration extends AbstractIntegrationTest {
     }
 
     /**
-     * Tests that absolute paths pointing inside ddfHome causes a warning
+     * Tests that absolute path pointing inside ddfHome causes a warning
      *
      * @throws Exception
      */
@@ -366,6 +371,31 @@ public class TestConfiguration extends AbstractIntegrationTest {
                         + "serverKeystore.jks");
 
         String response = console.runCommand(EXPORT_COMMAND);
+        assertThat(String.format("Should not have been able to export to %s.",
+                getExportDirectory()),
+                response,
+                containsString(String.format("Failed to export all configurations to %s",
+                        getExportDirectory())));
+    }
+
+    /**
+     * Tests that paths containing symbolic links cause a warning
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testExportWarningForSymbolicLinkPath() throws Exception {
+        resetInitialState();
+
+        Path target = Paths.get(ddfHome)
+                .resolve("etc")
+                .resolve("keystores");
+
+        Files.createSymbolicLink(symbolicLink, target);
+        System.setProperty(KEYSTORE_PROPERTY, "link" + File.separator + "serverKeystore.jks");
+
+        String response = console.runCommand(EXPORT_COMMAND);
+
         assertThat(String.format("Should not have been able to export to %s.",
                 getExportDirectory()),
                 response,
