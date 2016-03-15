@@ -367,6 +367,7 @@
         <module>landing-page</module>
         <module>platform-app</module>
         <module>docs</module>
+        <module>logviewer-ui</module>
     </modules>
     <repositories>
         <repository>
