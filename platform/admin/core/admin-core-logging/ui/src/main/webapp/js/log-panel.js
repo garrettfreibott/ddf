@@ -70,6 +70,7 @@ var LogPanel = function (props) {
         <LogViewer
           filter={state.filter}
           logs={state.logs}
+          displaySize={state.displaySize}
           dispatch={dispatch} />
       )
     }

@@ -15,14 +15,15 @@
 
 var dom = require('react-dom')
 var React = require('react')
+var debounce = require('debounce')
 
 var store = require('./store')
 var LogPanel = require('./log-panel')
 
 var render = function (data) {
-dom.render(
-  <LogPanel state={store.getState()} dispatch={store.dispatch} />,
-  document.getElementById('root'))
+    dom.render(
+      <LogPanel state={store.getState()} dispatch={store.dispatch} />,
+      document.getElementById('root'))
 }
 
 render()

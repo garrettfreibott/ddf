@@ -14,6 +14,7 @@
  **/
 
 var React = require('react')
+var debounce = require('debounce')
 
 var LevelSelector = require('./level-selector')
 var TextFilter = require('./text-filter')
@@ -75,6 +76,7 @@ var select = function (dispatch) {
 
 var entries = function (props) {
   return filter(props.filter, props.logs)
+    .slice(0, props.displaySize)
     .map(function (entry) {
       return <LogEntry entry={entry} />
     })
@@ -127,7 +129,7 @@ var LogViewer = function (props) {
                 {textFilter('app', props)}
               </td>
               <td style={s.controls}>
-                {textFilter('bundle', props)}
+                {textFilter('bundleName', props)}
               </td>
             </tr>
           </thead>

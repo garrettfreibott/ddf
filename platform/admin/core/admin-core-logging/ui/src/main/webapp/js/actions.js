@@ -32,3 +32,17 @@ exports.append = function (entry) {
     entry: entry
   }
 }
+
+exports.set = function (logs) {
+  return {
+    type: 'SET_LOGS',
+    logs: logs
+  }
+}
+
+exports.grow = function () {
+  return {
+    type: 'GROW_LOGS'
+  }
+
+}

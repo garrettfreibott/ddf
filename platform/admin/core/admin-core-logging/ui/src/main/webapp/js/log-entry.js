@@ -37,7 +37,7 @@ var LogEntry = function (props) {
   return (
     <tr>
       <td style={s} width={250}>
-        {format(entry.time)}
+        {format(entry.timestamp)}
       </td>
       <td style={s} width={100}>
         {entry.level}
@@ -49,7 +49,7 @@ var LogEntry = function (props) {
         {entry.app}
       </td>
       <td style={s} width={200}>
-        {entry.bundle}
+        {entry.bundleName}
       </td>
     </tr>
   )

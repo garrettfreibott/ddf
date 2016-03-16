@@ -20,13 +20,15 @@ module.exports = function (state, action) {
     return {
       logs: [],
       filter: { level: 'ALL' },
-      open: true
+      open: true,
+      displaySize: 25 // number of rows to display
     }
   }
 
   switch (action.type) {
     case 'FILTER_LOGS':
       return m(true, state, {
+        displaySize: 25,
         filter: m(true, state.filter, action.filter)
       })
 
@@ -38,6 +40,17 @@ module.exports = function (state, action) {
     case 'TOGGLE_LOGS':
       return m(true, state, {
         open: !state.open
+      })
+
+    case 'SET_LOGS':
+      return m(true, state, {
+        displaySize: 25,
+        logs: action.logs
+      })
+
+    case 'GROW_LOGS':
+      return m(true, state, {
+        displaySize: (state.displaySize + 25 < state.logs.length) ? state.displaySize + 25 : state.logs.length
       })
 
     default:

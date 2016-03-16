@@ -18,6 +18,10 @@ var redux = require('redux')
 var reducer = require('./reducer')
 var actions = require('./actions')
 var random = require('./random-entry')
+var http = require('http')
+var url = require('url')
+
+var data = require('./data.json')
 
 var store = redux.createStore(reducer)
 
@@ -25,8 +29,25 @@ var store = redux.createStore(reducer)
   store.dispatch(actions.append(random()))
 }*/
 
+/*setInterval(function () {
+  //store.dispatch(actions.append(random()))
+}, 1000)*/
+
+var entries = data.value
+
+for (var i = 0; i < 7; i++) {
+  entries = entries.concat(entries)
+}
+
+console.log(entries.length)
+
+store.dispatch(actions.set(entries))
+
 setInterval(function () {
-  store.dispatch(actions.append(random()))
-}, 1000)
+  store.dispatch(actions.grow())
+}, 250)
+/*setInterval(function () {
+  store.dispatch(actions.set(entries))
+}, 3000)*/
 
 module.exports = store
