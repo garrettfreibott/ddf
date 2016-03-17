@@ -12,16 +12,16 @@ var getLogs = function (timestamp, done) {
   }
 
   http.get({
-      path : endpoint
-    }, function (res) {
-      res.pipe(concat(function (body) {
-        try {
-          done(null, JSON.parse(body))
-        } catch (e) {
-          done(e)
-        }
-      }))
-    })
+    path : endpoint
+  }, function (res) {
+    res.pipe(concat(function (body) {
+      try {
+        done(null, JSON.parse(body))
+      } catch (e) {
+        done(e)
+      }
+    }))
+  })
 }
 
 module.exports = function () {
@@ -33,7 +33,7 @@ module.exports = function () {
       if (err) {
         done(err)
       } else {
-        var logs = body.value.reverse()
+        var logs = body.value
         if (timestamp === 0) {
           store.dispatch(actions.set(logs))
           timestamp = logs[logs.length-1].timestamp

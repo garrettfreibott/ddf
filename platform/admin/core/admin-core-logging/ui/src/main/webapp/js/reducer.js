@@ -20,7 +20,7 @@ var m = require('merge')
 var MAX_FILTER_ENTRIES = 10000
 
 // total number of logs that can be displayed for the user
-var MAX_DISPLAY_ENTRIES = 300
+var MAX_INITIAL_DISPLAY = 50
 
 module.exports = function (state, action) {
   if (state === undefined) {
@@ -28,14 +28,14 @@ module.exports = function (state, action) {
       logs: [],
       filter: { level: 'ALL' },
       open: true,
-      displaySize: 25 // number of rows to display
+      displaySize: 10 // number of rows to display
     }
   }
 
   switch (action.type) {
     case 'FILTER_LOGS':
       return m(true, state, {
-        displaySize: 25,
+        displaySize: 10,
         filter: m(true, state.filter, action.filter)
       })
 
@@ -56,7 +56,7 @@ module.exports = function (state, action) {
 
     case 'GROW_LOGS':
       return m(true, state, {
-        displaySize: (state.displaySize + 25 < MAX_DISPLAY_ENTRIES) ? state.displaySize + 25 : MAX_DISPLAY_ENTRIES
+        displaySize: state.displaySize + 10
       })
 
     default:

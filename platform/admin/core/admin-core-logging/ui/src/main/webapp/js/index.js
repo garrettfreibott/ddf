@@ -38,9 +38,5 @@ backend()
 store.dispatch(actions.append(data))
 })
 
-setInterval(function () {
-  store.dispatch(actions.grow())
-}, 500)
-
 render()
 store.subscribe(render)

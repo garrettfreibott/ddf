@@ -14,7 +14,7 @@
  **/
 
 var React = require('react')
-var debounce = require('debounce')
+var VisibilitySensor = require('react-visibility-sensor')
 
 var LevelSelector = require('./level-selector')
 var TextFilter = require('./text-filter')
@@ -74,14 +74,6 @@ var select = function (dispatch) {
   }
 }
 
-var entries = function (props) {
-  return filter(props.filter, props.logs)
-    .slice(0, props.displaySize)
-    .map(function (entry) {
-      return <LogEntry entry={entry} />
-    })
-}
-
 var textFilter = function (field, props) {
   var on = function (o) {
     props.dispatch(actions.filter(o))
@@ -92,8 +84,33 @@ var textFilter = function (field, props) {
   )
 }
 
+var scroll = function (dispatch) {
+  return function (isVisible) {
+    if (isVisible) {
+      dispatch(actions.grow())
+    }
+  }
+}
+
 var LogViewer = function (props) {
   var s = styles()
+
+  var filteredLogs = filter(props.filter, props.logs)
+
+  var displayedLogs = filteredLogs.slice(0, props.displaySize)
+    .map(function (entry) {
+      return <LogEntry entry={entry} />
+    })
+
+  var loading = function () {
+    if (filteredLogs.length > 0 && displayedLogs.length < filteredLogs.length) {
+      return (
+        <VisibilitySensor onChange={scroll(props.dispatch)}>
+          <span>Loading...</span>
+        </VisibilitySensor>
+      )
+    }
+  }
 
   return (
     <div style={s.container}>
@@ -139,9 +156,10 @@ var LogViewer = function (props) {
         <div style={s.scroll}>
           <table style={s.table}>
             <tbody>
-              {entries(props)}
+              {displayedLogs}
             </tbody>
           </table>
+          {loading()}
         </div>
       </div>
     </div>
