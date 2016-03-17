@@ -23,6 +23,6 @@ public class LogViewerPlugin extends AbstractApplicationPlugin {
     public LogViewerPlugin() {
         this.displayName = "Logs";
         this.iframeLocation = URI.create("/admin/logviewer/index.html");
-        this.setAssociations(Arrays.asList("system-page"));
+        this.setAssociations(Arrays.asList("system-module"));
     }
 }

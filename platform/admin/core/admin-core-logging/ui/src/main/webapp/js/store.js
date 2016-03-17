@@ -19,35 +19,35 @@ var reducer = require('./reducer')
 var actions = require('./actions')
 var random = require('./random-entry')
 var http = require('http')
-var url = require('url')
-
-var data = require('./data.json')
+var concat = require('concat-stream')
 
 var store = redux.createStore(reducer)
 
-/*for (var i = 0; i < 50; i++) {
-  store.dispatch(actions.append(random()))
-}*/
-
-/*setInterval(function () {
-  //store.dispatch(actions.append(random()))
-}, 1000)*/
-
-var entries = data.value
-
-for (var i = 0; i < 7; i++) {
-  entries = entries.concat(entries)
+var getLogs = function (done) {
+  http.get({
+    path : '/jolokia/exec/org.codice.ddf.admin.logging.LoggingServiceBean:service=logging-service/retrieveLogEvents'
+  }, function (res) {
+    res.pipe(concat(function (body) {
+      try {
+        done(null, JSON.parse(body))
+      } catch (e) {
+        done(e)
+      }
+    }))
+  })
 }
-
-console.log(entries.length)
-
-store.dispatch(actions.set(entries))
 
 setInterval(function () {
   store.dispatch(actions.grow())
 }, 250)
-/*setInterval(function () {
-  store.dispatch(actions.set(entries))
-}, 3000)*/
+
+setInterval(function () {
+  getLogs(function (err, body) {
+    if (err) {
+    } else {
+      store.dispatch(actions.append(body.value))
+    }
+  })
+}, 2000)
 
 module.exports = store

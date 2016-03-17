@@ -26,10 +26,10 @@ exports.toggle = function () {
   }
 }
 
-exports.append = function (entry) {
+exports.append = function (logs) {
   return {
     type: 'APPEND_LOGS',
-    entry: entry
+    logs: logs
   }
 }
 

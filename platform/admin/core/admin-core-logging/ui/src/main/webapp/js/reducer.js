@@ -15,6 +15,13 @@
 
 var m = require('merge')
 
+// total number of log entries to keep in memory that a
+// user can filter through
+var MAX_FILTER_ENTRIES = 10000
+
+// total number of logs that can be displayed for the user
+var MAX_DISPLAY_ENTRIES = 500
+
 module.exports = function (state, action) {
   if (state === undefined) {
     return {
@@ -34,7 +41,12 @@ module.exports = function (state, action) {
 
     case 'APPEND_LOGS':
       return m(true, state, {
-        logs: [action.entry].concat(state.logs)
+        logs: action.logs.filter(function (entry) {
+          if (state.logs.length === 0) {
+            return true
+          }
+          return entry.timestamp > state.logs[0].timestamp
+        }).concat(state.logs).slice(0, MAX_FILTER_ENTRIES)
       })
 
     case 'TOGGLE_LOGS':
@@ -44,13 +56,12 @@ module.exports = function (state, action) {
 
     case 'SET_LOGS':
       return m(true, state, {
-        displaySize: 25,
         logs: action.logs
       })
 
     case 'GROW_LOGS':
       return m(true, state, {
-        displaySize: (state.displaySize + 25 < state.logs.length) ? state.displaySize + 25 : state.logs.length
+        displaySize: (state.displaySize + 25 < MAX_DISPLAY_ENTRIES) ? state.displaySize + 25 : MAX_DISPLAY_ENTRIES
       })
 
     default:

@@ -28,7 +28,6 @@ define([
 
         initialize: function(options){
             this.regions = options.regions;
-            this.show();
         },
         show: function() {
             var layoutView = new ModuleDetailLayout();
@@ -58,7 +57,6 @@ define([
                     return model.get('displayName');
                 };
                 staticList.add(staticModulePlugins);
-                staticList.sort();
 
                 var dynamicList = new Backbone.Collection();
                 dynamicList.comparator = function(model) {
@@ -79,7 +77,7 @@ define([
             });
         },
         fetchSystemConfigPlugins: function(){
-            var pageName = 'system-page';
+            var pageName = 'system-module';
             var collection = new AppConfigPlugin.Collection();
             var defer = Q.defer();
             collection.fetchByAppName(pageName, {
