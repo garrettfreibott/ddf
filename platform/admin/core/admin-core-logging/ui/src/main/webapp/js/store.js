@@ -23,7 +23,7 @@ var concat = require('concat-stream')
 
 var store = redux.createStore(reducer)
 
-var getLogs = function (done) {
+/*var getLogs = function (done) {
   http.get({
     path : '/jolokia/exec/org.codice.ddf.admin.logging.LoggingServiceBean:service=logging-service/retrieveLogEvents'
   }, function (res) {
@@ -48,6 +48,6 @@ setInterval(function () {
       store.dispatch(actions.append(body.value))
     }
   })
-}, 2000)
+}, 2000)*/
 
 module.exports = store

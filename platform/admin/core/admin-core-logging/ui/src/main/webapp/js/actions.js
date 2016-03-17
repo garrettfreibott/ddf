@@ -26,10 +26,10 @@ exports.toggle = function () {
   }
 }
 
-exports.append = function (logs) {
+exports.append = function (entry) {
   return {
     type: 'APPEND_LOGS',
-    logs: logs
+    entry: entry
   }
 }
 
@@ -44,5 +44,4 @@ exports.grow = function () {
   return {
     type: 'GROW_LOGS'
   }
-
 }

@@ -15,16 +15,32 @@
 
 var dom = require('react-dom')
 var React = require('react')
-var debounce = require('debounce')
+var es = require('event-stream')
 
 var store = require('./store')
 var LogPanel = require('./log-panel')
+var backend = require('./backend')
+var actions = require('./actions')
 
 var render = function (data) {
     dom.render(
       <LogPanel state={store.getState()} dispatch={store.dispatch} />,
       document.getElementById('root'))
 }
+
+backend()
+.pipe(es.map(function (data, done) {
+  setTimeout(function () {
+    done(null, data)
+  }, 0)
+}))
+.on('data', function (data) {
+store.dispatch(actions.append(data))
+})
+
+setInterval(function () {
+  store.dispatch(actions.grow())
+}, 500)
 
 render()
 store.subscribe(render)
