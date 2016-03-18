@@ -18,4 +18,6 @@ import java.util.Collection;
 public interface LoggingServiceBeanMBean {
     
     Collection<LogEvent> retrieveLogEvents();
+    
+    Collection<LogEvent> retrieveLogEventsAfter(long timestamp);
 }

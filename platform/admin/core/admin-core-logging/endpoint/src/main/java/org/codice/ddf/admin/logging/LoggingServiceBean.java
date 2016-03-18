@@ -14,10 +14,8 @@
 package org.codice.ddf.admin.logging;
 
 import java.lang.management.ManagementFactory;
-import java.util.ArrayList;
+
 import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
 
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.InstanceNotFoundException;
@@ -32,6 +30,12 @@ import org.ops4j.pax.logging.spi.PaxLoggingEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.EvictingQueue;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Ordering;
+
 public class LoggingServiceBean implements PaxAppender, LoggingServiceBeanMBean {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoggingServiceBean.class);
@@ -43,7 +47,7 @@ public class LoggingServiceBean implements PaxAppender, LoggingServiceBeanMBean 
 
     private static final String BUNDLE_VERSION = "bundle.version";
 
-    private final LinkedList<LogEvent> logEvents = new LinkedList<>();
+    private EvictingQueue<LogEvent> logEvents;
 
     private int maxLogEvents = 500;
 
@@ -53,7 +57,8 @@ public class LoggingServiceBean implements PaxAppender, LoggingServiceBeanMBean 
 
     public LoggingServiceBean() {
         try {
-            objectName = new ObjectName(MBEAN_NAME);
+            logEvents = EvictingQueue.create(maxLogEvents);
+            objectName = new ObjectName(MBEAN_NAME); 
             mBeanServer = ManagementFactory.getPlatformMBeanServer();
         } catch (MalformedObjectNameException e) {
             LOGGER.error("Unable to create Logging Service MBean with name [{}].", MBEAN_NAME, e);
@@ -89,40 +94,47 @@ public class LoggingServiceBean implements PaxAppender, LoggingServiceBeanMBean 
     }
 
     @Override
-    public void doAppend(PaxLoggingEvent paxLoggingEvent) {
+    public void doAppend(PaxLoggingEvent paxLoggingEvent) { 
         LogEvent logEvent = createLogEvent(paxLoggingEvent);
         add(logEvent);
     }
 
     @Override
     public Collection<LogEvent> retrieveLogEvents() {
-        return Collections.unmodifiableList(new ArrayList<>(logEvents));
+        synchronized (this) {
+            return Lists.newArrayList(Ordering.natural().leastOf(logEvents, logEvents.size()));
+        }
+        
+    }
+    
+    @Override
+    public Collection<LogEvent> retrieveLogEventsAfter(long timestamp) {
+        synchronized (this) {
+            return Lists.newArrayList(Iterables.filter(logEvents, new TimestampPredicate(timestamp)));
+        }
     }
 
-    public void setMaxLogEvents(int maxLogEvents) {
-        synchronized (this) {
-            if (maxLogEvents < this.maxLogEvents) {
-                evict();
-            }
-            this.maxLogEvents = maxLogEvents;
+    public void setMaxLogEvents(int newMaxLogEvents) {
+        synchronized(this) {
+            EvictingQueue<LogEvent> evictingQueue = EvictingQueue.create(newMaxLogEvents);
+            evictingQueue.addAll(Ordering.natural().greatestOf(logEvents, newMaxLogEvents));
+            this.maxLogEvents = newMaxLogEvents;
+            logEvents = evictingQueue;
         }
     }
 
     public int getMaxLogEvents() {
-        return maxLogEvents;
+        synchronized (this) {
+            return maxLogEvents;
+        }
     }
 
     private void add(LogEvent logEvent) {
         synchronized (this) {
-            if (full()) {
-                evict();
-                logEvents.addFirst(logEvent);
-            } else {
-                logEvents.addFirst(logEvent);
-            }
+            logEvents.add(logEvent);
         }
     }
-
+    
     private LogEvent createLogEvent(PaxLoggingEvent paxLoggingEvent) {
         long timestamp = paxLoggingEvent.getTimeStamp();
         String level = paxLoggingEvent.getLevel().toString();
@@ -140,12 +152,19 @@ public class LoggingServiceBean implements PaxAppender, LoggingServiceBeanMBean 
     private String getBundleVersion(PaxLoggingEvent paxLoggingEvent) {
         return (String) paxLoggingEvent.getProperties().get(BUNDLE_VERSION);
     }
+    
+    private static class TimestampPredicate implements Predicate<LogEvent> {
 
-    private boolean full() {
-        return logEvents.size() >= maxLogEvents;
-    }
-
-    private void evict() {
-        logEvents.subList(maxLogEvents - 1, logEvents.size()).clear();
+        private final long timestamp;
+        
+        private TimestampPredicate(long timestamp) {
+            this.timestamp = timestamp;
+        }
+        
+        @Override
+        public boolean apply(LogEvent logEvent) {
+            return logEvent.getTimestamp() > timestamp;
+        }
+        
     }
 }

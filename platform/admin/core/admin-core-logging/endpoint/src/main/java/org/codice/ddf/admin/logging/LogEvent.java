@@ -13,7 +13,10 @@
  */
 package org.codice.ddf.admin.logging;
 
-public class LogEvent {
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
+public class LogEvent implements Comparable<LogEvent> {
 
     private final long timestamp;
     
@@ -51,5 +54,35 @@ public class LogEvent {
 
     public String getBundleVersion() {
         return bundleVersion;
+    }
+
+    @Override
+    public int compareTo(LogEvent anotherLogEvent) {
+        long anotherTimestamp = ((LogEvent) anotherLogEvent).getTimestamp();
+        if (timestamp < anotherTimestamp) {
+            return -1;
+        } else if (timestamp > anotherTimestamp) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public boolean equals(Object anotherLogEvent) {
+        if (!(anotherLogEvent instanceof LogEvent)) {
+            return false;
+        }
+        if (anotherLogEvent == this) {
+            return true;
+        }
+        LogEvent rhs = (LogEvent) anotherLogEvent;
+        return new EqualsBuilder().append(timestamp, rhs.getTimestamp()).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 31).append(timestamp).append(level).append(message)
+                .append(bundleName).append(bundleVersion).toHashCode();
     }
 }
