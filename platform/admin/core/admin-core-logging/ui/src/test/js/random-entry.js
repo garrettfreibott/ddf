@@ -1,22 +1,19 @@
-
-// !!! REMOVE THIS - for testing purposes
-
 var m = require('merge')
 var random = require('random-item')
 
-var levels = require('./levels')
+var levels = require('../../main/webapp/js/levels')
 
-var bundles = [
+var bundleName = [
   'catalog.bundle',
   'platform.bundle',
   'security.bundle',
   'utils.bundle'
 ]
 
-var apps = [
-  'Catalog',
-  'Platform',
-  'Security'
+var bundleVersion = [
+  '1.2.3',
+  '3.4.5',
+  '5.6.7'
 ]
 
 var messages = [
@@ -27,10 +24,10 @@ var messages = [
 
 module.exports = function (o) {
   return m({
-    time: (new Date()).toISOString(),
+    timestamp: (new Date()).toISOString(),
     level: random(levels().slice(1)),
-    bundle: random(bundles),
-    app: random(apps),
+    bundleName: random(bundleName),
+    bundleVersion: random(bundleVersion),
     message: random(messages)
   }, o)
 }

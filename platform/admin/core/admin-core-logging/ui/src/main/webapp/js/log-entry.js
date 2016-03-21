@@ -35,23 +35,20 @@ var LogEntry = function (props) {
   var s = styles(entry.level)
 
   return (
-    <tr>
-      <td style={s} width={250}>
-        {format(entry.timestamp)}
-      </td>
-      <td style={s} width={100}>
-        {entry.level}
-      </td>
-      <td style={s}>
-        {entry.message}
-      </td>
-      <td style={s} width={200}>
-        {entry.app}
-      </td>
-      <td style={s} width={200}>
-        {entry.bundleName}
-      </td>
-    </tr>
+  <tr>
+    <td style={s} width={250}>
+      {format(entry.timestamp)}
+    </td>
+    <td style={s} width={100}>
+      {entry.level}
+    </td>
+    <td style={s}>
+      {entry.message}
+    </td>
+    <td style={s} width={300}>
+      {entry.bundleName}
+    </td>
+  </tr>
   )
 }
 

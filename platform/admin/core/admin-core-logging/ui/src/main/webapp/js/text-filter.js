@@ -35,10 +35,10 @@ module.exports = function (props) {
   }
 
   return (
-    <input
-      style={styles()}
-      value={props.value}
-      onChange={change}
-      placeholder={props.field.toUpperCase()} />
+  <input
+    style={styles()}
+    value={props.value}
+    onChange={change}
+    placeholder={props.field.toUpperCase()} />
   )
 }

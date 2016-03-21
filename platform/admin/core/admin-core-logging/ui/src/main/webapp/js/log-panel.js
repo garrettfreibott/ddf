@@ -44,7 +44,7 @@ var styles = function (props) {
     },
     panel: {
       position: 'fixed',
-      //height: (props.state.open) ? '90%' : 0,
+      // height: (props.state.open) ? '90%' : 0,
       top: 0,
       left: 0,
       right: 0,
@@ -67,11 +67,11 @@ var LogPanel = function (props) {
   var viewer = function () {
     if (state.open) {
       return (
-        <LogViewer
-          filter={state.filter}
-          logs={state.logs}
-          displaySize={state.displaySize}
-          dispatch={dispatch} />
+      <LogViewer
+        filter={state.filter}
+        logs={state.logs}
+        displaySize={state.displaySize}
+        dispatch={dispatch} />
       )
     }
   }
@@ -85,17 +85,17 @@ var LogPanel = function (props) {
 
   var btn = function () {
     return (
-      <button style={s.btn} onClick={toggle}>
-        Logs
-        {icon()}
-      </button>
+    <button style={s.btn} onClick={toggle}>
+      Logs
+      {icon()}
+    </button>
     )
   }
 
   return (
-    <div style={s.panel}>
-      {viewer()}
-    </div>
+  <div style={s.panel}>
+    {viewer()}
+  </div>
   )
 }
 

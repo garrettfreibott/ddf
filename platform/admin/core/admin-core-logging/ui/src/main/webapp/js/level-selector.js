@@ -19,9 +19,9 @@ var levels = require('./levels')
 var options = function () {
   return levels().map(function (level) {
     return (
-      <option key={level} value={level}>
-        {level}
-      </option>
+    <option key={level} value={level}>
+      {level}
+    </option>
     )
   })
 }
@@ -32,9 +32,9 @@ var select = function (fn) {
 
 var LevelSelector = function (props) {
   return (
-    <select value={props.selected} onChange={select(props.onSelect)}>
-      {options()}
-    </select>
+  <select value={props.selected} onChange={select(props.onSelect)}>
+    {options()}
+  </select>
   )
 }
 

@@ -1,7 +1,7 @@
 var test = require('tape')
 var reducer = require('../../main/webapp/js/reducer')
 var actions = require('../../main/webapp/js/actions')
-var random = require('../../main/webapp/js/random-entry')
+var random = require('./random-entry')
 
 test('initial state', function (t) {
   t.plan(3)
@@ -29,6 +29,6 @@ test('filter logs', function (t) {
 test('append logs', function (t) {
   t.plan(1)
 
-  var state = reducer(reducer(), actions.append(random()))
+  var state = reducer(reducer(), actions.append([random()]))
   t.equal(state.logs.length, 1)
 })

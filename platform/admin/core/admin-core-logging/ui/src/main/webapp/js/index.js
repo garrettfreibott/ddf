@@ -21,22 +21,46 @@ var store = require('./store')
 var LogPanel = require('./log-panel')
 var backend = require('./backend')
 var actions = require('./actions')
+var uniq = require('./uniq')
 
 var render = function (data) {
-    dom.render(
-      <LogPanel state={store.getState()} dispatch={store.dispatch} />,
-      document.getElementById('root'))
+  dom.render(
+    <LogPanel state={store.getState()} dispatch={store.dispatch} />,
+    document.getElementById('root'))
+}
+
+
+var batch = function () {
+  var emit
+  var buff = []
+
+  setInterval(function () {
+    if (emit && buff.length > 0) {
+      emit(buff)
+      buff = []
+    }
+  }, 250)
+
+  return es.through(function (data) {
+    buff.unshift(data)
+
+    emit = function (data) {
+      this.emit('data', data)
+    }.bind(this)
+  })
 }
 
 backend()
-.pipe(es.map(function (data, done) {
-  setTimeout(function () {
-    done(null, data)
-  }, 0)
-}))
-.on('data', function (data) {
-store.dispatch(actions.append(data))
-})
+  .pipe(es.map(function (data, done) {
+    setTimeout(function () {
+      done(null, data)
+    }, 25)
+  }))
+  .pipe(uniq())
+  .pipe(batch())
+  .on('data', function (data) {
+    store.dispatch(actions.append(data))
+  })
 
 render()
 store.subscribe(render)

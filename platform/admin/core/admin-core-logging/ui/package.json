@@ -6,8 +6,8 @@
   "license": "LGPL-3.0",
   "main": "index.js",
   "scripts": {
-    "pretest": "standard ./src/",
-    "test": "browserify -d ./src/test/js/*.js | tape-run | tap-dot",
+    "pretest": "# standard ./src/**/*.js",
+    "test": "browserify -d ./src/test/js/*.js | tape-run",
     "start": "hotloadify src/main/webapp/js/index.js --open",
     "prebuild": "mkdirp ./target/webapp",
     "build": "browserify src/main/webapp/js/index.js -p [minifyify --no-map] > ./target/webapp/bundle.js"

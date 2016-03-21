@@ -14,6 +14,7 @@
  **/
 
 var React = require('react')
+var moment = require('moment')
 var VisibilitySensor = require('react-visibility-sensor')
 
 var LevelSelector = require('./level-selector')
@@ -64,6 +65,12 @@ var styles = function () {
     controls: {
       padding: 4,
       borderBottom: '1px ' + border + ' solid'
+    },
+    loading: {
+      color: fg,
+      padding: 10,
+      fontSize: 24,
+      textAlign: 'center'
     }
   }
 }
@@ -80,7 +87,7 @@ var textFilter = function (field, props) {
   }
 
   return (
-    <TextFilter field={field} value={props.filter[field]} onChange={on} />
+  <TextFilter field={field} value={props.filter[field]} onChange={on} />
   )
 }
 
@@ -105,64 +112,70 @@ var LogViewer = function (props) {
   var loading = function () {
     if (filteredLogs.length > 0 && displayedLogs.length < filteredLogs.length) {
       return (
-        <VisibilitySensor onChange={scroll(props.dispatch)}>
-          <span>Loading...</span>
-        </VisibilitySensor>
+      <VisibilitySensor onChange={scroll(props.dispatch)}>
+        <div style={s.loading}>Loading...</div>
+      </VisibilitySensor>
+      )
+    }
+  }
+
+  var logTime = function () {
+    var logs = props.logs
+    if (logs.length > 0) {
+      var lastTimestamp = moment(logs[logs.length - 1].timestamp).format('MMMM Do YYYY, h:mm:ss a')
+      return (
+      <span>Recorded {logs.length} logs since <br/> {lastTimestamp}</span>
       )
     }
   }
 
   return (
-    <div style={s.container}>
-      <div style={s.bar}>
+  <div style={s.container}>
+    <div style={s.bar}>
+      <table style={s.table}>
+        <thead>
+          <tr>
+            <td style={s.header} width={250}>
+              Time
+            </td>
+            <td style={s.header} width={100}>
+              Level
+            </td>
+            <td style={s.header}>
+              Message
+            </td>
+            <td style={s.header} width={300}>
+              Bundle
+            </td>
+          </tr>
+          <tr>
+            <td style={s.controls}>
+              {logTime()}
+            </td>
+            <td style={s.controls}>
+              <LevelSelector selected={props.filter.level} onSelect={select(props.dispatch)} />
+            </td>
+            <td style={s.controls}>
+              {textFilter('message', props)}
+            </td>
+            <td style={s.controls}>
+              {textFilter('bundleName', props)}
+            </td>
+          </tr>
+        </thead>
+      </table>
+    </div>
+    <div style={{ display: 'table-row', position: 'relative' }}>
+      <div style={s.scroll}>
         <table style={s.table}>
-          <thead>
-            <tr>
-              <td style={s.header} width={250}>
-                Time
-              </td>
-              <td style={s.header} width={100}>
-                Level
-              </td>
-              <td style={s.header}>
-                Message
-              </td>
-              <td style={s.header} width={200}>
-                App
-              </td>
-              <td style={s.header} width={200}>
-                Bundle
-              </td>
-            </tr>
-            <tr>
-              <td style={s.controls}></td>
-              <td style={s.controls}>
-                <LevelSelector selected={props.filter.level} onSelect={select(props.dispatch)} />
-              </td>
-              <td style={s.controls}>
-                {textFilter('message', props)}
-              </td>
-              <td style={s.controls}>
-                {textFilter('app', props)}
-              </td>
-              <td style={s.controls}>
-                {textFilter('bundleName', props)}
-              </td>
-            </tr>
-          </thead>
+          <tbody>
+            {displayedLogs}
+          </tbody>
         </table>
-      </div>
-      <div style={{ display: 'table-row', position: 'relative' }}>
-        <div style={s.scroll}>
-          <table style={s.table}>
-            <tbody>
-              {displayedLogs}
-            </tbody>
-          </table>
-          {loading()}
-        </div>
+        {loading()}
       </div>
     </div>
+  </div>
   )
 }
 

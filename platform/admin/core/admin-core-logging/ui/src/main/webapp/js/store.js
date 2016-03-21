@@ -16,10 +16,6 @@
 var redux = require('redux')
 
 var reducer = require('./reducer')
-var actions = require('./actions')
-var random = require('./random-entry')
-var http = require('http')
-var concat = require('concat-stream')
 
 var store = redux.createStore(reducer)
 module.exports = store

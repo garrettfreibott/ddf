@@ -13,7 +13,7 @@
  *
  **/
 
- exports.filter = function (filter) {
+exports.filter = function (filter) {
   return {
     type: 'FILTER_LOGS',
     filter: filter
@@ -26,10 +26,10 @@ exports.toggle = function () {
   }
 }
 
-exports.append = function (entry) {
+exports.append = function (entries) {
   return {
     type: 'APPEND_LOGS',
-    entry: entry
+    entries: entries
   }
 }
 

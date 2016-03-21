@@ -1,6 +1,6 @@
 var test = require('tape')
 var filter = require('../../main/webapp/js/filter')
-var random = require('../../main/webapp/js/random-entry')
+var random = require('./random-entry')
 
 test('level filter', function (t) {
   t.plan(1)

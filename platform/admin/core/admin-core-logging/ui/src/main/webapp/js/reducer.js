@@ -41,7 +41,7 @@ module.exports = function (state, action) {
 
     case 'APPEND_LOGS':
       return m(true, state, {
-        logs: [action.entry].concat(state.logs).slice(0, MAX_FILTER_ENTRIES)
+        logs: action.entries.concat(state.logs).slice(0, MAX_FILTER_ENTRIES)
       })
 
     case 'TOGGLE_LOGS':
