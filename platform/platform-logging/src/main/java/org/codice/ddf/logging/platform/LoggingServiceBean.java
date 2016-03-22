@@ -11,7 +11,7 @@
  * is distributed along with this program and can be found at
  * <http://www.gnu.org/licenses/lgpl.html>.
  */
-package org.codice.ddf.admin.logging;
+package org.codice.ddf.logging.platform;
 
 import java.lang.management.ManagementFactory;
 import java.util.List;
@@ -32,14 +32,11 @@ import org.ops4j.pax.logging.spi.PaxLoggingEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//import com.google.common.base.Predicate;
 import com.google.common.collect.EvictingQueue;
 import com.google.common.collect.Iterables;
-//import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-//import com.google.common.collect.Ordering;
 
-public class LoggingServiceBean implements PaxAppender, LoggingServiceBeanMBean, LoggingService {
+public class LoggingServiceBean implements PaxAppender, LoggingServiceBeanMBean {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoggingServiceBean.class);
 
@@ -49,9 +46,9 @@ public class LoggingServiceBean implements PaxAppender, LoggingServiceBeanMBean,
     private static final String BUNDLE_NAME = "bundle.name";
 
     private static final String BUNDLE_VERSION = "bundle.version";
-    
+
     private final WriteLock writeLock = new ReentrantReadWriteLock().writeLock();
-    
+
     private final ReadLock readLock = new ReentrantReadWriteLock().readLock();
 
     private EvictingQueue<LogEvent> logEvents;
@@ -65,7 +62,7 @@ public class LoggingServiceBean implements PaxAppender, LoggingServiceBeanMBean,
     public LoggingServiceBean() {
         try {
             logEvents = EvictingQueue.create(maxLogEvents);
-            objectName = new ObjectName(MBEAN_NAME); 
+            objectName = new ObjectName(MBEAN_NAME);
             mBeanServer = ManagementFactory.getPlatformMBeanServer();
         } catch (MalformedObjectNameException e) {
             LOGGER.error("Unable to create Logging Service MBean with name [{}].", MBEAN_NAME, e);
@@ -101,47 +98,26 @@ public class LoggingServiceBean implements PaxAppender, LoggingServiceBeanMBean,
     }
 
     @Override
-    public void doAppend(PaxLoggingEvent paxLoggingEvent) { 
-//        System.out.println("%%%######################################## Thread: " + Thread.currentThread().getName() + "; id: " + Thread.currentThread().getId());
-//        for(StackTraceElement s : Thread.currentThread().getStackTrace()) {
-//            System.out.println(s);
-//        }
+    public void doAppend(PaxLoggingEvent paxLoggingEvent) {
         LogEvent logEvent = createLogEvent(paxLoggingEvent);
         add(logEvent);
     }
 
     @Override
     public List<LogEvent> retrieveLogEvents() {
-        // synchronized (this) {
         try {
             readLock.lock();
-            
-            // START TEST
             return Lists.newArrayList(logEvents);
-            // END TEST
-            
-            
-//            return Lists.newArrayList(Ordering.natural().leastOf(logEvents, logEvents.size()));
         } finally {
             readLock.unlock();
         }
-        // }
     }
-    
-//    @Override
-//    public List<LogEvent> retrieveLogEventsAfter(long timestamp) {
-//        synchronized (this) {
-//            return Lists.newArrayList(Iterables.filter(logEvents, new TimestampPredicate(timestamp)));
-//        }
-//    }
 
     public void setMaxLogEvents(int newMaxLogEvents) {
-        // synchronized (this) {
         try {
             writeLock.lock();
             EvictingQueue<LogEvent> evictingQueue = EvictingQueue.create(newMaxLogEvents);
 
-            // START TEST
             if (logEvents.size() < newMaxLogEvents) {
                 evictingQueue.addAll(logEvents);
             } else {
@@ -149,39 +125,31 @@ public class LoggingServiceBean implements PaxAppender, LoggingServiceBeanMBean,
                         - newMaxLogEvents);
                 evictingQueue.addAll(Lists.newArrayList(iterable));
             }
-            // END TEST
-
-            // evictingQueue.addAll(Ordering.natural().greatestOf(logEvents, newMaxLogEvents));
             this.maxLogEvents = newMaxLogEvents;
             logEvents = evictingQueue;
         } finally {
             writeLock.unlock();
         }
-        // }
     }
 
     public int getMaxLogEvents() {
-        // synchronized (this) {
         try {
             readLock.lock();
             return maxLogEvents;
         } finally {
             readLock.unlock();
         }
-        // }
     }
 
     private void add(LogEvent logEvent) {
-        // synchronized (this) {
         try {
             writeLock.lock();
             logEvents.add(logEvent);
         } finally {
             writeLock.unlock();
         }
-        // }
     }
-    
+
     private LogEvent createLogEvent(PaxLoggingEvent paxLoggingEvent) {
         long timestamp = paxLoggingEvent.getTimeStamp();
         String level = paxLoggingEvent.getLevel().toString();
@@ -199,19 +167,5 @@ public class LoggingServiceBean implements PaxAppender, LoggingServiceBeanMBean,
     private String getBundleVersion(PaxLoggingEvent paxLoggingEvent) {
         return (String) paxLoggingEvent.getProperties().get(BUNDLE_VERSION);
     }
-    
-//    private static class TimestampPredicate implements Predicate<LogEvent> {
-//
-//        private final long timestamp;
-//        
-//        private TimestampPredicate(long timestamp) {
-//            this.timestamp = timestamp;
-//        }
-//        
-//        @Override
-//        public boolean apply(LogEvent logEvent) {
-//            return logEvent.getTimestamp() > timestamp;
-//        }
-//        
-//    }
 }
+

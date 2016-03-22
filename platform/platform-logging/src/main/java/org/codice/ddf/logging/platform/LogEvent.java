@@ -11,7 +11,7 @@
  * is distributed along with this program and can be found at
  * <http://www.gnu.org/licenses/lgpl.html>.
  */
-package org.codice.ddf.admin.logging;
+package org.codice.ddf.logging.platform;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -82,19 +82,6 @@ public class LogEvent implements Comparable<LogEvent> {
                 .append(bundleName, rhs.getBundleName())
                 .append(bundleVersion, rhs.getBundleVersion()).isEquals();
     }
-
-//    @Override
-//    public boolean equals(Object another) {
-//        if (!(another instanceof LogEvent)) {
-//            return false;
-//        }
-//        LogEvent anotherLogEvent = (LogEvent)another;
-//        if (anotherLogEvent.getTimestamp() == timestamp) {
-//            return true;
-//        }
-////        LogEvent rhs = (LogEvent) anotherLogEvent;
-//        return new EqualsBuilder().append(timestamp, anotherLogEvent.getTimestamp()).isEquals();
-//    }
 
     @Override
     public int hashCode() {

@@ -11,13 +11,11 @@
  * is distributed along with this program and can be found at
  * <http://www.gnu.org/licenses/lgpl.html>.
  */
-package org.codice.ddf.admin.logging;
+package org.codice.ddf.logging.platform;
 
 import java.util.List;
 
 public interface LoggingServiceBeanMBean {
     
     List<LogEvent> retrieveLogEvents();
-    
-//    List<LogEvent> retrieveLogEventsAfter(long timestamp);
 }

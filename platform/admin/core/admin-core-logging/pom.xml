@@ -27,6 +27,5 @@
 
     <modules>
         <module>ui</module>
-        <module>endpoint</module>
     </modules>
 </project>
