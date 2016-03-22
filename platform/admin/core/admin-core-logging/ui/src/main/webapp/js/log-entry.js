@@ -19,7 +19,7 @@ var moment = require('moment')
 var levels = require('./levels')
 
 var format = function (time) {
-  return moment(time).format('MMMM Do YYYY, h:mm:ss a')
+  return moment(time).format('D MMM YYYY, HH:mm:ss')
 }
 
 var styles = function (level) {
@@ -30,11 +30,13 @@ var styles = function (level) {
   }
 }
 
+// log entry to display
 var LogEntry = function (props) {
   var entry = props.entry
   var marks = props.marks
   var s = styles(entry.level)
 
+  // check if marks exist for filter highlighting
   var tryMark = function (key) {
     var mark = marks[key]
     var displayString = entry[key]
@@ -54,16 +56,16 @@ var LogEntry = function (props) {
 
   return (
   <tr>
-    <td style={s} width={250}>
+    <td style={s} width={175}>
       {format(entry.timestamp)}
     </td>
-    <td style={s} width={100}>
+    <td style={s} width={75}>
       {entry.level}
     </td>
     <td style={s}>
       {tryMark('message')}
     </td>
-    <td style={s} width={300}>
+    <td style={s} width={200}>
       {tryMark('bundleName')}
     </td>
   </tr>

@@ -30,6 +30,7 @@ var select = function (fn) {
   return function (e) { fn(e.target.value) }
 }
 
+// log level selector
 var LevelSelector = function (props) {
   return (
   <select value={props.selected} onChange={select(props.onSelect)}>

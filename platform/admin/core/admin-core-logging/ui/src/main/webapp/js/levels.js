@@ -23,6 +23,7 @@ var levels = {
   DEBUG: '#0f0'
 }
 
+// log level colors
 module.exports = function (level) {
   if (level !== undefined) {
     return c(levels[level]).lighten(0.9).hslString()

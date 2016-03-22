@@ -44,7 +44,6 @@ var styles = function (props) {
     },
     panel: {
       position: 'fixed',
-      // height: (props.state.open) ? '90%' : 0,
       top: 0,
       left: 0,
       right: 0,
@@ -60,10 +59,6 @@ var LogPanel = function (props) {
   var dispatch = props.dispatch
   var s = styles(props)
 
-  var toggle = function () {
-    dispatch(actions.toggle())
-  }
-
   var viewer = function () {
     if (state.open) {
       return (
@@ -74,22 +69,6 @@ var LogPanel = function (props) {
         dispatch={dispatch} />
       )
     }
-  }
-
-  var icon = function () {
-    if (state.open) {
-      return <span style={s.icon}>-</span>
-    }
-    return <span style={s.icon}>+</span>
-  }
-
-  var btn = function () {
-    return (
-    <button style={s.btn} onClick={toggle}>
-      Logs
-      {icon()}
-    </button>
-    )
   }
 
   return (

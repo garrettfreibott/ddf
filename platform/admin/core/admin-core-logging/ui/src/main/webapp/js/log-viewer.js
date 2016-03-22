@@ -45,7 +45,7 @@ var styles = function () {
     header: {
       color: fg,
       background: '#ecf0f1',
-      padding: 8
+      padding: 2
     },
     scroll: {
       display: 'block',
@@ -91,6 +91,7 @@ var textFilter = function (field, props) {
   )
 }
 
+// grow the log display when the bottom is reached
 var scroll = function (dispatch) {
   return function (isVisible) {
     if (isVisible) {
@@ -109,6 +110,7 @@ var LogViewer = function (props) {
       return <LogEntry entry={row.entry} marks={row.marks} />
     })
 
+  // show loading bar is there are more logs, hide if the end is reached
   var loading = function () {
     if (filteredLogs.length > 0 && displayedLogs.length < filteredLogs.length) {
       return (
@@ -119,10 +121,11 @@ var LogViewer = function (props) {
     }
   }
 
+  // timestamp formatting
   var logTime = function () {
     var logs = props.logs
     if (logs.length > 0) {
-      var lastTimestamp = moment(logs[logs.length - 1].timestamp).format('MMMM Do YYYY, h:mm:ss a')
+      var lastTimestamp = moment(logs[logs.length - 1].timestamp).format('D MMM YYYY, HH:mm:ss')
       return (
       <span>Recorded {logs.length} logs since <br/> {lastTimestamp}</span>
       )
@@ -135,16 +138,16 @@ var LogViewer = function (props) {
       <table style={s.table}>
         <thead>
           <tr>
-            <td style={s.header} width={250}>
+            <td style={s.header} width={175}>
               Time
             </td>
-            <td style={s.header} width={100}>
+            <td style={s.header} width={75}>
               Level
             </td>
             <td style={s.header}>
               Message
             </td>
-            <td style={s.header} width={300}>
+            <td style={s.header} width={200}>
               Bundle
             </td>
           </tr>

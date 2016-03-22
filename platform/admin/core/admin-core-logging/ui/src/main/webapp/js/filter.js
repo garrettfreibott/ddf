@@ -36,7 +36,7 @@ module.exports = function (filters, logs) {
 
   var getMarks = function (entry) {
     var marks = fields.map(function (field) {
-      if (entry[field] !== undefined) {
+      if (entry[field]) {
         var match = entry[field].toLowerCase()
           .match(new RegExp(filters[field], 'i'))
         if (match !== null) {

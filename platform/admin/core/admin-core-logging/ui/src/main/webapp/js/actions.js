@@ -22,7 +22,7 @@ exports.filter = function (filter) {
 }
 
 // for appending new logs to the stored log list
-// note: this will not cause the user to lose context
+// note: user will not lose context when scrolling
 exports.append = function (entries) {
   return {
     type: 'APPEND_LOGS',
@@ -31,7 +31,7 @@ exports.append = function (entries) {
 }
 
 // for entirely replacing the stored log list
-// note: this will cause the user to lose context
+// note: user will lose context when scrolling
 exports.set = function (logs) {
   return {
     type: 'SET_LOGS',
@@ -39,8 +39,7 @@ exports.set = function (logs) {
   }
 }
 
-// used for expanding the amount of logs displayed on screen
-// from the stored log list
+// used for expanding the max amount of stored logs displayed on screen
 exports.grow = function () {
   return {
     type: 'GROW_LOGS'
