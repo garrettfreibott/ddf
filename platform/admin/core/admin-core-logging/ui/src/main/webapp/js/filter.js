@@ -13,22 +13,49 @@
  *
  **/
 
+var arrayToObject = function (key, array) {
+  var o = {}
+  array.forEach(function (element) {
+    o[element[key]] = element
+  })
+  return o
+}
+
 module.exports = function (filters, logs) {
   var level = filters.level || 'ALL'
+
   var fields = Object.keys(filters).filter(function (field) {
     return field !== 'level' && filters[field] !== ''
   })
 
-  return logs.filter(function (entry) {
-    return level === 'ALL' || entry.level === level
-  }).filter(function (entry) {
-    return fields.reduce(function (match, field) {
-      if (!entry[field]) {
-        return match
-      }
+  var hasMarks = function (row) {
+    return Object.keys(row.marks).length > 0
+  }
 
-      return entry[field].toLowerCase()
-        .match(new RegExp(filters[field], 'i')) && match
-    }, true)
-  })
+  var getMarks = function (entry) {
+    var marks = fields.map(function (field) {
+      if (entry[field] !== undefined) {
+        var match = entry[field].toLowerCase()
+          .match(new RegExp(filters[field], 'i'))
+        if (match !== null) {
+          return {
+            field: field,
+            start: match.index,
+            end: match[0].length + match.index
+          }
+        }
+      }
+    }).filter(function (m) { return m !== undefined })
+
+    return {
+      entry: entry,
+      marks: arrayToObject('field', marks)
+    }
+  }
+
+  var levelLogs = logs.filter(function (entry) {
+    return level === 'ALL' || entry.level === level
+  }).map(getMarks)
+
+  return (fields.length > 0) ? levelLogs.filter(hasMarks) : levelLogs
 }

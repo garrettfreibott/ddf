@@ -105,8 +105,8 @@ var LogViewer = function (props) {
   var filteredLogs = filter(props.filter, props.logs)
 
   var displayedLogs = filteredLogs.slice(0, props.displaySize)
-    .map(function (entry) {
-      return <LogEntry entry={entry} />
+    .map(function (row) {
+      return <LogEntry entry={row.entry} marks={row.marks} />
     })
 
   var loading = function () {

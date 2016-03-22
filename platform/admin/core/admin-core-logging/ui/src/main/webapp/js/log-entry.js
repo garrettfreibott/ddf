@@ -32,7 +32,25 @@ var styles = function (level) {
 
 var LogEntry = function (props) {
   var entry = props.entry
+  var marks = props.marks
   var s = styles(entry.level)
+
+  var tryMark = function (key) {
+    var mark = marks[key]
+    var displayString = entry[key]
+    if (mark) {
+      var first = displayString.slice(0, mark.start)
+      var second = displayString.slice(mark.start, mark.end)
+      var third = displayString.slice(mark.end)
+      return (
+        <span>{first}<mark>{second}</mark>{third}</span>
+      )
+    } else {
+      return (
+        <span>{displayString}</span>
+      )
+    }
+  }
 
   return (
   <tr>
@@ -43,10 +61,10 @@ var LogEntry = function (props) {
       {entry.level}
     </td>
     <td style={s}>
-      {entry.message}
+      {tryMark('message')}
     </td>
     <td style={s} width={300}>
-      {entry.bundleName}
+      {tryMark('bundleName')}
     </td>
   </tr>
   )

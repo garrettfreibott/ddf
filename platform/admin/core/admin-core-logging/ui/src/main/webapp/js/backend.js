@@ -2,6 +2,8 @@ var es = require('event-stream')
 var concat = require('concat-stream')
 var http = require('http')
 
+var logs = []
+
 var getLogs = function (done) {
   endpoint = '/jolokia/exec/org.codice.ddf.admin.logging.LoggingServiceBean:service=logging-service/retrieveLogEvents'
 
@@ -20,20 +22,23 @@ var getLogs = function (done) {
 
 module.exports = function () {
   return es.readable(function (count, done) {
-    var that = this
-
-    getLogs(function (err, body) {
-      if (err) {
-        done(err)
+    if (logs.length > 0) {
+      if (count > 500) {
+        setTimeout(function () {
+          done(null, logs.shift())
+        }, 10)
       } else {
-        var logs = body.value
-        logs.forEach(function (entry) {
-          that.emit('data', entry)
-        })
-        //that.emit('data', logs)
-
-        setTimeout(done, 1000)
+        done(null, logs.shift())
       }
-    })
+    } else {
+      getLogs(function (err, body) {
+        if (err) {
+          done(err)
+        } else {
+          logs = body.value
+          done(null, logs.shift())
+        }
+      })
+    }
   })
 }

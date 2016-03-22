@@ -13,9 +13,45 @@
  *
  **/
 
+var es = require('event-stream')
 var redux = require('redux')
 
+var backend = require('./backend')
+var actions = require('./actions')
+var uniq = require('./uniq')
 var reducer = require('./reducer')
-
 var store = redux.createStore(reducer)
+
+var batch = function () {
+  var emit
+  var buff = []
+
+  setInterval(function () {
+    if (emit && buff.length > 0) {
+      emit(buff)
+      buff = []
+    }
+  }, 250)
+
+  return es.through(function (data) {
+    buff.unshift(data)
+
+    emit = function (data) {
+      this.emit('data', data)
+    }.bind(this)
+  })
+}
+
+backend()
+  .pipe(es.map(function (data, done) {
+    setTimeout(function () {
+      done(null, data)
+    }, 1000)
+  }))
+  .pipe(uniq())
+  .pipe(batch())
+  .on('data', function (data) {
+    store.dispatch(actions.append(data))
+  })
+
 module.exports = store
