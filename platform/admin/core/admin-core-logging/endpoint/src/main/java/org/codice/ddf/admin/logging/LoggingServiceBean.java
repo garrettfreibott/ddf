@@ -14,8 +14,10 @@
 package org.codice.ddf.admin.logging;
 
 import java.lang.management.ManagementFactory;
-
-import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.InstanceNotFoundException;
@@ -30,13 +32,14 @@ import org.ops4j.pax.logging.spi.PaxLoggingEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Predicate;
+//import com.google.common.base.Predicate;
 import com.google.common.collect.EvictingQueue;
 import com.google.common.collect.Iterables;
+//import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Ordering;
+//import com.google.common.collect.Ordering;
 
-public class LoggingServiceBean implements PaxAppender, LoggingServiceBeanMBean {
+public class LoggingServiceBean implements PaxAppender, LoggingServiceBeanMBean, LoggingService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoggingServiceBean.class);
 
@@ -46,6 +49,10 @@ public class LoggingServiceBean implements PaxAppender, LoggingServiceBeanMBean 
     private static final String BUNDLE_NAME = "bundle.name";
 
     private static final String BUNDLE_VERSION = "bundle.version";
+    
+    private final WriteLock writeLock = new ReentrantReadWriteLock().writeLock();
+    
+    private final ReadLock readLock = new ReentrantReadWriteLock().readLock();
 
     private EvictingQueue<LogEvent> logEvents;
 
@@ -95,44 +102,84 @@ public class LoggingServiceBean implements PaxAppender, LoggingServiceBeanMBean 
 
     @Override
     public void doAppend(PaxLoggingEvent paxLoggingEvent) { 
+//        System.out.println("%%%######################################## Thread: " + Thread.currentThread().getName() + "; id: " + Thread.currentThread().getId());
+//        for(StackTraceElement s : Thread.currentThread().getStackTrace()) {
+//            System.out.println(s);
+//        }
         LogEvent logEvent = createLogEvent(paxLoggingEvent);
         add(logEvent);
     }
 
     @Override
-    public Collection<LogEvent> retrieveLogEvents() {
-        synchronized (this) {
-            return Lists.newArrayList(Ordering.natural().leastOf(logEvents, logEvents.size()));
+    public List<LogEvent> retrieveLogEvents() {
+        // synchronized (this) {
+        try {
+            readLock.lock();
+            
+            // START TEST
+            return Lists.newArrayList(logEvents);
+            // END TEST
+            
+            
+//            return Lists.newArrayList(Ordering.natural().leastOf(logEvents, logEvents.size()));
+        } finally {
+            readLock.unlock();
         }
-        
+        // }
     }
     
-    @Override
-    public Collection<LogEvent> retrieveLogEventsAfter(long timestamp) {
-        synchronized (this) {
-            return Lists.newArrayList(Iterables.filter(logEvents, new TimestampPredicate(timestamp)));
-        }
-    }
+//    @Override
+//    public List<LogEvent> retrieveLogEventsAfter(long timestamp) {
+//        synchronized (this) {
+//            return Lists.newArrayList(Iterables.filter(logEvents, new TimestampPredicate(timestamp)));
+//        }
+//    }
 
     public void setMaxLogEvents(int newMaxLogEvents) {
-        synchronized(this) {
+        // synchronized (this) {
+        try {
+            writeLock.lock();
             EvictingQueue<LogEvent> evictingQueue = EvictingQueue.create(newMaxLogEvents);
-            evictingQueue.addAll(Ordering.natural().greatestOf(logEvents, newMaxLogEvents));
+
+            // START TEST
+            if (logEvents.size() < newMaxLogEvents) {
+                evictingQueue.addAll(logEvents);
+            } else {
+                Iterable<LogEvent> iterable = Iterables.skip(logEvents, logEvents.size()
+                        - newMaxLogEvents);
+                evictingQueue.addAll(Lists.newArrayList(iterable));
+            }
+            // END TEST
+
+            // evictingQueue.addAll(Ordering.natural().greatestOf(logEvents, newMaxLogEvents));
             this.maxLogEvents = newMaxLogEvents;
             logEvents = evictingQueue;
+        } finally {
+            writeLock.unlock();
         }
+        // }
     }
 
     public int getMaxLogEvents() {
-        synchronized (this) {
+        // synchronized (this) {
+        try {
+            readLock.lock();
             return maxLogEvents;
+        } finally {
+            readLock.unlock();
         }
+        // }
     }
 
     private void add(LogEvent logEvent) {
-        synchronized (this) {
+        // synchronized (this) {
+        try {
+            writeLock.lock();
             logEvents.add(logEvent);
+        } finally {
+            writeLock.unlock();
         }
+        // }
     }
     
     private LogEvent createLogEvent(PaxLoggingEvent paxLoggingEvent) {
@@ -153,18 +200,18 @@ public class LoggingServiceBean implements PaxAppender, LoggingServiceBeanMBean 
         return (String) paxLoggingEvent.getProperties().get(BUNDLE_VERSION);
     }
     
-    private static class TimestampPredicate implements Predicate<LogEvent> {
-
-        private final long timestamp;
-        
-        private TimestampPredicate(long timestamp) {
-            this.timestamp = timestamp;
-        }
-        
-        @Override
-        public boolean apply(LogEvent logEvent) {
-            return logEvent.getTimestamp() > timestamp;
-        }
-        
-    }
+//    private static class TimestampPredicate implements Predicate<LogEvent> {
+//
+//        private final long timestamp;
+//        
+//        private TimestampPredicate(long timestamp) {
+//            this.timestamp = timestamp;
+//        }
+//        
+//        @Override
+//        public boolean apply(LogEvent logEvent) {
+//            return logEvent.getTimestamp() > timestamp;
+//        }
+//        
+//    }
 }

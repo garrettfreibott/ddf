@@ -13,11 +13,11 @@
  */
 package org.codice.ddf.admin.logging;
 
-import java.util.Collection;
+import java.util.List;
 
 public interface LoggingServiceBeanMBean {
     
-    Collection<LogEvent> retrieveLogEvents();
+    List<LogEvent> retrieveLogEvents();
     
-    Collection<LogEvent> retrieveLogEventsAfter(long timestamp);
+//    List<LogEvent> retrieveLogEventsAfter(long timestamp);
 }

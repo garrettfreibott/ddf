@@ -25,11 +25,17 @@
               update-strategy="container-managed"/>
     </bean>
 
-    <service id="loggingService" ref="logging"
-        interface="org.ops4j.pax.logging.spi.PaxAppender">
+<!--     <service id="loggingService" ref="logging" -->
+<!--         interface="org.ops4j.pax.logging.spi.PaxAppender"> -->
+<!--         <service-properties> -->
+<!--             <entry key="org.ops4j.pax.logging.appender.name" value="LoggingService" /> -->
+<!--         </service-properties> -->
+<!--     </service> -->
+
+    <service id="loggingService" ref="logging" auto-export="interfaces">
         <service-properties>
-            <entry key="org.ops4j.pax.logging.appender.name" value="LoggingService" />
+            <entry key="org.ops4j.pax.logging.appender.name"
+                value="LoggingService" />
         </service-properties>
     </service>
-
 </blueprint>

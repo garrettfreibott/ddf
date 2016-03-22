@@ -29,5 +29,6 @@
         <module>admin-core-appservice</module>
         <module>admin-core-jolokia</module>
         <module>admin-core-insecuredefaults</module>
+        <module>admin-core-logging</module>
     </modules>
 </project>

@@ -975,6 +975,7 @@
     <feature name="platform-all" install="manual" version="${project.version}" hidden="true">
         <feature prerequisite="true">platform-security-session</feature>
         <feature prerequisite="true">platform-migrate-all</feature>
+        <feature>admin-core-logging</feature>
         <feature>platform-scheduler</feature>
         <feature>platform-commands</feature>
         <feature>platform-configuration</feature>
@@ -995,6 +996,11 @@
         <feature>banana</feature>
     </feature>
 
+    <feature name="admin-core-logging" install="manual" version="${project.version}"
+             description="Logging">
+        <bundle>mvn:ddf.admin.core.logging/admin-core-logging-endpoint/${project.version}</bundle>
+    </feature>
+
     <feature name="platform-security-session" install="manual" version="${project.version}"
              description="Custom Session Manager">
         <feature>pax-jetty</feature>
@@ -1010,6 +1016,7 @@
     <feature name="landing-page" install="manual" version="${project.version}"
              description="Landing page and branding support.">
         <feature prerequisite="true">platform-dependencies</feature>
+
         <bundle>mvn:ddf.platform/branding-resources/${project.version}</bundle>
         <bundle>mvn:ddf.platform/landing-page/${project.version}</bundle>
     </feature>

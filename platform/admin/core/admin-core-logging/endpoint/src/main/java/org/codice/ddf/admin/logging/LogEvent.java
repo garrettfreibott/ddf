@@ -67,7 +67,7 @@ public class LogEvent implements Comparable<LogEvent> {
             return 0;
         }
     }
-
+    
     @Override
     public boolean equals(Object anotherLogEvent) {
         if (!(anotherLogEvent instanceof LogEvent)) {
@@ -77,8 +77,24 @@ public class LogEvent implements Comparable<LogEvent> {
             return true;
         }
         LogEvent rhs = (LogEvent) anotherLogEvent;
-        return new EqualsBuilder().append(timestamp, rhs.getTimestamp()).isEquals();
+        return new EqualsBuilder().append(timestamp, rhs.getTimestamp())
+                .append(level, rhs.getLevel().toString()).append(message, rhs.getMessage())
+                .append(bundleName, rhs.getBundleName())
+                .append(bundleVersion, rhs.getBundleVersion()).isEquals();
     }
+
+//    @Override
+//    public boolean equals(Object another) {
+//        if (!(another instanceof LogEvent)) {
+//            return false;
+//        }
+//        LogEvent anotherLogEvent = (LogEvent)another;
+//        if (anotherLogEvent.getTimestamp() == timestamp) {
+//            return true;
+//        }
+////        LogEvent rhs = (LogEvent) anotherLogEvent;
+//        return new EqualsBuilder().append(timestamp, anotherLogEvent.getTimestamp()).isEquals();
+//    }
 
     @Override
     public int hashCode() {
