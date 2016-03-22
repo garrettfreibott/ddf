@@ -12,13 +12,6 @@ test('initial state', function (t) {
   t.deepEqual(state.filter, { level: 'ALL' })
 })
 
-test('toggle logs', function (t) {
-  t.plan(1)
-
-  var state = reducer(reducer(), actions.toggle())
-  t.equal(state.open, false)
-})
-
 test('filter logs', function (t) {
   t.plan(1)
 

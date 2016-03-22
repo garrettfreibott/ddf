@@ -13,6 +13,7 @@
  *
  **/
 
+// for applying a filter to the logs
 exports.filter = function (filter) {
   return {
     type: 'FILTER_LOGS',
@@ -20,12 +21,8 @@ exports.filter = function (filter) {
   }
 }
 
-exports.toggle = function () {
-  return {
-    type: 'TOGGLE_LOGS'
-  }
-}
-
+// for appending new logs to the stored log list
+// note: this will not cause the user to lose context
 exports.append = function (entries) {
   return {
     type: 'APPEND_LOGS',
@@ -33,6 +30,8 @@ exports.append = function (entries) {
   }
 }
 
+// for entirely replacing the stored log list
+// note: this will cause the user to lose context
 exports.set = function (logs) {
   return {
     type: 'SET_LOGS',
@@ -40,6 +39,8 @@ exports.set = function (logs) {
   }
 }
 
+// used for expanding the amount of logs displayed on screen
+// from the stored log list
 exports.grow = function () {
   return {
     type: 'GROW_LOGS'

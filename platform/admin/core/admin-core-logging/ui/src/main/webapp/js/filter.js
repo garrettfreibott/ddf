@@ -21,6 +21,8 @@ var arrayToObject = function (key, array) {
   return o
 }
 
+// filter logic for log level and regex matching.
+// also adds <mark/> tags for filter highlighting
 module.exports = function (filters, logs) {
   var level = filters.level || 'ALL'
 

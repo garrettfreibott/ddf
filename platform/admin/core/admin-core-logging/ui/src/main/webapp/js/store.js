@@ -19,35 +19,14 @@ var redux = require('redux')
 var backend = require('./backend')
 var actions = require('./actions')
 var uniq = require('./uniq')
+var batch = require('./batch')
 var reducer = require('./reducer')
 var store = redux.createStore(reducer)
 
-var batch = function () {
-  var emit
-  var buff = []
-
-  setInterval(function () {
-    if (emit && buff.length > 0) {
-      emit(buff)
-      buff = []
-    }
-  }, 250)
-
-  return es.through(function (data) {
-    buff.unshift(data)
-
-    emit = function (data) {
-      this.emit('data', data)
-    }.bind(this)
-  })
-}
-
+// added to store.js to ensure that it should only be run once
+// pipe order:
+// backend (fetch logs) -> uniq (filter out duplicates) -> dispatch action.append (append new logs)
 backend()
-  .pipe(es.map(function (data, done) {
-    setTimeout(function () {
-      done(null, data)
-    }, 1000)
-  }))
   .pipe(uniq())
   .pipe(batch())
   .on('data', function (data) {

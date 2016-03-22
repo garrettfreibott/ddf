@@ -4,6 +4,7 @@ var http = require('http')
 
 var logs = []
 
+// retrieves logs from the endpoint
 var getLogs = function (done) {
   endpoint = '/jolokia/exec/org.codice.ddf.admin.logging.LoggingServiceBean:service=logging-service/retrieveLogEvents'
 
@@ -20,16 +21,19 @@ var getLogs = function (done) {
   })
 }
 
+// polls the endpoint in batches of 500 and streams them out individually
 module.exports = function () {
   return es.readable(function (count, done) {
     if (logs.length > 0) {
       if (count > 500) {
+        // set polling interval
         setTimeout(function () {
           done(null, logs.shift())
         }, 10)
       } else {
         done(null, logs.shift())
       }
+    // fetch new logs if all have been streamed out
     } else {
       getLogs(function (err, body) {
         if (err) {
