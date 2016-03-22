@@ -29,7 +29,7 @@ module.exports = function (filters, logs) {
   })
 
   var hasMarks = function (row) {
-    return Object.keys(row.marks).length > 0
+    return Object.keys(row.marks).length === fields.length
   }
 
   var getMarks = function (entry) {
