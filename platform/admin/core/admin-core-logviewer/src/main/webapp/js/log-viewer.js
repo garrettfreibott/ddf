@@ -31,14 +31,25 @@ var styles = function () {
 
   return {
     container: {
-      display: 'table',
+      position: 'relative',
       height: '100%',
-      width: '100%',
       background: '#ccc'
     },
-    table: {
+    filterRow: {
       color: fg,
       background: bg,
+      width: '100%',
+      height: 60,
+      borderBottom: '1px ' + border + ' solid'
+    },
+    logRows: {
+      position: 'absolute',
+      overflowY: 'auto',
+      overflowX: 'hidden',
+      top: 61,
+      bottom: 0
+    },
+    table: {
       borderCollapse: 'collapse',
       tableLayout: 'fixed',
       width: '100%'
@@ -48,24 +59,12 @@ var styles = function () {
       background: '#ecf0f1',
       padding: 2
     },
-    scroll: {
-      display: 'block',
-      overflowY: 'auto',
-      overflowX: 'hidden',
-      height: '100%'
-    },
-    bar: {
-      display: 'table-row',
-      height: 60,
-      boxShadow: '0 0 2px black'
-    },
     logs: {
       display: 'table-row',
       position: 'relative'
     },
     controls: {
-      padding: 4,
-      borderBottom: '1px ' + border + ' solid'
+      padding: 4
     },
     loading: {
       color: fg,
@@ -135,7 +134,8 @@ var LogViewer = function (props) {
 
   return (
   <div style={s.container}>
-    <div style={s.bar}>
+
+    <div style={s.filterRow}>
       <table style={s.table}>
         <thead>
           <tr>
@@ -169,16 +169,16 @@ var LogViewer = function (props) {
         </thead>
       </table>
     </div>
-    <div style={{ display: 'table-row', position: 'relative' }}>
-      <div style={s.scroll}>
-        <table style={s.table}>
-          <tbody>
-            {displayedLogs}
-          </tbody>
-        </table>
-        {loading()}
-      </div>
+
+    <div style={s.logRows}>
+      <table style={s.table}>
+        <tbody>
+          {displayedLogs}
+        </tbody>
+      </table>
+      {loading()}
     </div>
+
   </div>
   )
 }
