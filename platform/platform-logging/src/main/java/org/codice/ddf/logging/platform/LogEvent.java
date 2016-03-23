@@ -16,19 +16,35 @@ package org.codice.ddf.logging.platform;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+/**
+ * Describes a log event in the system
+ */
 public class LogEvent implements Comparable<LogEvent> {
 
     private final long timestamp;
-    
+
     private final String level;
-    
+
     private final String message;
-    
+
     private final String bundleName;
-    
+
     private final String bundleVersion;
-    
-    public LogEvent(long timestamp, String level, String message, String bundleName, String bundleVersion) {
+
+    /**
+     * @param timestamp
+     *            timestamp of this {@link LogEvent}
+     * @param level
+     *            level of this {@link LogEvent}
+     * @param message
+     *            log message of this {@link LogEvent}
+     * @param bundleName
+     *            the name of the bundle creating this {@link LogEvent}
+     * @param bundleVersion
+     *            the version of the bundle creating this {@link LogEvent}
+     */
+    public LogEvent(long timestamp, String level, String message, String bundleName,
+            String bundleVersion) {
         this.timestamp = timestamp;
         this.level = level;
         this.message = message;
@@ -67,7 +83,7 @@ public class LogEvent implements Comparable<LogEvent> {
             return 0;
         }
     }
-    
+
     @Override
     public boolean equals(Object anotherLogEvent) {
         if (!(anotherLogEvent instanceof LogEvent)) {

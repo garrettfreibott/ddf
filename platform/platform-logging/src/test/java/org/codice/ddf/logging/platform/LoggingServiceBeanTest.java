@@ -15,6 +15,7 @@ package org.codice.ddf.logging.platform;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -38,6 +39,10 @@ public class LoggingServiceBeanTest {
     private static final String BUNDLE_NAME = "bundle.name";
 
     private static final String BUNDLE_VERSION = "bundle.version";
+
+    private static final int DEFAULT_LOG_EVENTS_LIMIT = 500;
+    
+    private static final int MAX_LOG_EVENTS_LIMIT = 5000;
 
     @Mock
     private MBeanServer mockMBeanServer;
@@ -94,8 +99,36 @@ public class LoggingServiceBeanTest {
                 contains(expectedLogEvents.toArray(new LogEvent[expectedLogEvents.size()])));
     }
 
+    @Test
+    public void testSetMaxLogEventsTo0() {
+        // Setup
+        LoggingServiceBean loggingServiceBean = new LoggingServiceBean();
+        loggingServiceBean.init();
+
+        // Perform Test
+        loggingServiceBean.setMaxLogEvents(0);
+
+        // Verify
+        int newMaxLogEvents = loggingServiceBean.getMaxLogEvents();
+        assertThat(newMaxLogEvents, is(DEFAULT_LOG_EVENTS_LIMIT));
+    }
+
+    @Test
+    public void testSetMaxLogEventsToExceedLimit() {
+        // Setup
+        LoggingServiceBean loggingServiceBean = new LoggingServiceBean();
+        loggingServiceBean.init();
+
+        // Perform Test
+        loggingServiceBean.setMaxLogEvents(MAX_LOG_EVENTS_LIMIT + 1);
+
+        // Verify
+        int newMaxLogEvents = loggingServiceBean.getMaxLogEvents();
+        assertThat(newMaxLogEvents, is(DEFAULT_LOG_EVENTS_LIMIT));
+    }
+
     /**
-     * Verify oldest Log Entries are evicted when full.
+     * Verify oldest log events are eviced when queue is full.
      */
     @Test
     public void testDoAppendWhenLoggingQueueIsFull() {
@@ -223,4 +256,3 @@ public class LoggingServiceBeanTest {
         }
     }
 }
-

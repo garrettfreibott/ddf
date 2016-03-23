@@ -19,67 +19,67 @@ import static org.hamcrest.Matchers.is;
 import org.junit.Test;
 
 public class LogEventTest {
-    
+
     private static final String LEVEL = "INFO";
-    
+
     private static final String BUNDLE_VERSION = "1.2.3";
-    
+
     private static final String MESSAGE_1 = "message 1";
-    
+
     private static final String MESSAGE_2 = "message 2";
-    
+
     private static final String BUNDLE_NAME_1 = "my-bundle-name-1";
-    
+
     private static final String BUNDLE_NAME_2 = "my-bundle-name-2";
-    
+
     @Test
     public void testEqualsLogEventsSameFieldValues() {
         LogEvent logEvent = new LogEvent(1L, LEVEL, MESSAGE_1, BUNDLE_NAME_1, BUNDLE_VERSION);
         LogEvent anotherLogEvent = new LogEvent(1L, LEVEL, MESSAGE_1, BUNDLE_NAME_1, BUNDLE_VERSION);
         assertThat(logEvent.equals(anotherLogEvent), is(true));
     }
-    
+
     @Test
     public void testEqualsLogEventsDifferentReferences() {
         LogEvent logEvent = new LogEvent(1L, LEVEL, MESSAGE_1, BUNDLE_NAME_1, BUNDLE_VERSION);
         LogEvent anotherLogEvent = new LogEvent(2L, LEVEL, MESSAGE_2, BUNDLE_NAME_2, BUNDLE_VERSION);
         assertThat(logEvent.equals(anotherLogEvent), is(false));
     }
-    
+
     @Test
     public void testEqualsLogEventsSameReference() {
         LogEvent logEvent = new LogEvent(1L, LEVEL, MESSAGE_1, BUNDLE_NAME_1, BUNDLE_VERSION);
         assertThat(logEvent.equals(logEvent), is(true));
     }
-    
+
     @Test
     public void testEqualsOtherLogEventNotInstanceOfLogEvent() {
         LogEvent logEvent = new LogEvent(1L, LEVEL, MESSAGE_1, BUNDLE_NAME_1, BUNDLE_VERSION);
         String anotherLogEvent = "logEvent";
         assertThat(logEvent.equals(anotherLogEvent), is(false));
     }
-    
+
     @Test
     public void testCompareToLogEventsHaveSameTimestamp() {
         LogEvent logEvent = new LogEvent(1L, LEVEL, MESSAGE_1, BUNDLE_NAME_1, BUNDLE_VERSION);
         LogEvent anotherLogEvent = new LogEvent(1L, LEVEL, MESSAGE_2, BUNDLE_NAME_2, BUNDLE_VERSION);
         assertThat(logEvent.compareTo(anotherLogEvent), is(0));
     }
-    
+
     @Test
     public void testCompareToAnotherLogEventHasBiggerTimestamp() {
         LogEvent logEvent = new LogEvent(1L, LEVEL, MESSAGE_1, BUNDLE_NAME_1, BUNDLE_VERSION);
         LogEvent anotherLogEvent = new LogEvent(2L, LEVEL, MESSAGE_2, BUNDLE_NAME_2, BUNDLE_VERSION);
         assertThat(logEvent.compareTo(anotherLogEvent), is(-1));
     }
-    
+
     @Test
     public void testCompareToAnotherLogEventHasSmallerTimestamp() {
         LogEvent logEvent = new LogEvent(2L, LEVEL, MESSAGE_1, BUNDLE_NAME_1, BUNDLE_VERSION);
         LogEvent anotherLogEvent = new LogEvent(1L, LEVEL, MESSAGE_2, BUNDLE_NAME_2, BUNDLE_VERSION);
         assertThat(logEvent.compareTo(anotherLogEvent), is(1));
     }
-    
+
     @Test
     public void testHashCode() {
         LogEvent logEvent = new LogEvent(1L, LEVEL, MESSAGE_1, BUNDLE_NAME_1, BUNDLE_VERSION);

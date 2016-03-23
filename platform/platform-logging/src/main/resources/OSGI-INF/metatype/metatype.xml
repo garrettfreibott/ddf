@@ -15,16 +15,15 @@
  -->
 <metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.0.0">
 
-        <OCD name="Logging Service"
-         id="org.codice.ddf.logging.platform.LoggingServiceBean">
-                <AD
-                description="The maximum number of log events stored for display in the Admin UI."
-                name="Max Log Events" id="maxLogEvents" required="true"
-                type="Integer" default="500"/>
-        </OCD>
+    <OCD name="Logging Service" id="org.codice.ddf.logging.platform.LoggingServiceBean">
+        <AD
+            description="The maximum number of log events stored for display in the Admin Console. This must be greater than 0 and must not exceed 5000."
+            name="Max Log Events" id="maxLogEvents" required="true"
+            type="Integer" default="500" />
+    </OCD>
 
-        <Designate pid="org.codice.ddf.logging.platform.LoggingServiceBean">
-                <Object ocdref="org.codice.ddf.logging.platform.LoggingServiceBean"/>
-        </Designate>
+    <Designate pid="org.codice.ddf.logging.platform.LoggingServiceBean">
+        <Object ocdref="org.codice.ddf.logging.platform.LoggingServiceBean" />
+    </Designate>
 
 </metatype:MetaData>

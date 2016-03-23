@@ -36,6 +36,11 @@ import com.google.common.collect.EvictingQueue;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
+/**
+ * A custom {@link org.ops4j.pax.logging.spi.PaxAppender} which receives 
+ * {@link org.ops4j.pax.logging.spi.PaxLoggingEvent}s and is the Jolokia 
+ * endpoint for the Logging UI in the Admin Console.
+ */
 public class LoggingServiceBean implements PaxAppender, LoggingServiceBeanMBean {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoggingServiceBean.class);
@@ -47,13 +52,17 @@ public class LoggingServiceBean implements PaxAppender, LoggingServiceBeanMBean 
 
     private static final String BUNDLE_VERSION = "bundle.version";
 
+    private static final int MAX_LOG_EVENTS_LIMIT = 5000;
+
+    private static final int DEFAULT_LOG_EVENTS_LIMIT = 500;
+
     private final WriteLock writeLock = new ReentrantReadWriteLock().writeLock();
 
     private final ReadLock readLock = new ReentrantReadWriteLock().readLock();
 
     private EvictingQueue<LogEvent> logEvents;
 
-    private int maxLogEvents = 500;
+    private int maxLogEvents = DEFAULT_LOG_EVENTS_LIMIT;
 
     private ObjectName objectName;
 
@@ -61,7 +70,7 @@ public class LoggingServiceBean implements PaxAppender, LoggingServiceBeanMBean 
 
     public LoggingServiceBean() {
         try {
-            logEvents = EvictingQueue.create(maxLogEvents);
+            logEvents = EvictingQueue.create(DEFAULT_LOG_EVENTS_LIMIT);
             objectName = new ObjectName(MBEAN_NAME);
             mBeanServer = ManagementFactory.getPlatformMBeanServer();
         } catch (MalformedObjectNameException e) {
@@ -97,6 +106,9 @@ public class LoggingServiceBean implements PaxAppender, LoggingServiceBeanMBean 
         }
     }
 
+    /**
+     * Called each time a {@link org.ops4j.pax.logging.spi.PaxLoggingEvent} is created in the system
+     */
     @Override
     public void doAppend(PaxLoggingEvent paxLoggingEvent) {
         LogEvent logEvent = createLogEvent(paxLoggingEvent);
@@ -113,9 +125,27 @@ public class LoggingServiceBean implements PaxAppender, LoggingServiceBeanMBean 
         }
     }
 
+    /**
+     * Sets the maximum number of {@link LogEvent}s to store
+     * 
+     * @param newMaxLogEvents
+     *            This number cannot be less than 0 or greater than {@code MAX_LOG_EVENTS_LIMIT}. In
+     *            the event that this parameter is less than 0 or greater than
+     *            {@code MAX_LOG_EVENTS_LIMIT}, the maximum log events stored will set set to
+     *            {@code MAX_LOG_EVENTS_LIMIT}.
+     */
     public void setMaxLogEvents(int newMaxLogEvents) {
         try {
             writeLock.lock();
+            if (newMaxLogEvents <= 0 || newMaxLogEvents > MAX_LOG_EVENTS_LIMIT) {
+                LOGGER.warn(
+                        "An invalid value of [{}] was entered for maximum log events to store. This "
+                                + "value must be greater than 0 and must not exceed [{}]. Maximum log"
+                                + " events to store will be set to [{}].", newMaxLogEvents,
+                        MAX_LOG_EVENTS_LIMIT, DEFAULT_LOG_EVENTS_LIMIT);
+                newMaxLogEvents = DEFAULT_LOG_EVENTS_LIMIT;
+            }
+
             EvictingQueue<LogEvent> evictingQueue = EvictingQueue.create(newMaxLogEvents);
 
             if (logEvents.size() < newMaxLogEvents) {
@@ -168,4 +198,3 @@ public class LoggingServiceBean implements PaxAppender, LoggingServiceBeanMBean 
         return (String) paxLoggingEvent.getProperties().get(BUNDLE_VERSION);
     }
 }
-

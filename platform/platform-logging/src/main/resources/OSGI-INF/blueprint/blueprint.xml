@@ -13,22 +13,21 @@
  **/
 -->
 <blueprint xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
-    xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0"
+    xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0" xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0"
     xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
 
-    <bean id="logging" class="org.codice.ddf.logging.platform.LoggingServiceBean" 
-        init-method="init"
-        destroy-method="destroy">
+    <bean id="logging" class="org.codice.ddf.logging.platform.LoggingServiceBean"
+        init-method="init" destroy-method="destroy">
         <cm:managed-properties
-              persistent-id="org.codice.ddf.logging.platform.LoggingServiceBean"
-              update-strategy="container-managed"/>
+            persistent-id="org.codice.ddf.logging.platform.LoggingServiceBean"
+            update-strategy="container-managed" />
     </bean>
 
     <service id="loggingService" ref="logging"
         interface="org.ops4j.pax.logging.spi.PaxAppender">
         <service-properties>
-            <entry key="org.ops4j.pax.logging.appender.name" value="LoggingService" />
+            <entry key="org.ops4j.pax.logging.appender.name"
+                value="LoggingService" />
         </service-properties>
     </service>
 </blueprint>

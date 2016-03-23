@@ -15,7 +15,17 @@ package org.codice.ddf.logging.platform;
 
 import java.util.List;
 
+/**
+ * The {@link LoggingServiceBeanMBean} interface is an MBean 
+ * interface that defines logging event operations.
+ *
+ */
 public interface LoggingServiceBeanMBean {
-    
+
+    /**
+     * Retrieves all of the stored {@link LogEvent}s
+     * 
+     * @return list of {@link LogEvent}s in ascending order
+     */
     List<LogEvent> retrieveLogEvents();
 }
