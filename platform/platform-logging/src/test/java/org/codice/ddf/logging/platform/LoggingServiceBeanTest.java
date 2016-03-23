@@ -128,7 +128,7 @@ public class LoggingServiceBeanTest {
     }
 
     /**
-     * Verify oldest log events are eviced when queue is full.
+     * Verify oldest log events are evicted when queue is full.
      */
     @Test
     public void testDoAppendWhenLoggingQueueIsFull() {
