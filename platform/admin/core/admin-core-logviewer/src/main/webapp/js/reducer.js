@@ -17,7 +17,7 @@ var m = require('merge')
 
 // total number of log entries to keep in memory that a
 // user can filter through
-var MAX_FILTER_ENTRIES = 10000
+var MAX_FILTER_ENTRIES = 5000
 
 // total number of logs that can be displayed for the user
 var MAX_INITIAL_DISPLAY = 50

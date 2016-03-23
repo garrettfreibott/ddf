@@ -55,7 +55,7 @@ var styles = function () {
     },
     bar: {
       display: 'table-row',
-      height: 64,
+      height: 60,
       boxShadow: '0 0 2px black'
     },
     logs: {
@@ -106,8 +106,8 @@ var LogViewer = function (props) {
   var filteredLogs = filter(props.filter, props.logs)
 
   var displayedLogs = filteredLogs.slice(0, props.displaySize)
-    .map(function (row) {
-      return <LogEntry entry={row.entry} marks={row.marks} />
+    .map(function (row, i) {
+      return <LogEntry key={i} entry={row.entry} marks={row.marks} />
     })
 
   // show loading bar is there are more logs, hide if the end is reached

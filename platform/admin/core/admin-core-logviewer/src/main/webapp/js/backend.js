@@ -29,10 +29,11 @@ module.exports = function () {
         // set polling interval
         setTimeout(function () {
           done(null, logs.shift())
-        }, 10)
+        }, 50)
       } else {
         done(null, logs.shift())
       }
+
     // fetch new logs if all have been streamed out
     } else {
       getLogs(function (err, body) {

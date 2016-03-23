@@ -24,9 +24,14 @@ var format = function (time) {
 
 var styles = function (level) {
   return {
-    borderBottom: '1px #ccc solid',
-    padding: 5,
-    background: levels(level)
+    row: {
+      borderBottom: '1px #ccc solid',
+      padding: 5,
+      background: levels(level)
+    },
+    dim: {
+      opacity: 0.5
+    }
   }
 }
 
@@ -45,7 +50,11 @@ var LogEntry = function (props) {
       var second = displayString.slice(mark.start, mark.end)
       var third = displayString.slice(mark.end)
       return (
-        <span>{first}<mark>{second}</mark>{third}</span>
+        <span>
+          <span style={s.dim}>{first}</span>
+          <mark>{second}</mark>
+          <span style={s.dim}>{third}</span>
+        </span>
       )
     } else {
       return (
@@ -56,16 +65,16 @@ var LogEntry = function (props) {
 
   return (
   <tr>
-    <td style={s} width={175}>
+    <td style={s.row} width={175}>
       {format(entry.timestamp)}
     </td>
-    <td style={s} width={75}>
+    <td style={s.row} width={75}>
       {entry.level}
     </td>
-    <td style={s}>
+    <td style={s.row}>
       {tryMark('message')}
     </td>
-    <td style={s} width={200}>
+    <td style={s.row} width={200}>
       {tryMark('bundleName')}
     </td>
   </tr>
