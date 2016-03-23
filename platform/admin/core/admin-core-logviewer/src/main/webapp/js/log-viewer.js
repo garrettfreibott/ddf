@@ -40,6 +40,7 @@ var styles = function () {
       color: fg,
       background: bg,
       borderCollapse: 'collapse',
+      tableLayout: 'fixed',
       width: '100%'
     },
     header: {

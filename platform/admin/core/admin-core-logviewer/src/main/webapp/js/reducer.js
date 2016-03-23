@@ -28,14 +28,14 @@ module.exports = function (state, action) {
       logs: [],
       filter: { level: 'ALL' },
       open: true,
-      displaySize: 10 // number of rows to display
+      displaySize: 25 // number of rows to display
     }
   }
 
   switch (action.type) {
     case 'FILTER_LOGS':
       return m(true, state, {
-        displaySize: 10,
+        displaySize: 25,
         filter: m(true, state.filter, action.filter)
       })
 
@@ -56,7 +56,7 @@ module.exports = function (state, action) {
 
     case 'GROW_LOGS':
       return m(true, state, {
-        displaySize: state.displaySize + 10
+        displaySize: state.displaySize + 50
       })
 
     default:

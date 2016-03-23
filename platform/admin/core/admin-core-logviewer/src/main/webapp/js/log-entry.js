@@ -27,7 +27,8 @@ var styles = function (level) {
     row: {
       borderBottom: '1px #ccc solid',
       padding: 5,
-      background: levels(level)
+      background: levels(level),
+      wordWrap: 'break-word'
     },
     dim: {
       opacity: 0.5

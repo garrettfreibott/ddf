@@ -6,7 +6,7 @@ var logs = []
 
 // retrieves logs from the endpoint
 var getLogs = function (done) {
-  endpoint = '/jolokia/exec/org.codice.ddf.admin.logging.LoggingServiceBean:service=logging-service/retrieveLogEvents'
+  endpoint = '/jolokia/exec/org.codice.ddf.logging.platform.LoggingServiceBean:service=logging-service/retrieveLogEvents'
 
   http.get({
     path: endpoint
