@@ -16,11 +16,15 @@
 var React = require('react')
 var moment = require('moment')
 
-var levels = require('./levels')
+var levels = require('../levels')
 
 var format = function (time) {
   return moment(time).format('D MMM YYYY, HH:mm:ss')
 }
+
+var ReactCSSTransitionGroup = require('react-addons-css-transition-group')
+
+var count = 0
 
 var styles = function (level) {
   return {
@@ -65,20 +69,20 @@ var LogEntry = function (props) {
   }
 
   return (
-  <tr>
-    <td style={s.row} width={175}>
-      {format(entry.timestamp)}
-    </td>
-    <td style={s.row} width={75}>
-      {entry.level}
-    </td>
-    <td style={s.row}>
-      {tryMark('message')}
-    </td>
-    <td style={s.row} width={200}>
-      {tryMark('bundleName')}
-    </td>
-  </tr>
+    <tr className="element">
+      <td style={s.row} width={175}>
+        {format(entry.timestamp)}
+      </td>
+      <td style={s.row} width={75}>
+        {entry.level}
+      </td>
+      <td style={s.row}>
+        {tryMark('message')}
+      </td>
+      <td style={s.row} width={200}>
+        {tryMark('bundleName')}
+      </td>
+    </tr>
   )
 }
 

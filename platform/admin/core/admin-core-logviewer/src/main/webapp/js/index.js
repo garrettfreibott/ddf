@@ -18,9 +18,9 @@ var React = require('react')
 var es = require('event-stream')
 
 var store = require('./store')
-var LogPanel = require('./log-panel')
-var backend = require('./backend')
-var actions = require('./actions')
+var LogPanel = require('./components/log-panel')
+var backend = require('./backend/backend')
+var actions = require('./actions/actions')
 var uniq = require('./uniq')
 
 var render = function (data) {

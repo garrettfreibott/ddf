@@ -12,31 +12,18 @@
  * <http://www.gnu.org/licenses/lgpl.html>.
  *
  **/
-
-var React = require('react')
-var levels = require('./levels')
-
-var options = function () {
-  return levels().map(function (level) {
-    return (
-    <option key={level} value={level}>
-      {level}
-    </option>
-    )
-  })
+.logviewer-logentry {
+  position: relative;
+  animation: push ease 0.25s;
 }
 
-var select = function (fn) {
-  return function (e) { fn(e.target.value) }
+@keyframes push {
+  0% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
-
-// log level selector
-var LevelSelector = function (props) {
-  return (
-  <select value={props.selected} onChange={select(props.onSelect)}>
-    {options()}
-  </select>
-  )
-}
-
-module.exports = LevelSelector

@@ -16,11 +16,12 @@
 var React = require('react')
 var moment = require('moment')
 var VisibilitySensor = require('react-visibility-sensor')
+var fs = require('fs')
 
 var LevelSelector = require('./level-selector')
 var TextFilter = require('./text-filter')
 var LogEntry = require('./log-entry')
-var actions = require('./actions')
+var actions = require('../actions/actions')
 
 var filter = require('./filter')
 
@@ -134,6 +135,7 @@ var LogViewer = function (props) {
 
   return (
   <div style={s.container}>
+    <style>{fs.readFileSync(__dirname + '/animations.css', 'utf8')}</style>
 
     <div style={s.filterRow}>
       <table style={s.table}>

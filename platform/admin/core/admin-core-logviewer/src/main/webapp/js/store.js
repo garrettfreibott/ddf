@@ -16,11 +16,11 @@
 var es = require('event-stream')
 var redux = require('redux')
 
-var backend = require('./backend')
-var actions = require('./actions')
+var backend = require('./backend/backend')
+var actions = require('./actions/actions')
 var uniq = require('./uniq')
 var batch = require('./batch')
-var reducer = require('./reducer')
+var reducer = require('./reducer/reducer')
 var store = redux.createStore(reducer)
 
 // added to store.js to ensure that it should only be run once

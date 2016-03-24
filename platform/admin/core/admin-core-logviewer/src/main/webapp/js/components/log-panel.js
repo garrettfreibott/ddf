@@ -16,7 +16,7 @@
 var React = require('react')
 
 var LogViewer = require('./log-viewer')
-var actions = require('./actions')
+var actions = require('../actions/actions')
 
 var styles = function (props) {
   return {

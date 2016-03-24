@@ -13,31 +13,30 @@
  *
  **/
 
-var es = require('event-stream')
+var React = require('react')
+var levels = require('../levels')
 
-// adds back-pressure to handle high-volume logs (like TRACE)
-module.exports = function (interval) {
-  var that
-  var buff = []
-  var emit = function (data) {
-    that.emit('data', data)
-  }
-
-  var flush = function () {
-    if (that !== undefined && buff.length > 0) {
-      emit(buff)
-      buff = []
-    }
-  }
-
-  var i = setInterval(flush, interval || 250)
-
-  return es.through(function (data) {
-    that = this
-    buff.unshift(data)
-  }, function () {
-    clearInterval(i)
-    flush()
-    this.emit('end')
+var options = function () {
+  return levels().map(function (level) {
+    return (
+    <option key={level} value={level}>
+      {level}
+    </option>
+    )
   })
 }
+
+var select = function (fn) {
+  return function (e) { fn(e.target.value) }
+}
+
+// log level selector
+var LevelSelector = function (props) {
+  return (
+  <select value={props.selected} onChange={select(props.onSelect)}>
+    {options()}
+  </select>
+  )
+}
+
+module.exports = LevelSelector
