@@ -24,7 +24,8 @@ export default (state, action) => {
     return {
       logs: [],
       filter: { level: 'ALL' },
-      displaySize: INITIAL_DISPLAY_SIZE
+      displaySize: INITIAL_DISPLAY_SIZE,
+      expandedHash: undefined
     }
   }
 
@@ -43,6 +44,11 @@ export default (state, action) => {
     case 'GROW_DISPLAY_SIZE':
       return { ...state,
         displaySize: state.displaySize + GROW_SIZE
+      }
+
+    case 'CHANGE_EXPANDED_ENTRY':
+      return { ...state,
+        expandedHash: action.hash
       }
 
     default:

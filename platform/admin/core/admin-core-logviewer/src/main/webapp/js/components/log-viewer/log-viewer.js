@@ -23,12 +23,12 @@ import LogEntry from '../log-entry/log-entry'
 import * as actions from '../../actions'
 import filterLogs from '../../filter'
 
-export default ({ dispatch, displaySize, logs, filter }) => {
+export default ({ dispatch, expandedHash, displaySize, logs, filter }) => {
   const filteredLogs = filterLogs(filter, logs)
 
   const displayedLogs = filteredLogs.slice(0, displaySize)
     .map(function (row, i) {
-      return <LogEntry key={i} entry={row.entry} marks={row.marks} />
+      return <LogEntry key={i} entry={row.entry} marks={row.marks} expandedHash={expandedHash} dispatch={dispatch}/>
     })
 
   // grow the log display when the bottom is reached
