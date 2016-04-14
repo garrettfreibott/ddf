@@ -14,12 +14,20 @@
   border-bottom: 1px #ccc solid;
   padding: 5px;
   word-wrap: break-word;
+  cursor: pointer;
 }
 
 .message {
-  height: 32px;
   width: 100%;
   overflow: hidden;
+  white-space: nowrap;
+  background-color: inherit;
+  tansition: background-color 0.2s;
+}
+
+.message-expanded {
+  background-color: grey;
+  white-space: normal;
 }
 
 .dim {

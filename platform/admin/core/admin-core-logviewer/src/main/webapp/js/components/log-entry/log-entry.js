@@ -49,8 +49,17 @@ export default ({ entry, marks, expandedHash, dispatch }) => {
     }
   }
 
+  // TODO: move into reducer
   const expandEntry = () => {
-    dispatch(action.expandEntry(entry.hash))
+    if (entry.hash === expandedHash) {
+      dispatch(actions.expandEntry(undefined))
+    } else {
+      dispatch(actions.expandEntry(entry.hash))
+    }
+  }
+
+  const getClasses = () => {
+    return (entry.hash === expandedHash) ? 'row message-expanded' : 'row message'
   }
 
   return (
@@ -61,14 +70,13 @@ export default ({ entry, marks, expandedHash, dispatch }) => {
       <td className='row' style={{ background: levels(entry.level) }} width={75}>
         {entry.level}
       </td>
-      <td className='row message' style={{ background: levels(entry.level) }}>
+      <td className={getClasses()} style={{ background: levels(entry.level) }}>
         {tryMark('message')}
       </td>
       <td className='row' style={{ background: levels(entry.level) }} width={200}>
-        {hash}
+        {tryMark('bundleName')}
       </td>
     </tr>
   )
 }
 
-// {tryMark('bundleName')}
