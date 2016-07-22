@@ -192,6 +192,8 @@ public abstract class AbstractCswSource extends MaskableImpl
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractCswSource.class);
 
+    private static final String BYTES_SKIPPED = "bytes-skipped";
+
     private static final String DEFAULT_CSW_TRANSFORMER_ID = "csw";
 
     private static final String DESCRIBABLE_PROPERTIES_FILE = "/describable.properties";
@@ -919,7 +921,9 @@ public abstract class AbstractCswSource extends MaskableImpl
             getRecordByIdRequest.setId(metacardId);
 
             String rangeValue = "";
+            int requestedBytesSkipped = 0;
             if (requestProperties.containsKey(CswConstants.BYTES_TO_SKIP)) {
+                requestedBytesSkipped = (int)(requestProperties.get(CswConstants.BYTES_TO_SKIP));
                 rangeValue = String.format("%s%s-",
                         CswConstants.BYTES_EQUAL,
                         requestProperties.get(CswConstants.BYTES_TO_SKIP)
@@ -928,10 +932,24 @@ public abstract class AbstractCswSource extends MaskableImpl
             }
             CswRecordCollection recordCollection;
             try {
+                LOGGER.error("##### getting record by id");
                 recordCollection = csw.getRecordById(getRecordByIdRequest, rangeValue);
 
+                LOGGER.error("##### getting resource");
                 Resource resource = recordCollection.getResource();
+                LOGGER.error("##### resource got.");
                 if (resource != null) {
+                    // if a range header was used, verify that the server responded correctly and adjust
+                    // the input stream accordingly
+                    if(requestedBytesSkipped > 0){
+                        int responseBytesSkipped = 0;
+                        if(recordCollection.getResourceProperties().get(BYTES_SKIPPED) != null) {
+                            responseBytesSkipped = (int) recordCollection.getResourceProperties()
+                                    .get(BYTES_SKIPPED);
+                        }
+                        alignStreamToResponseRange(resource.getInputStream(), requestedBytesSkipped, responseBytesSkipped);
+                    }
+
                     return new ResourceResponseImpl(new ResourceImpl(new BufferedInputStream(
                             resource.getInputStream()),
                             resource.getMimeTypeValue(),
@@ -945,6 +963,18 @@ public abstract class AbstractCswSource extends MaskableImpl
         }
         LOGGER.debug("Retrieving resource at : {}", resourceUri);
         return resourceReader.retrieveResource(resourceUri, requestProperties);
+    }
+
+    private void alignStreamToResponseRange(InputStream in, int requestedBytesSkipped, int responseBytesSkipped) throws CswException{
+        try {
+            if (requestedBytesSkipped > responseBytesSkipped){
+                in.skip(requestedBytesSkipped - responseBytesSkipped);
+            } else {
+                throw new CswException("Source server skipped more bytes than requested in range header.");
+            }
+        } catch (IOException e) {
+            throw new CswException("Unable to skip bytes in resource's input stream.");
+        }
     }
 
     public void setCswUrl(String cswUrl) {

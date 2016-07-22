@@ -17,9 +17,14 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.HttpHeaders;
@@ -63,6 +68,10 @@ public class GetRecordsMessageBodyReader implements MessageBodyReader<CswRecordC
 
     private DataHolder argumentHolder;
 
+    public final String BYTES_SKIPPED = "bytes-skipped";
+
+    public final String CONTENT_RANGE_HEADER = "Content-Range";
+
     public GetRecordsMessageBodyReader(Converter converter, CswSourceConfiguration configuration) {
         xstream = new XStream(new XppDriver());
         xstream.setClassLoader(this.getClass()
@@ -103,6 +112,13 @@ public class GetRecordsMessageBodyReader implements MessageBodyReader<CswRecordC
         // raw product data
         String productRetrievalHeader =
                 httpHeaders.getFirst(CswConstants.PRODUCT_RETRIEVAL_HTTP_HEADER);
+        // Check to see if the server returned a Partial Content response
+        String bytesSkipped = StringUtils.substringBefore(httpHeaders.getFirst(CONTENT_RANGE_HEADER), "-");
+        if(StringUtils.isNotBlank(bytesSkipped)){
+            Map<String, Serializable> properties = new HashMap<>();
+            properties.put(BYTES_SKIPPED, Integer.parseInt(bytesSkipped));
+            cswRecords.setResourceProperties(properties);
+        }
         if (productRetrievalHeader != null && productRetrievalHeader.equalsIgnoreCase("TRUE")) {
             String fileName = handleContentDispositionHeader(httpHeaders);
             cswRecords = new CswRecordCollection();

@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URLConnection;
 import java.nio.file.InvalidPathException;
@@ -37,12 +38,14 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.jaxrs.ext.multipart.ContentDisposition;
+import org.apache.http.HttpStatus;
 import org.apache.tika.Tika;
 import org.apache.tika.metadata.HttpHeaders;
 import org.codice.ddf.security.common.jaxrs.RestSecurity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.api.client.http.HttpStatusCodes;
 import com.google.common.collect.ImmutableSet;
 
 import ddf.catalog.data.Metacard;
@@ -311,7 +314,15 @@ public class URLResourceReader implements ResourceReader {
 
             InputStream is = connection.getInputStream();
 
-            skipBytes(is, bytesToSkip);
+            // ONLY skip if the server does not support Partial Content responses
+            if(connection instanceof HttpURLConnection){
+                HttpURLConnection http = (HttpURLConnection) connection;
+                if(StringUtils.isBlank(http.getHeaderField("Accept-Ranges"))
+                        && http.getResponseCode() == HttpStatus.SC_PARTIAL_CONTENT){
+                    skipBytes(is, bytesToSkip);
+                }
+
+            }
 
             return new ResourceResponseImpl(new ResourceImpl(new BufferedInputStream(is),
                     mimeType,
@@ -376,7 +387,12 @@ public class URLResourceReader implements ResourceReader {
                         "Received null response while retrieving resource.");
             }
 
-            skipBytes(is, bytesToSkip);
+            // If the the server supports byte range headers AND returned a Partial Content response
+            // then do NOT skip bytes in the input stream
+            if(StringUtils.isBlank(response.getHeaderString("Accept-Range"))
+                    && response.getStatus() != HttpStatus.SC_PARTIAL_CONTENT){
+                skipBytes(is, bytesToSkip);
+            }
 
             return new ResourceResponseImpl(new ResourceImpl(new BufferedInputStream(is),
                     mimeType,

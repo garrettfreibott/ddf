@@ -1198,7 +1198,6 @@ public class TestFederation extends AbstractIntegrationTest {
      * @throws Exception
      */
     // TODO: this test is ignored until the csw range-header bug is resolved with ticket DDF-2300
-    @Ignore
     @Test
     public void testRetrievalWithByteOffset() throws Exception {
 
