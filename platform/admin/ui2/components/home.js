@@ -4,6 +4,8 @@ import Divider from 'material-ui/Divider'
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card'
 import FlatButton from 'material-ui/FlatButton'
 
+import Flexbox from 'flexbox-react'
+
 import Action from '../containers/action'
 import Question from '../containers/question'
 import Loading from '../containers/loading'
@@ -23,18 +25,18 @@ export default ({ stage: { form, actions = [] } }) => (
       showExpandableButton />
 
     <CardActions>
-      <Divider />
       <Loading />
-      <Form {...form} />
+      
+      <Flexbox justifyContent='center'>
+        <Form {...form} />
+      </Flexbox>
 
-      <div style={{padding: '20px 0'}}>
-        <Divider />
-      </div>
-
-      <FlatButton label='Back' secondary />
-      <div style={{textAlign: 'right'}}>
-      {actions.map((a, i) => <Action key={i} {...a} />)}
-      </div>
+      <Flexbox justifyContent='space-between'>
+        <FlatButton label='Back' secondary />
+        <div>
+          {actions.map((a, i) => <Action key={i} {...a} />)}
+        </div>
+      </Flexbox>
 
       <Errors />
     </CardActions>

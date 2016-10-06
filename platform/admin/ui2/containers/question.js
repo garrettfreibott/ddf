@@ -11,7 +11,6 @@ const PortInput = ({ submitting, id, value, label, defaults = [], onEdit }) => (
   <TextField
     disabled={submitting}
     value={value}
-    fullWidth
     floatingLabelText={label}
     onChange={(e) => onEdit(id, e.target.value)} />
 )
@@ -19,7 +18,6 @@ const PortInput = ({ submitting, id, value, label, defaults = [], onEdit }) => (
 const StringEnumInput = ({ submitting, id, value, label, defaults = [], onEdit }) => (
   <SelectField
     value={value || defaults[0]}
-    fullWidth
     disabled={submitting}
     floatingLabelText={label}
     onChange={(e, i, v) => onEdit(id, v)}>
@@ -29,7 +27,6 @@ const StringEnumInput = ({ submitting, id, value, label, defaults = [], onEdit }
 
 const HostNameInput = ({ submitting, id, value, onEdit }) => (
   <TextField
-    fullWidth
     disabled={submitting}
     value={value}
     floatingLabelText='Hostname'

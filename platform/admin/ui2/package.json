@@ -22,6 +22,7 @@
     "less": "^2.7.1"
   },
   "dependencies": {
+    "flexbox-react": "^4.0.0",
     "font-awesome": "^4.6.3",
     "font-awesome-webpack": "0.0.4",
     "material-ui": "^0.16.0",
