@@ -20,9 +20,21 @@ export const fetch = () => (dispatch) => {
 }
 
 export const edit = (id, value) => ({ type: 'EDIT_VALUE', id, value })
+export const submittingStart = () => ({ type: 'SUBMITTING_START' })
+export const submittingEnd = () => ({ type: 'SUBMITTING_END' })
+
+export const networkError = () => ({
+  type: 'ERROR',
+  message: 'Cannot submit form. Network error.'
+})
+
+export const badJsonResponse = () => ({
+  type: 'ERROR',
+  message: 'Invalid network reponse.'
+})
 
 export const submit = ({ method, url }) => (dispatch, getState) => {
-  dispatch({ type: 'SUBMITTING_START' })
+  dispatch(submittingStart())
   const state = getState()
 
   const opts = {
@@ -35,15 +47,17 @@ export const submit = ({ method, url }) => (dispatch, getState) => {
 
   const req = http.request(opts, (res) => {
     if (res.statusCode !== 200) {
-      dispatch({ type: 'SUBMITTING_END' })
-      dispatch({
-        type: 'NETWORK_ERROR',
-        message: 'Cannot submit form. Network error.'
-      })
+      dispatch(submittingEnd())
+      dispatch(networkError())
     } else {
       res.pipe(concat((body) => {
+        dispatch(submittingEnd())
+        try {
+          dispatch(setStage(JSON.parse(body)))
+        } catch (e) {
+          dispatch(badJsonResponse())
+        }
       }))
-      dispatch({ type: 'SUBMITTING_END' })
     }
   })
 

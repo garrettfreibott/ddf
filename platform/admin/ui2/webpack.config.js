@@ -34,7 +34,33 @@ var config = {
   }
 }
 
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV === 'production') {
+  config = merge.smart(config, {
+    plugins: [
+      new webpack.DefinePlugin({
+        'process.env.NODE_ENV': '"production"'
+      }),
+      new webpack.optimize.UglifyJsPlugin({
+        output: {
+          comments: false
+        },
+        compress: {
+          warnings: false
+        }
+      })
+    ]
+  })
+} else if (process.env.NODE_ENV === 'test') {
+  config = merge.smart(config, {
+    output: {
+      publicPath: '/',
+      filename: 'bundle.js',
+      path: path.resolve(__dirname, 'public', 'test')
+    },
+    entry: './test/reducer.js',
+    target: 'node'
+  })
+} else {
   config = merge.smart(config, {
     entry: [
       'react-hot-loader/patch',
@@ -51,29 +77,13 @@ if (process.env.NODE_ENV !== 'production') {
       host: '0.0.0.0',
       proxy: {
         '/admin': {
-          target: 'https://10.101.2.161:8993',
+          target: 'https://192.168.0.4:8993',
           secure: false
         }
       }
     },
     plugins: [
       new webpack.HotModuleReplacementPlugin()
-    ]
-  })
-} else {
-  config = merge.smart(config, {
-    plugins: [
-      new webpack.DefinePlugin({
-        'process.env.NODE_ENV': '"production"'
-      }),
-      new webpack.optimize.UglifyJsPlugin({
-        output: {
-          comments: false
-        },
-        compress: {
-          warnings: false
-        }
-      })
     ]
   })
 }

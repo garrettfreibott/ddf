@@ -47,7 +47,7 @@ const form = combineReducers({ title, questions })
 const state = (state = {}, { type, stage } = {}) => {
   switch (type) {
     case 'SET_STAGE':
-      return stage.state
+      return stage.state || state
     default:
       return state
   }
@@ -68,7 +68,9 @@ const submitting = (state = false, { type } = {}) => {
 
 const errors = (state = null, { type, message } = {}) => {
   switch (type) {
-    case 'NETWORK_ERROR':
+    case 'SET_STAGE':
+      return null
+    case 'ERROR':
       return message
     default:
       return state

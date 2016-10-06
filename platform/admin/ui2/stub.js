@@ -1,41 +1,41 @@
 export default {
   'actions': [
     {
+      'label': 'check',
       'method': 'POST',
-      'label': 'continue',
-      'url': '/security/wizard/bind'
+      'url': '/admin/security/wizard/network'
     }
   ],
   'form': {
     'title': 'LDAP Network Settings',
     'questions': [
       {
-        'type': 'HOSTNAME',
+        'id': 'hostName',
         'label': 'LDAP Host name',
-        'id': 'hostName'
+        'type': 'HOSTNAME',
+        'value': 'localhost'
       },
       {
-        'type': 'PORT',
-        'label': 'LDAP Port',
-        'id': 'port',
         'defaults': [
           389,
           636
-        ]
+        ],
+        'id': 'port',
+        'label': 'LDAP Port',
+        'type': 'PORT',
+        'value': 636
       },
       {
         'defaults': [
           'No encryption',
-          'Use ldaps',
+          'Use LDAPS',
           'Use startTLS'
         ],
         'id': 'ldapEncryptionMethod',
         'label': 'Encryption method',
-        'type': 'STRING_ENUM'
+        'type': 'STRING_ENUM',
+        'value': 'No encryption'
       }
     ]
-  },
-  'state': {
-    'chris': 'isDumb'
   }
 }

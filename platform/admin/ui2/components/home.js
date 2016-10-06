@@ -1,7 +1,6 @@
 import React from 'react'
 
-import Divider from 'material-ui/Divider'
-import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card'
+import { Card, CardActions, CardHeader } from 'material-ui/Card'
 import FlatButton from 'material-ui/FlatButton'
 
 import Flexbox from 'flexbox-react'
@@ -20,13 +19,11 @@ const Form = ({ title, questions = [] }) => (
 export default ({ stage: { form, actions = [] } }) => (
   <Card style={{ margin: 20, padding: 20, boxSizing: 'border-box' }}>
     <CardHeader
-      title={form.title}
-      actAsExpander
-      showExpandableButton />
+      title={form.title} />
 
     <CardActions>
       <Loading />
-      
+
       <Flexbox justifyContent='center'>
         <Form {...form} />
       </Flexbox>
@@ -40,9 +37,5 @@ export default ({ stage: { form, actions = [] } }) => (
 
       <Errors />
     </CardActions>
-
-    <CardText expandable>
-      Some useful help text should be placed here.
-    </CardText>
   </Card>
 )
