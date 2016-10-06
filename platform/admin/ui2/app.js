@@ -9,15 +9,22 @@ import Home from './containers/home'
 import { Router, Route, browserHistory } from 'react-router'
 import { fetch } from './actions'
 
-store.dispatch(fetch())
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+
+if (!window.init) {
+  store.dispatch(fetch())
+  window.init = true
+}
 
 export default () => (
-  <Provider store={store}>
-    <div>
-      <Router history={browserHistory}>
-        <Route path='/' component={Home} />
-      </Router>
-      <DevTools />
-    </div>
-  </Provider>
+  <MuiThemeProvider>
+    <Provider store={store}>
+      <div>
+        <Router history={browserHistory}>
+          <Route path='/' component={Home} />
+        </Router>
+        <DevTools />
+      </div>
+    </Provider>
+  </MuiThemeProvider>
 )

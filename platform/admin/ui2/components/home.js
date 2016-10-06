@@ -1,50 +1,46 @@
 import React from 'react'
 
-import styles from './home.less'
+import Divider from 'material-ui/Divider'
+import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card'
+import FlatButton from 'material-ui/FlatButton'
 
-const Input = ({ type }) => {
-  switch (type) {
-    case 'String':
-      return <input className={styles.input} type='text' />
-    default:
-      return <span>Unknown input type {JSON.stringify(type)}.</span>
-  }
-}
+import Action from '../containers/action'
+import Question from '../containers/question'
+import Loading from '../containers/loading'
+import Errors from '../containers/errors'
 
-const Option = ({ label, type }) => {
-  return (
-    <div>
-      <div>{label}</div>
-      <Input type={type} />
-    </div>
-  )
-}
+const Form = ({ title, questions = [] }) => (
+  <div>
+    {questions.map((q, i) => <Question key={i} {...q} />)}
+  </div>
+)
 
-const Content = ({ title, options = [] }) => {
-  return (
-    <div>
-      <h2>{title}</h2>
-      <div>{options.map((option, i) => <Option key={i} {...option}/>)}</div>
-    </div>
-  )
-}
+export default ({ stage: { form, actions = [] } }) => (
+  <Card style={{ margin: 20, padding: 20, boxSizing: 'border-box' }}>
+    <CardHeader
+      title={form.title}
+      actAsExpander
+      showExpandableButton />
 
-const Section = ({ contents = [] }) => {
-  return (
-    <div>
-      {contents.map((content, i) => <Content key={i} {...content} />)}
-    </div>
-  )
-}
+    <CardActions>
+      <Divider />
+      <Loading />
+      <Form {...form} />
 
-export default ({ wizards }) => {
-  const sections = wizards.sections || []
-  return (
-    <div className={styles.home}>
-      <b>Admin UI 2</b>
-      <h1>{wizards.title}</h1>
-      {sections.map((section, i) => <Section key={i} {...section} />)}
-      <pre>{JSON.stringify(wizards, null, 2).slice(0,0)}</pre>
-    </div>
-  );
-}
+      <div style={{padding: '20px 0'}}>
+        <Divider />
+      </div>
+
+      <FlatButton label='Back' secondary />
+      <div style={{textAlign: 'right'}}>
+      {actions.map((a, i) => <Action key={i} {...a} />)}
+      </div>
+
+      <Errors />
+    </CardActions>
+
+    <CardText expandable>
+      Some useful help text should be placed here.
+    </CardText>
+  </Card>
+)
