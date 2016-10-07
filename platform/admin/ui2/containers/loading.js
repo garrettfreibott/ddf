@@ -4,6 +4,8 @@ import CircularProgress from 'material-ui/CircularProgress'
 
 import { connect } from 'react-redux'
 
+import { isSubmitting } from '../reducer'
+
 import styles from './loading.less'
 
 const Loading = ({ submitting }) => {
@@ -20,6 +22,6 @@ const Loading = ({ submitting }) => {
   }
 }
 
-const mapStateToProps = ({ submitting }) => ({ submitting })
+const mapStateToProps = (state) => ({ submitting: isSubmitting(state) })
 
 export default connect(mapStateToProps)(Loading)

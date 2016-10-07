@@ -1,28 +1,16 @@
-import { combineReducers } from 'redux'
+import { combineReducers } from 'redux-immutable'
 
-const actions = (state = [], { type, stage } = {}) => {
+import { fromJS } from 'immutable'
+
+const stage = (state = fromJS([{}]), { type, stage, id, value } = {}) => {
   switch (type) {
     case 'SET_STAGE':
-      return stage.actions
-    default:
-      return state
-  }
-}
-
-const title = (state = 'loading...', { type, stage } = {}) => {
-  switch (type) {
-    case 'SET_STAGE':
-      return stage.form.title
-    default:
-      return state
-  }
-}
-
-const question = (state = {}, { type, id, value }) => {
-  switch (type) {
+      return state.unshift(fromJS(stage))
     case 'EDIT_VALUE':
-      if (id === state.id) {
-        return { ...state, value: value }
+      return state.update(0, s => s.updateIn(['form', 'questions'], qs => qs.update(id, q => q.set('value', value))))
+    case 'BACK_STAGE':
+      if (state.size > 1) {
+        return state.shift()
       } else {
         return state
       }
@@ -31,29 +19,7 @@ const question = (state = {}, { type, id, value }) => {
   }
 }
 
-const questions = (state = [], { type, stage, ...rest } = {}) => {
-  switch (type) {
-    case 'SET_STAGE':
-      return stage.form.questions
-    case 'EDIT_VALUE':
-      return state.map((q) => question(q, { type, ...rest }))
-    default:
-      return state
-  }
-}
-
-const form = combineReducers({ title, questions })
-
-const state = (state = {}, { type, stage } = {}) => {
-  switch (type) {
-    case 'SET_STAGE':
-      return stage.state || state
-    default:
-      return state
-  }
-}
-
-const stage = combineReducers({ state, form, actions })
+export const getCurrentStage = (state) => state.get('stage').first().toJS()
 
 const submitting = (state = false, { type } = {}) => {
   switch (type) {
@@ -65,6 +31,8 @@ const submitting = (state = false, { type } = {}) => {
       return state
   }
 }
+
+export const isSubmitting = (state) => state.get('submitting')
 
 const errors = (state = null, { type, message } = {}) => {
   switch (type) {

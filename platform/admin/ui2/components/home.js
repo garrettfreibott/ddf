@@ -1,7 +1,6 @@
 import React from 'react'
 
 import { Card, CardActions, CardHeader } from 'material-ui/Card'
-import FlatButton from 'material-ui/FlatButton'
 
 import Flexbox from 'flexbox-react'
 
@@ -9,14 +8,15 @@ import Action from '../containers/action'
 import Question from '../containers/question'
 import Loading from '../containers/loading'
 import Errors from '../containers/errors'
+import Back from '../containers/back'
 
 const Form = ({ title, questions = [] }) => (
   <div>
-    {questions.map((q, i) => <Question key={i} {...q} />)}
+    {questions.map((q, i) => <Question key={i} {...q} id={i} />)}
   </div>
 )
 
-export default ({ stage: { form, actions = [] } }) => (
+export default ({ form = { title: 'Loading...' }, actions = [] }) => (
   <Card style={{ margin: 20, padding: 20, boxSizing: 'border-box' }}>
     <CardHeader
       title={form.title} />
@@ -29,7 +29,7 @@ export default ({ stage: { form, actions = [] } }) => (
       </Flexbox>
 
       <Flexbox justifyContent='space-between'>
-        <FlatButton label='Back' secondary />
+        <Back />
         <div>
           {actions.map((a, i) => <Action key={i} {...a} />)}
         </div>

@@ -3,6 +3,8 @@ import React from 'react'
 import { submit } from '../actions'
 import { connect } from 'react-redux'
 
+import { isSubmitting } from '../reducer'
+
 import RaisedButton from 'material-ui/RaisedButton'
 
 const Action = ({ submitting, label, onSubmit, ...rest }) => (
@@ -11,6 +13,6 @@ const Action = ({ submitting, label, onSubmit, ...rest }) => (
   </div>
 )
 
-const mapStateToProps = ({ submitting }) => ({ submitting })
+const mapStateToProps = (state) => ({ submitting: isSubmitting(state) })
 
 export default connect(mapStateToProps, { onSubmit: submit })(Action)

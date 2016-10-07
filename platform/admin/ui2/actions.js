@@ -2,6 +2,8 @@ import http from 'http'
 import concat from 'concat-stream'
 import { parse } from 'url'
 
+import { getCurrentStage } from './reducer'
+
 import stub from './stub'
 
 const getStage = (url, done) => {
@@ -23,6 +25,8 @@ export const edit = (id, value) => ({ type: 'EDIT_VALUE', id, value })
 export const submittingStart = () => ({ type: 'SUBMITTING_START' })
 export const submittingEnd = () => ({ type: 'SUBMITTING_END' })
 
+export const back = () => ({ type: 'BACK_STAGE' })
+
 export const networkError = () => ({
   type: 'ERROR',
   message: 'Cannot submit form. Network error.'
@@ -35,7 +39,7 @@ export const badJsonResponse = () => ({
 
 export const submit = ({ method, url }) => (dispatch, getState) => {
   dispatch(submittingStart())
-  const state = getState()
+  const stage = getCurrentStage(getState())
 
   const opts = {
     ...parse(url),
@@ -61,7 +65,7 @@ export const submit = ({ method, url }) => (dispatch, getState) => {
     }
   })
 
-  req.write(JSON.stringify(state.stage))
+  req.write(JSON.stringify(stage))
   req.end()
 }
 

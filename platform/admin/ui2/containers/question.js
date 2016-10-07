@@ -9,6 +9,8 @@ import AutoComplete from 'material-ui/AutoComplete'
 import { edit } from '../actions'
 import { connect } from 'react-redux'
 
+import { isSubmitting } from '../reducer'
+
 const PortInput = ({ submitting, id, value, label, error, defaults = [], onEdit }) => (
   <AutoComplete
     dataSource={defaults.map((value) => ({ text: String(value), value: value }))}
@@ -79,6 +81,6 @@ const Question = ({ type, ...args }) => {
   }
 }
 
-const mapStateToProps = ({ submitting }) => ({ submitting })
+const mapStateToProps = (state) => ({ submitting: isSubmitting(state) })
 
 export default connect(mapStateToProps, { onEdit: edit })(Question)
