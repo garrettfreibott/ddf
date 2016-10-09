@@ -57,14 +57,17 @@ if (process.env.NODE_ENV === 'production') {
       filename: 'bundle.js',
       path: path.resolve(__dirname, 'public', 'test')
     },
-    entry: './test/reducer.js',
+    entry: [
+      'source-map-support/register',
+      './test/reducer.js'
+    ],
     target: 'node'
   })
 } else {
   config = merge.smart(config, {
     entry: [
       'react-hot-loader/patch',
-      'webpack-dev-server/client?http://localhost:8080/',
+      'webpack-dev-server/client?/',
       'webpack/hot/only-dev-server',
       './'
     ],
