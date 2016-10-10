@@ -1,30 +1,18 @@
-import http from 'http'
-import concat from 'concat-stream'
-import { parse } from 'url'
+import * as api from './api'
 
 import { getCurrentStage } from './reducer'
 
-import stub from './stub'
-
-const getStage = (url, done) => {
-  done(null, stub)
-}
-
-const setStage = (stage) => ({ type: 'SET_STAGE', stage })
+export const setStage = (stage) => ({ type: 'SET_STAGE', stage })
 
 export const fetch = () => (dispatch) => {
-  getStage('/', (err, body) => {
-    if (err) {
-    } else {
-      dispatch(setStage(body))
-    }
+  api.fetch('network-settings').then(stage => {
+    dispatch(setStage(stage))
   })
 }
 
 export const edit = (id, value) => ({ type: 'EDIT_VALUE', id, value })
 export const submittingStart = () => ({ type: 'SUBMITTING_START' })
 export const submittingEnd = () => ({ type: 'SUBMITTING_END' })
-
 export const back = () => ({ type: 'BACK_STAGE' })
 
 export const networkError = () => ({
@@ -32,40 +20,18 @@ export const networkError = () => ({
   message: 'Cannot submit form. Network error.'
 })
 
-export const badJsonResponse = () => ({
-  type: 'ERROR',
-  message: 'Invalid network reponse.'
-})
-
-export const submit = ({ method, url }) => (dispatch, getState) => {
-  dispatch(submittingStart())
+export const submit = (action) => (dispatch, getState) => {
   const stage = getCurrentStage(getState())
 
-  const opts = {
-    ...parse(url),
-    method: method,
-    headers: {
-      'content-type': 'application/json'
-    }
-  }
+  dispatch(submittingStart())
 
-  const req = http.request(opts, (res) => {
-    if (res.statusCode !== 200) {
+  api.submit(stage, action)
+    .then(stage => {
+      dispatch(submittingEnd())
+      dispatch(setStage(stage))
+    }, error => {
       dispatch(submittingEnd())
       dispatch(networkError())
-    } else {
-      res.pipe(concat((body) => {
-        dispatch(submittingEnd())
-        try {
-          dispatch(setStage(JSON.parse(body)))
-        } catch (e) {
-          dispatch(badJsonResponse())
-        }
-      }))
-    }
-  })
-
-  req.write(JSON.stringify(stage))
-  req.end()
+    })
 }
 

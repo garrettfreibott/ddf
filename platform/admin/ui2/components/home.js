@@ -10,22 +10,15 @@ import Loading from '../containers/loading'
 import Errors from '../containers/errors'
 import Back from '../containers/back'
 
-const Form = ({ title, questions = [] }) => (
-  <div>
-    {questions.map((q, i) => <Question key={i} {...q} id={i} />)}
-  </div>
-)
-
-export default ({ form = { title: 'Loading...' }, actions = [] }) => (
-  <Card style={{ margin: 20, padding: 20, boxSizing: 'border-box' }}>
-    <CardHeader
-      title={form.title} />
+export default ({ form: { title = 'Loading...', description, questions = [] } = {}, actions = [] }) => (
+  <Card style={{ maxWidth: 600, margin: 20, padding: 20, boxSizing: 'border-box' }}>
+    <CardHeader title={title} subtitle={description}/>
 
     <CardActions>
       <Loading />
 
       <Flexbox justifyContent='center'>
-        <Form {...form} />
+        <div>{questions.map((q, i) => <Question key={i} {...q} id={i} />)}</div>
       </Flexbox>
 
       <Flexbox justifyContent='space-between'>

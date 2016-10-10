@@ -29,9 +29,18 @@ var config = {
       {
         test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
         loader: 'file'
+      },
+      {
+        test: /\.json$/,
+        loader: 'json'
       }
     ]
-  }
+  },
+  plugins: [
+    new webpack.ProvidePlugin({
+      'Promise': 'es6-promise'
+    })
+  ]
 }
 
 if (process.env.NODE_ENV === 'production') {

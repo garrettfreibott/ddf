@@ -11,16 +11,16 @@ import { connect } from 'react-redux'
 
 import { isSubmitting } from '../reducer'
 
-const PortInput = ({ submitting, id, value, label, error, defaults = [], onEdit }) => (
+const PortInput = ({ submitting, id, value, error, defaults = [], onEdit }) => (
   <AutoComplete
     dataSource={defaults.map((value) => ({ text: String(value), value: value }))}
     openOnFocus
     filter={AutoComplete.noFilter}
+    type='number'
     errorText={error}
     disabled={submitting}
-    floatingLabelText={label}
-    type='number'
-    value={value}
+    floatingLabelText='Port'
+    searchText={String(value || defaults[0])}
     onNewRequest={({ value }) => { onEdit(id, value) }}
     onUpdateInput={(value) => { onEdit(id, Number(value)) }} />
 )

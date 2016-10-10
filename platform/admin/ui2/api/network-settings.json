@@ -1,0 +1,32 @@
+{
+  "title": "LDAP Network Settings",
+  "description": "The following information will be used to connect to the LDAP server.",
+  "questions": [
+    {
+      "id": "hostname",
+      "label": "LDAP Host name",
+      "type": "HOSTNAME"
+    },
+    {
+      "id": "port",
+      "label": "LDAP Port",
+      "type": "PORT",
+      "value": 389,
+      "defaults": [
+        389,
+        636
+      ]
+    },
+    {
+      "id": "encryptionMethod",
+      "label": "Encryption method",
+      "type": "STRING_ENUM",
+      "value": "No encryption",
+      "defaults": [
+        "No encryption",
+        "Use LDAPS",
+        "Use startTLS"
+      ]
+    }
+  ]
+}

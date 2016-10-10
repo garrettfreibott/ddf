@@ -3,7 +3,7 @@ export default {
     {
       'label': 'check',
       'method': 'POST',
-      'url': '/admin/security/wizard/network'
+      'url': '/network-settings'
     }
   ],
   'form': {

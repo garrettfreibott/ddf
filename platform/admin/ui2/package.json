@@ -11,11 +11,12 @@
   },
   "scripts": {
     "start": "webpack-dev-server --progress --open",
-    "pretest": "standard && flow",
+    "pretest": "#standard && flow",
     "test:gen": "NODE_ENV=test webpack && node public/test/bundle.js",
     "test": "npm run test:gen",
     "format": "standard --fix",
-    "dist": "NODE_ENV=production webpack --progress"
+    "dist": "NODE_ENV=production webpack --progress",
+    "dist:stat": "NODE_ENV=production webpack --json | webpack-bundle-size-analyzer"
   },
   "peerDependencies": {
     "react": "^15.1.0",
@@ -23,16 +24,17 @@
     "less": "^2.7.1"
   },
   "dependencies": {
+    "es6-promise": "^4.0.5",
     "flexbox-react": "^4.0.0",
     "font-awesome": "^4.6.3",
-    "font-awesome-webpack": "0.0.4",
     "material-ui": "^0.16.0",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
     "react-redux": "^4.4.5",
     "react-router": "^2.5.2",
     "react-tap-event-plugin": "^1.0.0",
-    "redux": "^3.5.2"
+    "redux": "^3.5.2",
+    "redux-immutable": "^3.0.8"
   },
   "devDependencies": {
     "babel-loader": "^6.2.4",
@@ -43,6 +45,8 @@
     "express": "^4.14.0",
     "file-loader": "^0.9.0",
     "flow-bin": "^0.32.0",
+    "font-awesome-webpack": "0.0.4",
+    "json-loader": "^0.5.4",
     "less": "^2.7.1",
     "less-loader": "^2.2.3",
     "react-hot-loader": "^3.0.0-beta.3",
@@ -56,6 +60,7 @@
     "testcheck": "^0.1.4",
     "url-loader": "^0.5.7",
     "webpack": "^1.13.1",
+    "webpack-bundle-size-analyzer": "^2.2.0",
     "webpack-dev-server": "^1.14.1",
     "webpack-merge": "^0.14.0",
     "webpack-validator": "^2.2.3"

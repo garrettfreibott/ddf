@@ -9,7 +9,7 @@ import App from './app'
 inject()
 
 render(
-  <AppContainer>
+  <AppContainer errorReporter={({ error }) => { throw error }}>
     <App />
   </AppContainer>,
   document.getElementById('root'))
@@ -21,7 +21,7 @@ if (module.hot) {
     try {
       const NextApp = require('./app').default
       render(
-        <AppContainer>
+        <AppContainer errorReporter={({ error }) => { throw error }}>
           <NextApp />
         </AppContainer>,
         document.getElementById('root'))
