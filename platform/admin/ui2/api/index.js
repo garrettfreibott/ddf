@@ -3,12 +3,48 @@ const api = {
     'network-settings': () => ({
       actions: [
         {
-          label: "continue",
-          method: "POST",
-          url: "/network-settings"
+          label: 'continue',
+          method: 'POST',
+          url: '/network-settings'
         }
       ],
       form: require('./network-settings')
+    }),
+    'discover-sources': () => ({
+      actions: [
+        {
+          label: 'discover sources',
+          method: 'POST',
+          url: '/discover-sources'
+        },
+        {
+          label: 'manually configure',
+          method: 'POST',
+          url: '/current-add-source'
+        }
+      ],
+      form: {
+        title: 'Source Information',
+        description: 'Enter information about your source',
+        questions: [
+          {
+            id: 'sourceName',
+            label: 'Source Name',
+            type: 'STRING'
+          },
+          {
+            'id': 'hostname',
+            'label': 'Source Host name',
+            'type': 'HOSTNAME'
+          },
+          {
+            'id': 'port',
+            'label': 'Source Port',
+            'type': 'PORT',
+            'value': 8993
+          }
+        ]
+      }
     })
   },
   POST: {
@@ -30,15 +66,34 @@ const api = {
         },
         actions: [
           {
-            label: "continue",
-            method: "POST",
-            url: "/network-settings"
+            label: 'continue',
+            method: 'POST',
+            url: '/network-settings'
           }
         ],
         form: require('./bind-settings')
       }
     },
     '/bind-settings': (stage) => {
+    },
+    '/discover-sources': (stage) => {
+      return {
+        form: {
+          title: 'Results',
+          description: '',
+          questions: [
+            {
+              id: 'recommended',
+              label: '',
+              type: 'STRING_ENUM',
+              defaults: [
+                'Recommended',
+                'Customize'
+              ]
+            }
+          ]
+        }
+      }
     }
   }
 }
@@ -56,7 +111,7 @@ export const fetch = (id) => new Promise((resolve, reject) => {
   }
 })
 
-export const submit = (stage, { method, url}) => new Promise((resolve, reject) => {
+export const submit = (stage, { method, url }) => new Promise((resolve, reject) => {
   const fn = api[method][url]
   if (fn) {
     resolve(fn(stage))

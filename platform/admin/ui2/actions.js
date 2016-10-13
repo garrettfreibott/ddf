@@ -5,7 +5,7 @@ import { getCurrentStage } from './reducer'
 export const setStage = (stage) => ({ type: 'SET_STAGE', stage })
 
 export const fetch = () => (dispatch) => {
-  api.fetch('network-settings').then(stage => {
+  api.fetch('discover-sources').then(stage => {
     dispatch(setStage(stage))
   })
 }
@@ -29,7 +29,7 @@ export const submit = (action) => (dispatch, getState) => {
     .then(stage => {
       dispatch(submittingEnd())
       dispatch(setStage(stage))
-    }, error => {
+    }, () => {
       dispatch(submittingEnd())
       dispatch(networkError())
     })

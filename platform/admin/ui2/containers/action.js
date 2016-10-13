@@ -8,9 +8,7 @@ import { isSubmitting } from '../reducer'
 import RaisedButton from 'material-ui/RaisedButton'
 
 const Action = ({ submitting, label, onSubmit, ...rest }) => (
-  <div>
-    <RaisedButton onClick={() => { onSubmit(rest) }} label={label} primary disabled={submitting} />
-  </div>
+  <RaisedButton style={{ marginLeft: 10 }} onClick={() => { onSubmit(rest) }} label={label} primary disabled={submitting} />
 )
 
 const mapStateToProps = (state) => ({ submitting: isSubmitting(state) })
