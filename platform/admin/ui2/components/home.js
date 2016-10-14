@@ -11,7 +11,7 @@ import Errors from '../containers/errors'
 import Back from '../containers/back'
 
 export default ({ form: { title = 'Loading...', description, questions = [] } = {}, actions = [] }) => (
-  <Card style={{ maxWidth: 600, margin: 20, padding: 20, boxSizing: 'border-box' }}>
+  <Card style={{ maxWidth: 600, padding: 20, boxSizing: 'border-box' }}>
     <CardHeader title={title} subtitle={description} />
 
     <CardActions>

@@ -4,7 +4,13 @@ import { List, Map, fromJS } from 'immutable'
 
 export const getCurrentStage = (state) => state.get('stage').first().toJS()
 
+export const getAllStages = (state) => state.get('stage').pop().toJS()
+
 export const canGoBack = (state) => state.get('stage').size > 2
+
+export const changeDisplay = (state, action) => {
+    stage(state, action)
+}
 
 const stage = (state = fromJS([{}]), { type, stage, id, value } = {}) => {
   switch (type) {
@@ -18,6 +24,8 @@ const stage = (state = fromJS([{}]), { type, stage, id, value } = {}) => {
       } else {
         return state
       }
+     case 'CHANGE_DISPLAY_TYPE':
+        return state.update(id, s=> s.updateIn([id, 'displayType'], value))
     default:
       return state
   }

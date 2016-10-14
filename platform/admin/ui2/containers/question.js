@@ -64,12 +64,20 @@ const StringInput = ({ submitting, id, label, error, value, onEdit }) => (
     onChange={(e) => onEdit(id, e.target.value)} />
 )
 
+const Info = ({id, label, value}) => (
+    <div>
+        <h3>{label}</h3>
+        <p>{value}</p>
+    </div>
+)
+
 const inputs = {
   PORT: PortInput,
   HOSTNAME: HostNameInput,
   STRING_ENUM: StringEnumInput,
   STRING: StringInput,
-  PASSWORD: PasswordInput
+  PASSWORD: PasswordInput,
+  INFO: Info
 }
 
 const Question = ({ type, ...args }) => {

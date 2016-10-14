@@ -1,3 +1,5 @@
+import { changeDisplay } from '../reducer'
+
 const api = {
   GET: {
     'network-settings': () => ({
@@ -78,9 +80,10 @@ const api = {
     },
     '/discover-sources': (stage) => {
       return {
+        displayType: "Recommended",
         form: {
           title: 'Results',
-          description: '',
+          description: "Use the recommended configuration, or customize your source",
           questions: [
             {
               id: 'recommended',
@@ -89,10 +92,37 @@ const api = {
               defaults: [
                 'Recommended',
                 'Customize'
-              ]
+              ],
+              onEdit: (id, value) => {
+                changeDisplay(stage,{
+                                    type: "CHANGE_DISPLAY_TYPE",
+                                    stage: stage,
+                                    id: id,
+                                    value: value
+                                    })
+              }
+            },
+            {
+                id: 'recommended-info',
+                label: "Configuration Type A",
+                type: "INFO",
+                value: "Configuration Type A allows you do to a bunch of cool stuff!"
+            },
+            {
+                id: "recommended-blurb",
+                label: "",
+                type: "INFO",
+                value: "Based on what we found, Configuration Type A will likely provide you with the best functionality."
             }
           ]
-        }
+        },
+        actions: [
+          {
+              label: "save",
+              method: "POST",
+              url: "/save-source"
+          }
+        ]
       }
     }
   }
