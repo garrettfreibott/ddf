@@ -26,9 +26,10 @@ const api = {
         }
       ],
       form: {
-        title: 'Source Information',
+        type: 'PANEL',
+        label: 'Source Information',
         description: 'Enter information about your source',
-        questions: [
+        children: [
           {
             id: 'sourceName',
             label: 'Source Name',
@@ -80,39 +81,28 @@ const api = {
     },
     '/discover-sources': (stage) => {
       return {
-        displayType: "Recommended",
         form: {
-          title: 'Results',
+          type: 'PANEL',
+          label: 'Results',
           description: "Use the recommended configuration, or customize your source",
-          questions: [
+          options: [
             {
-              id: 'recommended',
-              label: '',
-              type: 'STRING_ENUM',
-              defaults: [
-                'Recommended',
-                'Customize'
-              ],
-              onEdit: (id, value) => {
-                changeDisplay(stage,{
-                                    type: "CHANGE_DISPLAY_TYPE",
-                                    stage: stage,
-                                    id: id,
-                                    value: value
-                                    })
-              }
-            },
-            {
+              label: "Recommended",
+              component: {
                 id: 'recommended-info',
                 label: "Configuration Type A",
                 type: "INFO",
                 value: "Configuration Type A allows you do to a bunch of cool stuff!"
+              }
             },
             {
-                id: "recommended-blurb",
+              label: "Customize",
+              component: {
+                id: 'customize-info',
                 label: "",
                 type: "INFO",
                 value: "Based on what we found, Configuration Type A will likely provide you with the best functionality."
+              }
             }
           ]
         },

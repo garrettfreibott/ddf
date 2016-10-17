@@ -6,12 +6,17 @@ import TextField from 'material-ui/TextField'
 
 import AutoComplete from 'material-ui/AutoComplete'
 
+import { Card, CardActions, CardHeader } from 'material-ui/Card'
+import Flexbox from 'flexbox-react'
+
 import { edit } from '../actions'
 import { connect } from 'react-redux'
 
 import { isSubmitting } from '../reducer'
 
-const PortInput = ({ submitting, id, value, error, defaults = [], onEdit }) => (
+var Component
+
+const PortInput = ({ submitting, path, value, error, defaults = [], onEdit }) => (
   <AutoComplete
     dataSource={defaults.map((value) => ({ text: String(value), value: value }))}
     openOnFocus
@@ -21,54 +26,71 @@ const PortInput = ({ submitting, id, value, error, defaults = [], onEdit }) => (
     disabled={submitting}
     floatingLabelText='Port'
     searchText={String(value || defaults[0])}
-    onNewRequest={({ value }) => { onEdit(id, value) }}
-    onUpdateInput={(value) => { onEdit(id, Number(value)) }} />
+    onNewRequest={({ value }) => { onEdit(path, value) }}
+    onUpdateInput={(value) => { onEdit(path, Number(value)) }} />
 )
 
-const StringEnumInput = ({ submitting, id, value, label, error, defaults = [], onEdit }) => (
+const StringEnumInput = ({ submitting, path, value, label, error, defaults = [], onEdit }) => (
   <SelectField
     value={value || defaults[0] || ''}
     disabled={submitting}
     errorText={error}
     floatingLabelText={label}
-    onChange={(e, i, v) => onEdit(id, v)}>
+    onChange={(e, i, v) => onEdit(path, v)}>
     {defaults.map((d, i) => <MenuItem key={i} value={d} primaryText={d} />)}
   </SelectField>
 )
 
-const HostNameInput = ({ submitting, id, value, error, onEdit }) => (
+const HostNameInput = ({ submitting, path, value, error, onEdit }) => (
   <TextField
     disabled={submitting}
     errorText={error}
     value={value || ''}
     floatingLabelText='Hostname'
-    onChange={(e) => onEdit(id, e.target.value)} />
+    onChange={(e) => onEdit(path, e.target.value)} />
 )
 
-const PasswordInput = ({ submitting, id, label, error, value, onEdit }) => (
+const PasswordInput = ({ submitting, path, label, error, value, onEdit }) => (
   <TextField
     disabled={submitting}
     errorText={error}
     value={value || ''}
     floatingLabelText={label}
     type='password'
-    onChange={(e) => onEdit(id, e.target.value)} />
+    onChange={(e) => onEdit(path, e.target.value)} />
 )
 
-const StringInput = ({ submitting, id, label, error, value, onEdit }) => (
+const StringInput = ({ submitting, path, label, error, value, onEdit }) => (
   <TextField
     disabled={submitting}
     errorText={error}
     value={value || ''}
     floatingLabelText={label}
-    onChange={(e) => onEdit(id, e.target.value)} />
+    onChange={(e) => onEdit(path, e.target.value)} />
 )
 
 const Info = ({id, label, value}) => (
-    <div>
-        <h3>{label}</h3>
-        <p>{value}</p>
-    </div>
+  <div>
+    <h3>{label}</h3>
+    <p>{value}</p>
+  </div>
+)
+
+const Panel = ({ id, path = [], label, description, children = [] }) => (
+  <Card>
+    <CardHeader title={label} subtitle={description} />
+    <CardActions>
+      <Flexbox justifyContent='center'>
+        <div>{children.map((c, i) => <Component key={i} {...c} path={[ 'children', i ]} />)}</div>
+      </Flexbox>
+    </CardActions>
+  </Card>
+)
+
+const Selector = ({ id, path = [], value, label, description, options = [] }) => (
+  <div>
+    <Component type='STRING_ENUM' value={value || options[0].label}  defaults={[options.map((o) => o.label)]} />
+  </div>
 )
 
 const inputs = {
@@ -77,10 +99,13 @@ const inputs = {
   STRING_ENUM: StringEnumInput,
   STRING: StringInput,
   PASSWORD: PasswordInput,
-  INFO: Info
+  INFO: Info,
+  PANEL: Panel,
+  SELECTOR: Selector
 }
 
-const Question = ({ type, ...args }) => {
+const StatelessComponent = ({ type, key, ...args }) => {
+  debugger
   const found = inputs[type]
   if (found !== undefined) {
     return <div>{React.createElement(found, { ...args })}</div>
@@ -91,4 +116,6 @@ const Question = ({ type, ...args }) => {
 
 const mapStateToProps = (state) => ({ submitting: isSubmitting(state) })
 
-export default connect(mapStateToProps, { onEdit: edit })(Question)
+Component = connect(mapStateToProps, { onEdit: edit })(StatelessComponent)
+
+export default Component

@@ -8,24 +8,21 @@ export const getAllStages = (state) => state.get('stage').pop().toJS()
 
 export const canGoBack = (state) => state.get('stage').size > 2
 
-export const changeDisplay = (state, action) => {
-    stage(state, action)
-}
-
 const stage = (state = fromJS([{}]), { type, stage, id, value } = {}) => {
   switch (type) {
     case 'SET_STAGE':
       return state.unshift(fromJS(stage))
     case 'EDIT_VALUE':
-      return state.update(0, s => s.updateIn(['form', 'questions'], qs => (qs || List()).update(id, q => (q || Map()).set('value', value))))
+      debugger
+      return state.setIn([0, 'form', ...id, 'value'], value)
     case 'BACK_STAGE':
       if (state.size > 2) {
         return state.shift()
       } else {
         return state
       }
-     case 'CHANGE_DISPLAY_TYPE':
-        return state.update(id, s=> s.updateIn([id, 'displayType'], value))
+    case 'CHANGE_DISPLAY_TYPE':
+      return state.update()
     default:
       return state
   }
