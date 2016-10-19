@@ -3,11 +3,19 @@ import * as api from './api'
 import { getCurrentStage } from './reducer'
 
 export const setStage = (stage) => ({ type: 'SET_STAGE', stage })
+export const resetStage = (stage) => ({ type: 'RESET_STAGE', stage })
 
-export const fetch = () => (dispatch) => {
-  api.fetch('discover-sources').then(stage => {
-    dispatch(setStage(stage))
+export const fetch = (stageId) => (dispatch) => {
+  api.fetch(stageId).then(stage => {
+    dispatch(resetStage(stage))
   })
+}
+
+export const setList = (list) => ({ type: 'SET_LIST', list })
+
+export const list = () => (dispatch) => {
+  api.list()
+    .then((list) => dispatch(setList(list)))
 }
 
 export const edit = (id, value) => ({ type: 'EDIT_VALUE', id, value })

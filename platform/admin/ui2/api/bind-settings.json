@@ -1,7 +1,8 @@
 {
-  "title": "LDAP Bind Settings",
+  "type": "PANEL",
+  "label": "LDAP Bind Settings",
   "description": "The following information will be used to bind to the LDAP server.",
-  "questions": [
+  "children": [
     {
       "id": "bindUser",
       "label": "LDAP Bind User",

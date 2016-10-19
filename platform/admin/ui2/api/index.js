@@ -54,7 +54,7 @@ const api = {
         hostname,
         port,
         encryptionMethod
-      } = stage.form.questions.reduce((o, q, i) => {
+      } = stage.form.children.reduce((o, q, i) => {
         o[q.id] = q.value
         return o
       }, {})

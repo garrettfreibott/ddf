@@ -9,13 +9,12 @@ import Component from '../containers/component'
 import Loading from '../containers/loading'
 import Back from '../containers/back'
 
-export default ({ form = {}, actions = [] }) => (
+export default ({ form = {}, actions = [], path = [] }) => (
   <Card style={{ maxWidth: 600, margin: 20, padding: 20, boxSizing: 'border-box' }}>
     <Loading />
-    <Component {...form} />
+    <Component path={[ ...path, 'form' ]} {...form} />
     <Flexbox style={{marginTop: 20}} justifyContent='space-between'>
       <Back />
-
       <div>{actions.map((a, i) => <Action key={i} {...a} />)}</div>
     </Flexbox>
   </Card>

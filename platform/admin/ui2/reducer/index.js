@@ -12,8 +12,10 @@ const stage = (state = fromJS([{}]), { type, stage, id, value } = {}) => {
   switch (type) {
     case 'SET_STAGE':
       return state.unshift(fromJS(stage))
+    case 'RESET_STAGE':
+      return fromJS([ stage, {} ])
     case 'EDIT_VALUE':
-      return state.setIn([0, 'form', ...id, 'value'], value)
+      return state.setIn([ ...id, 'value'], value)
     case 'BACK_STAGE':
       if (state.size > 2) {
         return state.shift()
@@ -55,4 +57,15 @@ const errors = (state = null, { type, message } = {}) => {
 
 export const getErrors = (state) => state.get('errors')
 
-export default combineReducers({ errors, submitting, stage })
+const list = (state = fromJS([]), { type, list } = {}) => {
+  switch (type) {
+    case 'SET_LIST':
+      return fromJS(list)
+    default:
+      return state
+  }
+}
+
+export const getList = (state) => state.get('list')
+
+export default combineReducers({ list, errors, submitting, stage })

@@ -1,7 +1,8 @@
 {
-  "title": "LDAP Network Settings",
+  "type": "PANEL",
+  "label": "LDAP Network Settings",
   "description": "The following information will be used to connect to the LDAP server.",
-  "questions": [
+  "children": [
     {
       "id": "hostname",
       "label": "LDAP Host name",
