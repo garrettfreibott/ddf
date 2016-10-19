@@ -1,5 +1,3 @@
-import { changeDisplay } from '../reducer'
-
 const api = {
   GET: {
     'network-settings': () => ({
@@ -84,21 +82,21 @@ const api = {
         form: {
           type: 'SELECTOR',
           label: 'Results',
-          description: "Use the recommended configuration, or customize your source",
+          description: 'Use the recommended configuration, or customize your source',
           options: [
             {
-              label: "Recommended",
+              label: 'Recommended',
               component: {
                 id: 'recommended-info',
-                label: "Configuration Type A",
-                type: "INFO",
-                value: "Configuration Type A allows you do to a bunch of cool stuff!"
+                label: 'Configuration Type A',
+                type: 'INFO',
+                value: 'Configuration Type A allows you do to a bunch of cool stuff!'
               }
             },
             {
-              label: "Customize",
+              label: 'Customize',
               component: {
-                type: "PANEL",
+                type: 'PANEL',
                 children: [
                   {
                     id: 'sourceName',
@@ -111,14 +109,14 @@ const api = {
                     'type': 'HOSTNAME'
                   },
                   {
-                    "id": "encryptionMethod",
-                    "label": "Encryption method",
-                    "type": "STRING_ENUM",
-                    "value": "No encryption",
-                    "defaults": [
-                      "No encryption",
-                      "Use LDAPS",
-                      "Use startTLS"
+                    'id': 'encryptionMethod',
+                    'label': 'Encryption method',
+                    'type': 'STRING_ENUM',
+                    'value': 'No encryption',
+                    'defaults': [
+                      'No encryption',
+                      'Use LDAPS',
+                      'Use startTLS'
                     ]
                   }
                 ]
@@ -128,9 +126,9 @@ const api = {
         },
         actions: [
           {
-              label: "save",
-              method: "POST",
-              url: "/save-source"
+            label: 'save',
+            method: 'POST',
+            url: '/save-source'
           }
         ]
       }

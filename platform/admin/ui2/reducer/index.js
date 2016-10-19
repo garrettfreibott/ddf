@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux-immutable'
 
-import { List, Map, fromJS } from 'immutable'
+import { fromJS } from 'immutable'
 
 export const getCurrentStage = (state) => state.get('stage').first().toJS()
 

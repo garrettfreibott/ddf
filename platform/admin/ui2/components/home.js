@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Card, CardActions, CardHeader } from 'material-ui/Card'
+import { Card } from 'material-ui/Card'
 
 import Flexbox from 'flexbox-react'
 

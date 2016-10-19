@@ -6,7 +6,7 @@ import TextField from 'material-ui/TextField'
 
 import AutoComplete from 'material-ui/AutoComplete'
 
-import { Card, CardActions, CardHeader } from 'material-ui/Card'
+import { CardActions, CardHeader } from 'material-ui/Card'
 import Flexbox from 'flexbox-react'
 
 import { edit } from '../actions'
@@ -82,7 +82,7 @@ const Panel = ({ id, path = [], label, description, children = [] }) => (
     <CardActions>
       <Flexbox justifyContent='center'>
         <div>{children.map((c, i) =>
-               <Component key={i} {...c} path={[ ...path, 'children', i ]} />)}</div>
+          <Component key={i} {...c} path={[ ...path, 'children', i ]} />)}</div>
       </Flexbox>
     </CardActions>
   </div>
@@ -102,8 +102,8 @@ const Selector = ({ id, path = [], value, label, description, options = [] }) =>
         type='STRING_ENUM'
         value={value || options[0].label}
         defaults={options.map((o) => o.label)} />
-      <Component path={[ ...path, 'options', i, 'component']}
-                 {...options[i].component} />
+      <Component path={[ ...path, 'options', i, 'component' ]}
+        {...options[i].component} />
     </div>
   )
 }

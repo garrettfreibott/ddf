@@ -10,16 +10,16 @@ import Flexbox from 'flexbox-react'
 import styles from './errors.less'
 
 const Errors = ({ errors, onDismiss }) => {
-  if (errors === null) return null;
+  if (errors === null) return null
 
   return (
     <div className={styles.message}>
-    <Flexbox justifyContent='space-between'>
-      {errors}
-      <div className={styles.dismiss} onClick={onDismiss}>
-        <i className='fa fa-times'></i>
-      </div>
-    </Flexbox>
+      <Flexbox justifyContent='space-between'>
+        {errors}
+        <div className={styles.dismiss} onClick={onDismiss}>
+          <i className='fa fa-times' />
+        </div>
+      </Flexbox>
     </div>
   )
 }
