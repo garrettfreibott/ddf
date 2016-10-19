@@ -77,21 +77,36 @@ const Info = ({id, label, value}) => (
 )
 
 const Panel = ({ id, path = [], label, description, children = [] }) => (
-  <Card>
+  <div>
     <CardHeader title={label} subtitle={description} />
     <CardActions>
       <Flexbox justifyContent='center'>
-        <div>{children.map((c, i) => <Component key={i} {...c} path={[ 'children', i ]} />)}</div>
+        <div>{children.map((c, i) =>
+               <Component key={i} {...c} path={[ ...path, 'children', i ]} />)}</div>
       </Flexbox>
     </CardActions>
-  </Card>
-)
-
-const Selector = ({ id, path = [], value, label, description, options = [] }) => (
-  <div>
-    <Component type='STRING_ENUM' value={value || options[0].label}  defaults={[options.map((o) => o.label)]} />
   </div>
 )
+
+const findComponentIndex = (options, value) => {
+  const i = options.findIndex((option) => value === option.label)
+  return (i === -1) ? 0 : i
+}
+
+const Selector = ({ id, path = [], value, label, description, options = [] }) => {
+  const i = findComponentIndex(options, value)
+  return (
+    <div>
+      <Component
+        path={[]}
+        type='STRING_ENUM'
+        value={value || options[0].label}
+        defaults={options.map((o) => o.label)} />
+      <Component path={[ ...path, 'options', i, 'component']}
+                 {...options[i].component} />
+    </div>
+  )
+}
 
 const inputs = {
   PORT: PortInput,
@@ -104,8 +119,9 @@ const inputs = {
   SELECTOR: Selector
 }
 
-const StatelessComponent = ({ type, key, ...args }) => {
-  debugger
+const StatelessComponent = ({ type, ...args }) => {
+  if (type === undefined) return null
+
   const found = inputs[type]
   if (found !== undefined) {
     return <div>{React.createElement(found, { ...args })}</div>
@@ -119,3 +135,4 @@ const mapStateToProps = (state) => ({ submitting: isSubmitting(state) })
 Component = connect(mapStateToProps, { onEdit: edit })(StatelessComponent)
 
 export default Component
+

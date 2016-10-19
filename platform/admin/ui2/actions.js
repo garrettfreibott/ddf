@@ -21,6 +21,10 @@ export const networkError = () => ({
   message: 'Cannot submit form. Network error.'
 })
 
+export const dismissErrors = () => ({
+  type: 'DISMISS_ERRORS'
+})
+
 export const submit = (action) => (dispatch, getState) => {
   const stage = getCurrentStage(getState())
 

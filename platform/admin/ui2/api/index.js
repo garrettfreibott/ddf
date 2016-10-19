@@ -82,7 +82,7 @@ const api = {
     '/discover-sources': (stage) => {
       return {
         form: {
-          type: 'PANEL',
+          type: 'SELECTOR',
           label: 'Results',
           description: "Use the recommended configuration, or customize your source",
           options: [
@@ -98,10 +98,30 @@ const api = {
             {
               label: "Customize",
               component: {
-                id: 'customize-info',
-                label: "",
-                type: "INFO",
-                value: "Based on what we found, Configuration Type A will likely provide you with the best functionality."
+                type: "PANEL",
+                children: [
+                  {
+                    id: 'sourceName',
+                    label: 'Source Name',
+                    type: 'STRING'
+                  },
+                  {
+                    'id': 'hostname',
+                    'label': 'Source Host name',
+                    'type': 'HOSTNAME'
+                  },
+                  {
+                    "id": "encryptionMethod",
+                    "label": "Encryption method",
+                    "type": "STRING_ENUM",
+                    "value": "No encryption",
+                    "defaults": [
+                      "No encryption",
+                      "Use LDAPS",
+                      "Use startTLS"
+                    ]
+                  }
+                ]
               }
             }
           ]

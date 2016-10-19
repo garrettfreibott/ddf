@@ -13,7 +13,6 @@ const stage = (state = fromJS([{}]), { type, stage, id, value } = {}) => {
     case 'SET_STAGE':
       return state.unshift(fromJS(stage))
     case 'EDIT_VALUE':
-      debugger
       return state.setIn([0, 'form', ...id, 'value'], value)
     case 'BACK_STAGE':
       if (state.size > 2) {
@@ -45,11 +44,15 @@ const errors = (state = null, { type, message } = {}) => {
   switch (type) {
     case 'SET_STAGE':
       return null
+    case 'DISMISS_ERRORS':
+      return null
     case 'ERROR':
       return message
     default:
       return state
   }
 }
+
+export const getErrors = (state) => state.get('errors')
 
 export default combineReducers({ errors, submitting, stage })
