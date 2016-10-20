@@ -4,9 +4,17 @@ import thunk from 'redux-thunk'
 import { Map } from 'immutable'
 
 import reducer from './reducer'
-import DevTools from './containers/dev-tools'
 
-const enhancer = compose(applyMiddleware(thunk), DevTools.instrument())
+var enhancer
+
+if (process.env.NODE_ENV === 'production') {
+  enhancer = applyMiddleware(thunk)
+}
+
+if (process.env.NODE_ENV !== 'production') {
+  const DevTools = require('./containers/dev-tools').default
+  enhancer = compose(applyMiddleware(thunk), DevTools.instrument())
+}
 
 const store = createStore(reducer, Map(), enhancer)
 

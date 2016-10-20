@@ -7,10 +7,10 @@ var config = {
   output: {
     publicPath: '/',
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'public')
+    path: path.resolve(__dirname, 'target', 'webapp')
   },
   devtool: 'source-map',
-  entry: './',
+  entry: './src/main/webapp',
   module: {
     loaders: [
       {
@@ -54,6 +54,7 @@ if (process.env.NODE_ENV === 'production') {
           comments: false
         },
         compress: {
+          drop_console: true,
           warnings: false
         }
       })
@@ -64,13 +65,21 @@ if (process.env.NODE_ENV === 'production') {
     output: {
       publicPath: '/',
       filename: 'bundle.js',
-      path: path.resolve(__dirname, 'public', 'test')
+      path: path.resolve(__dirname, 'target', 'test')
     },
     entry: [
       'source-map-support/register',
-      './test/reducer.js'
+      './src/test/webapp/reducer.js'
     ],
-    target: 'node'
+    target: 'node',
+    resolve: {
+      root: [
+        './node_modules',
+        './src/main/webapp/'
+      ].map(function (dir) {
+        return path.resolve(__dirname, dir)
+      })
+    }
   })
 } else {
   config = merge.smart(config, {
@@ -78,11 +87,11 @@ if (process.env.NODE_ENV === 'production') {
       'react-hot-loader/patch',
       'webpack-dev-server/client?/',
       'webpack/hot/only-dev-server',
-      './'
+      './src/main/webapp'
     ],
     devServer: {
       noInfo: true,
-      contentBase: 'public',
+      contentBase: 'src/main/resources/',
       compress: true,
       hot: true,
       historyApiFallback: true,

@@ -56,6 +56,8 @@
                 <artifactId>maven-bundle-plugin</artifactId>
                 <configuration>
                     <instructions>
+                        <Web-ContextPath>/admin/security</Web-ContextPath>
+                        <_wab>${project.build.directory}/webapp/</_wab>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Embed-Dependency>
                             spark-core,
@@ -64,6 +66,11 @@
                             gson-extras
                         </Embed-Dependency>
                         <Import-Package>
+                            org.eclipse.jetty.server,
+                            org.eclipse.jetty.server.handler,
+                            org.eclipse.jetty.servlets,
+                            javax.servlet.http;version="[3,4)",
+                            javax.servlet;version="[3,4)",
                             !org.eclipse.jetty.websocket.*,
                             !sun.reflect,
                             !com.sun.management,
@@ -72,6 +79,39 @@
                         <Export-Package/>
                     </instructions>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>npm install</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>install</arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>npm dist</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>run dist</arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>grunt build</id>
+                        <goals>
+                            <goal>grunt</goal>
+                        </goals>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

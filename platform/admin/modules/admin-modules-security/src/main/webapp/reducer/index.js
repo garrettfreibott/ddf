@@ -15,7 +15,7 @@ const stage = (state = fromJS([{}]), { type, stage, id, value } = {}) => {
     case 'RESET_STAGE':
       return fromJS([ stage, {} ])
     case 'EDIT_VALUE':
-      return state.setIn([ ...id, 'value'], value)
+      return state.setIn([ ...id, 'value' ], value)
     case 'BACK_STAGE':
       if (state.size > 2) {
         return state.shift()

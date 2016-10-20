@@ -1,18 +1,13 @@
 import React from 'react'
 import { Provider } from 'react-redux'
 import store from './store'
-import DevTools from './containers/dev-tools'
 
 import Stage from './containers/stage'
 import StageList from './containers/stage-list'
 
 import { Router, Route, hashHistory } from 'react-router'
-import { fetch } from './actions'
-
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-
-import AppBar from 'material-ui/AppBar';
-
+import AppBar from 'material-ui/AppBar'
 import Flexbox from 'flexbox-react'
 
 const App = (props) => (
@@ -28,6 +23,16 @@ const App = (props) => (
     </Flexbox>
   </div>
 )
+
+var DevTools
+
+if (process.env.NODE_ENV === 'production') {
+  DevTools = () => null
+}
+
+if (process.env.NODE_ENV !== 'production') {
+  DevTools = require('./containers/dev-tools').default
+}
 
 export default () => (
   <MuiThemeProvider>

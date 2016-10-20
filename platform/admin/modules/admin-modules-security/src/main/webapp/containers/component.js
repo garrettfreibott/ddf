@@ -88,9 +88,12 @@ const Panel = ({ id, path = [], label, description, children = [] }) => (
   </div>
 )
 
+// can be refactored to use findIndex, but don't want to shim it yet
 const findComponentIndex = (options, value) => {
-  const i = options.findIndex((option) => value === option.label)
-  return (i === -1) ? 0 : i
+  for (var i = 0; i < options.length; i++) {
+    if (value === options[i].label) return i
+  }
+  return 0
 }
 
 const Selector = ({ id, path = [], value, label, description, options = [] }) => {
@@ -98,7 +101,7 @@ const Selector = ({ id, path = [], value, label, description, options = [] }) =>
   return (
     <div>
       <Component
-        path={[]}
+        path={path}
         type='STRING_ENUM'
         value={value || options[0].label}
         defaults={options.map((o) => o.label)} />

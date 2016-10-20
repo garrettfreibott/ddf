@@ -11,9 +11,8 @@
   },
   "scripts": {
     "start": "webpack-dev-server --progress --open",
-    "pretest": "#standard && flow",
-    "test:gen": "NODE_ENV=test webpack && node public/test/bundle.js",
-    "test": "npm run test:gen",
+    "pretest": "standard ./src/**/*.js",
+    "test": "NODE_ENV=test webpack && node target/test/bundle.js",
     "format": "standard --fix",
     "dist": "NODE_ENV=production webpack --progress",
     "dist:stat": "NODE_ENV=production webpack --json | webpack-bundle-size-analyzer"
@@ -43,9 +42,7 @@
     "babel-preset-react": "^6.11.1",
     "babel-preset-stage-0": "^6.5.0",
     "concat-stream": "^1.5.2",
-    "express": "^4.14.0",
     "file-loader": "^0.9.0",
-    "flow-bin": "^0.32.0",
     "font-awesome-webpack": "0.0.4",
     "json-loader": "^0.5.4",
     "less": "^2.7.1",

@@ -5,17 +5,18 @@ export const action = (label, method, url) => ({
   url: url || '/admin/security/wizard/network'
 })
 
-export const question = (id, label, type, value) => ({
+export const childrenFn = (id, label, type, value) => ({
   id: id || 0,
   label: label || 'label',
   type: type || 'HOSTNAME',
   value: value || 'value'
 })
 
-export const stage = (actions, title, questions) => ({
+export const stage = (actions, label, children) => ({
   actions: actions || [action()],
   form: {
-    title: title || 'title',
-    questions: questions || [question()]
+    type: 'PANEL',
+    label: label || 'title',
+    children: children || [childrenFn()]
   }
 })

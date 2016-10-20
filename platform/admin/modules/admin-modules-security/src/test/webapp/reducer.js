@@ -1,11 +1,7 @@
 import { check, property, gen } from 'testcheck'
-import { submittingStart, submittingEnd, networkError, edit, setStage } from '../actions'
+import { submittingStart, submittingEnd, networkError } from 'actions'
 
-import { stage } from './random'
-
-import reducer, { isSubmitting, getCurrentStage } from '../reducer'
-
-console.log(JSON.stringify(stage(), null, 2))
+import reducer, { isSubmitting, getCurrentStage, getErrors } from 'reducer'
 
 const isValid = (state, action, nextState) => {
   switch (action.type) {
@@ -14,11 +10,11 @@ const isValid = (state, action, nextState) => {
     case 'SUBMITTING_END':
       return isSubmitting(nextState) === false
     case 'EDIT_VALUE':
-      return action.value === getCurrentStage(nextState).form.questions[0].value
+      return action.value === getCurrentStage(nextState).form.children[0].value
     case 'SET_STAGE':
       return getCurrentStage(state) !== getCurrentStage(nextState)
     case 'ERROR':
-      return nextState.errors !== null
+      return getErrors(nextState) !== null
   }
   return true
 }
@@ -29,9 +25,7 @@ const c = check(
       gen.oneOf([
         gen.return(submittingStart()),
         gen.return(submittingEnd()),
-        gen.return(networkError()),
-        gen.map((value) => edit(0, value), gen.string),
-        gen.map((o) => setStage(o), gen.object({}))
+        gen.return(networkError())
       ])
     )],
     (actions) => {
