@@ -118,7 +118,7 @@ const inputs = {
   STRING: StringInput,
   PASSWORD: PasswordInput,
   INFO: Info,
-  PANEL: Panel,
+  BASE_CONTAINER: Panel,
   SELECTOR: Selector
 }
 

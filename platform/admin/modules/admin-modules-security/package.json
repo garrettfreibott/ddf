@@ -1,7 +1,7 @@
 {
-  "name": "ui2",
+  "name": "admin-modules-security",
   "author": "Codice",
-  "description": "The second ui.",
+  "description": "The security admin ui module.",
   "version": "1.0.0",
   "main": "index.js",
   "license": "LGPL-3.0",
@@ -24,8 +24,11 @@
   },
   "dependencies": {
     "es6-promise": "^4.0.5",
+    "exports-loader": "^0.6.3",
     "flexbox-react": "^4.0.0",
     "font-awesome": "^4.6.3",
+    "immutable": "^3.8.1",
+    "imports-loader": "^0.6.5",
     "material-ui": "^0.16.0",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
@@ -33,7 +36,8 @@
     "react-router": "^2.5.2",
     "react-tap-event-plugin": "^1.0.0",
     "redux": "^3.5.2",
-    "redux-immutable": "^3.0.8"
+    "redux-immutable": "^3.0.8",
+    "whatwg-fetch": "^1.0.0"
   },
   "devDependencies": {
     "babel-core": "^6.17.0",
@@ -42,6 +46,7 @@
     "babel-preset-react": "^6.11.1",
     "babel-preset-stage-0": "^6.5.0",
     "concat-stream": "^1.5.2",
+    "css-loader": "^0.25.0",
     "file-loader": "^0.9.0",
     "font-awesome-webpack": "0.0.4",
     "json-loader": "^0.5.4",

@@ -6,7 +6,7 @@ export const setStage = (stage) => ({ type: 'SET_STAGE', stage })
 export const resetStage = (stage) => ({ type: 'RESET_STAGE', stage })
 
 export const fetch = (stageId) => (dispatch) => {
-  api.fetch(stageId).then(stage => {
+  api.fetchStage(stageId).then(stage => {
     dispatch(resetStage(stage))
   })
 }

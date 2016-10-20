@@ -38,7 +38,8 @@ var config = {
   },
   plugins: [
     new webpack.ProvidePlugin({
-      'Promise': 'es6-promise'
+      Promise: 'es6-promise',
+      fetch: 'imports?this=>global!exports?global.fetch!whatwg-fetch'
     })
   ]
 }
@@ -98,7 +99,7 @@ if (process.env.NODE_ENV === 'production') {
       host: '0.0.0.0',
       proxy: {
         '/admin': {
-          target: 'https://192.168.0.4:8993',
+          target: 'https://localhost:8993',
           secure: false
         }
       }
