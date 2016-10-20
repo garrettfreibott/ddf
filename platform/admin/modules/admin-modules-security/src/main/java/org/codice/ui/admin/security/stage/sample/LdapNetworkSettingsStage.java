@@ -1,21 +1,20 @@
 package org.codice.ui.admin.security.stage.sample;
 
-import static org.codice.ui.admin.security.stage.Action.ActionMethod.POST;
+import static org.codice.ui.admin.security.stage.components.ButtonActionComponent.Method.POST;
 import static org.codice.ui.admin.security.stage.components.Component.ComponentType.BASE_CONTAINER;
-import static org.codice.ui.admin.security.stage.components.Component.ComponentType.BUTTON;
-import static org.codice.ui.admin.security.stage.components.Component.ComponentType.HOSTNAME;
-import static org.codice.ui.admin.security.stage.components.Component.ComponentType.PORT;
-import static org.codice.ui.admin.security.stage.components.Component.ComponentType.STRING_ENUM;
 
 import java.util.Arrays;
 import java.util.Map;
 
+import org.codice.ui.admin.security.config.Configuration;
+import org.codice.ui.admin.security.stage.Stage;
 import org.codice.ui.admin.security.stage.StageFinder;
 import org.codice.ui.admin.security.stage.StageParameters;
-import org.codice.ui.admin.security.config.Configuration;
-import org.codice.ui.admin.security.stage.Action;
+import org.codice.ui.admin.security.stage.components.ButtonActionComponent;
 import org.codice.ui.admin.security.stage.components.Component;
-import org.codice.ui.admin.security.stage.Stage;
+import org.codice.ui.admin.security.stage.components.HostnameComponent;
+import org.codice.ui.admin.security.stage.components.PortComponent;
+import org.codice.ui.admin.security.stage.components.StringEnumComponent;
 
 public class LdapNetworkSettingsStage extends Stage {
 
@@ -33,6 +32,7 @@ public class LdapNetworkSettingsStage extends Stage {
     public LdapNetworkSettingsStage(StageFinder stageFinder) {
         super(stageFinder);
     }
+
     public LdapNetworkSettingsStage(StageParameters stageParameters) {
         super(stageParameters);
     }
@@ -44,8 +44,7 @@ public class LdapNetworkSettingsStage extends Stage {
 
     @Override
     public Stage validateStage(Stage ldapNetworkSettingsStage, Map<String, String> params) {
-        Component ldapHostNameQ =
-                ldapNetworkSettingsStage.getComponent(LDAP_HOST_NAME_ID);
+        Component ldapHostNameQ = ldapNetworkSettingsStage.getComponent(LDAP_HOST_NAME_ID);
         Component ldapPortQ = ldapNetworkSettingsStage.getComponent(LDAP_PORT_ID);
         Component ldapEncryptionMethodQ = ldapNetworkSettingsStage.getComponent(
                 LDAP_ENCRYPTION_METHOD);
@@ -79,8 +78,9 @@ public class LdapNetworkSettingsStage extends Stage {
 
         if (!connectionSuccessful && !skipConnectionTest) {
             ldapNetworkSettingsStage.getRootComponent()
-                    .subComponents(Component.builder(null, BUTTON)
-                            .defaults(new Action(POST, getWizardUrl() + "?skip=true", "skip")));
+                    .subComponents(new ButtonActionComponent().setMethod(POST)
+                            .setUrl(getWizardUrl() + "?skip=true")
+                            .label("skip"));
         }
 
         return ldapNetworkSettingsStage;
@@ -108,22 +108,16 @@ public class LdapNetworkSettingsStage extends Stage {
 
     @Override
     public Component getDefaultRootComponent() {
-        Action checkStage = new Action(POST,
-                getWizardUrl() + "/" + LDAP_NETWORK_SETTINGS_STAGE_ID,
-                "check");
-
         return Component.builder("LDAP Network Settings", BASE_CONTAINER)
-                .subComponents(Component.builder(LDAP_HOST_NAME_ID, HOSTNAME)
-                                .title("LDAP Host name"),
-                        Component.builder(LDAP_PORT_ID, PORT)
-                                .defaults(389, 636)
-                                .title("LDAP Port"),
-                        Component.builder(LDAP_ENCRYPTION_METHOD,
-                                STRING_ENUM)
-                                .defaults(LDAP_ENCRYPTION_METHODS)
-                                .title("Encryption method"),
-                        Component.builder(null, BUTTON)
-                                .defaults(checkStage).title("Check"));
+                .subComponents(new HostnameComponent(LDAP_HOST_NAME_ID).label("LDAP Host name"),
+                        new PortComponent(LDAP_PORT_ID).defaults(389, 636)
+                                .label("LDAP PortComponent"),
+                        new StringEnumComponent(LDAP_ENCRYPTION_METHOD).defaults(
+                                LDAP_ENCRYPTION_METHODS)
+                                .label("Encryption method"),
+                        (new ButtonActionComponent()).setUrl(getWizardUrl() + "/" + getStageId())
+                                .setMethod(POST)
+                                .label("check"));
     }
 
     @Override

@@ -7,14 +7,12 @@ import java.util.List;
 public class Component<T> {
 
     public enum ComponentType {
-        PORT, HOSTNAME, STRING_ENUM, STRING, PASSWORD, BUTTON, BASE_CONTAINER
+        PORT, HOSTNAME, STRING_ENUM, STRING, PASSWORD, BUTTON, BASE_CONTAINER, ACTION
     }
 
     private String id;
 
-    private String title;
-
-    private ComponentType type;
+    private String label;
 
     private List<Component> children;
 
@@ -24,9 +22,8 @@ public class Component<T> {
 
     private List<T> defaults;
 
-    public Component(String id, ComponentType type) {
+    public Component(String id) {
         this.id = id;
-        this.type = type;
         children = new ArrayList<>();
         errors = new ArrayList<>();
         defaults = new ArrayList<>();
@@ -88,14 +85,6 @@ public class Component<T> {
         return id;
     }
 
-    public void setComponentType(ComponentType componentType) {
-        this.type = componentType;
-    }
-
-    public void getComponentType(ComponentType componentType) {
-        this.type = componentType;
-    }
-
     public T getValue() {
         return value;
     }
@@ -104,7 +93,7 @@ public class Component<T> {
     //  Builder Methods
     //
     public static Component builder(String id, ComponentType componentType) {
-        return new Component(id, componentType);
+        return new Component(id);
     }
 
 
@@ -113,8 +102,8 @@ public class Component<T> {
         return this;
     }
 
-    public Component title(String title) {
-        this.title = title;
+    public Component label(String label) {
+        this.label = label;
         return this;
     }
 

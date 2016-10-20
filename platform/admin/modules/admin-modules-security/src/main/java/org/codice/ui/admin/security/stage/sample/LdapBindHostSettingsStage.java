@@ -1,17 +1,16 @@
 package org.codice.ui.admin.security.stage.sample;
 
-import static org.codice.ui.admin.security.stage.Action.ActionMethod.POST;
-import static org.codice.ui.admin.security.stage.components.Component.ComponentType.BUTTON;
+import static org.codice.ui.admin.security.stage.components.ButtonActionComponent.Method.POST;
 import static org.codice.ui.admin.security.stage.components.Component.ComponentType.PASSWORD;
 import static org.codice.ui.admin.security.stage.components.Component.ComponentType.STRING;
 
 import java.util.Map;
 
+import org.codice.ui.admin.security.config.Configuration;
+import org.codice.ui.admin.security.stage.Stage;
 import org.codice.ui.admin.security.stage.StageFinder;
 import org.codice.ui.admin.security.stage.StageParameters;
-import org.codice.ui.admin.security.config.Configuration;
-import org.codice.ui.admin.security.stage.Action;
-import org.codice.ui.admin.security.stage.Stage;
+import org.codice.ui.admin.security.stage.components.ButtonActionComponent;
 import org.codice.ui.admin.security.stage.components.Component;
 
 public class LdapBindHostSettingsStage extends Stage {
@@ -37,14 +36,14 @@ public class LdapBindHostSettingsStage extends Stage {
 
     @Override
     public Component getDefaultRootComponent() {
-        Action validateStageBtn = new Action(POST, getWizardUrl() + "/" + getStageId(), "check");
         return Component.builder("LDAP Bind User Settings", Component.ComponentType.BASE_CONTAINER)
                 .subComponents(Component.builder(BIND_USER_DN, STRING)
-                                .title("LDAP Bind User DN"),
+                                .label("LDAP Bind User DN"),
                         Component.builder(BIND_USER_PASS, PASSWORD)
-                                .title("LDAP Bind User Password"),
-                        Component.builder(null, BUTTON)
-                                .defaults(validateStageBtn));
+                                .label("LDAP Bind User Password"),
+                        new ButtonActionComponent().setMethod(POST)
+                                .setUrl(getWizardUrl() + "/" + getStageId())
+                                .label("check"));
     }
 
     @Override
@@ -76,8 +75,9 @@ public class LdapBindHostSettingsStage extends Stage {
 
         if (!connectionSuccessful && !skipConnectionTest) {
             stageToTest.getRootComponent()
-                    .subComponents(Component.builder(null, BUTTON)
-                            .defaults(new Action(POST, getWizardUrl() + "?skip=true", "skip")));
+                    .subComponents(new ButtonActionComponent().setUrl(getWizardUrl() + "?skip=true")
+                            .setMethod(POST)
+                            .label("skip"));
         }
 
         return stageToTest;

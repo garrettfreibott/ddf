@@ -1,18 +1,18 @@
 package org.codice.ui.admin.security.stage.sample;
 
-import static org.codice.ui.admin.security.stage.Action.ActionMethod.POST;
+import static org.codice.ui.admin.security.stage.components.ButtonActionComponent.Method.POST;
 import static org.codice.ui.admin.security.stage.components.Component.ComponentType.BASE_CONTAINER;
 import static org.codice.ui.admin.security.stage.components.Component.ComponentType.BUTTON;
-import static org.codice.ui.admin.security.stage.components.Component.ComponentType.STRING;
 
 import java.util.Map;
 
+import org.codice.ui.admin.security.config.Configuration;
+import org.codice.ui.admin.security.stage.Stage;
 import org.codice.ui.admin.security.stage.StageFinder;
 import org.codice.ui.admin.security.stage.StageParameters;
-import org.codice.ui.admin.security.config.Configuration;
-import org.codice.ui.admin.security.stage.Action;
-import org.codice.ui.admin.security.stage.Stage;
+import org.codice.ui.admin.security.stage.components.ButtonActionComponent;
 import org.codice.ui.admin.security.stage.components.Component;
+import org.codice.ui.admin.security.stage.components.StringComponent;
 
 public class LdapDirectorySettingsStage extends Stage {
 
@@ -71,8 +71,10 @@ public class LdapDirectorySettingsStage extends Stage {
 
         if (!connectionSuccessful && !skipConnectionTest) {
             stageToTest.getRootComponent()
-                    .subComponents(Component.builder(null, BUTTON)
-                            .defaults(new Action(POST, getWizardUrl() + "?skip=true", "skip")));
+                    .subComponents(new ButtonActionComponent().setUrl(
+                                    getWizardUrl() + "?skip=true")
+                                    .setMethod(POST)
+                                    .label("skip"));
         }
 
         return stageToTest;
@@ -91,29 +93,23 @@ public class LdapDirectorySettingsStage extends Stage {
         newConfiguration.addValue(BASE_GROUP_DN,
                 currentStage.getComponent(BASE_GROUP_DN)
                         .getValue());
-        newConfiguration.addValue(BASE_USERNAME_ATTRIBUTE, currentStage.getComponent(
-                BASE_USERNAME_ATTRIBUTE)
-                .getValue());
+        newConfiguration.addValue(BASE_USERNAME_ATTRIBUTE,
+                currentStage.getComponent(BASE_USERNAME_ATTRIBUTE)
+                        .getValue());
         currentStage.setConfiguration(newConfiguration);
         return currentStage;
     }
 
     @Override
     public Component getDefaultRootComponent() {
-        Action validateStageBtn = new Action(POST,
-                getWizardUrl() + "/" + LDAP_DIRECTORY_SETTINGS_STAGE_ID,
-                "check");
-
         return Component.builder("LDAP Directory Settings", BASE_CONTAINER)
-                .subComponents(Component.builder(BASE_USER_DN, STRING)
-                                .title("Base User DN"),
-                        Component.builder(BASE_GROUP_DN, STRING)
-                                .title("Group User DN"),
-                        Component.builder(BASE_USERNAME_ATTRIBUTE, STRING)
-                                .title("User name attribute"),
-                        Component.builder(null, BUTTON)
-                                .defaults(validateStageBtn)
-                                .title("Check"));
+                .subComponents(new StringComponent(BASE_USER_DN).label("Base User DN"),
+                        new StringComponent(BASE_GROUP_DN).label("Group User DN"),
+                        new StringComponent(BASE_USERNAME_ATTRIBUTE).label("User name attribute"),
+                        new ButtonActionComponent().setUrl(
+                                getWizardUrl() + "/" + LDAP_DIRECTORY_SETTINGS_STAGE_ID)
+                                .setMethod(POST)
+                                .label("check"));
     }
 
     @Override
