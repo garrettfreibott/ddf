@@ -14,7 +14,7 @@
     "pretest": "standard ./src/**/*.js",
     "test": "NODE_ENV=test webpack && node target/test/bundle.js",
     "format": "standard --fix",
-    "dist": "NODE_ENV=production webpack --progress",
+    "dist": "NODE_ENV=production webpack --bail --progress",
     "dist:stat": "NODE_ENV=production webpack --json | webpack-bundle-size-analyzer"
   },
   "peerDependencies": {
