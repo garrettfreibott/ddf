@@ -8,12 +8,26 @@ export const getAllStages = (state) => state.get('stage').pop().toJS()
 
 export const canGoBack = (state) => state.get('stage').size > 2
 
+const clearError = (component) => {
+  const noErrors = component.delete('error')
+
+  if (noErrors.has('children')) {
+    return noErrors.update('children', (children) => children.map(clearError))
+  }
+
+  return noErrors
+}
+
 const stage = (state = fromJS([{}]), { type, stage, id, value } = {}) => {
   switch (type) {
     case 'SET_STAGE':
       return state.unshift(fromJS(stage))
     case 'RESET_STAGE':
       return fromJS([ stage, {} ])
+    case 'RESET_LAST_STAGE':
+      return state.shift().unshift(fromJS(stage))
+    case 'CLEAR_LAST_ERRORS':
+      return state.updateIn([0, 'rootComponent'], clearError)
     case 'EDIT_VALUE':
       return state.setIn([ ...id, 'value' ], value)
     case 'BACK_STAGE':

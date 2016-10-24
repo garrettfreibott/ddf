@@ -1,6 +1,7 @@
 package org.codice.ui.admin.security.stage;
 
 import java.util.Map;
+import java.util.Optional;
 
 import org.codice.ui.admin.security.config.Configuration;
 import org.codice.ui.admin.security.stage.components.Component;
@@ -61,6 +62,17 @@ public abstract class Stage {
 
     public Component getRootComponent() {
         return rootComponent;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends Component> Optional<T> getComponent(String componentId, Class<T> clazz) {
+        Component component = getComponent(componentId);
+
+        if (clazz.isInstance(component)) {
+            return Optional.of((T) component);
+        }
+
+        return Optional.empty();
     }
 
     public Component getComponent(String componentId) {

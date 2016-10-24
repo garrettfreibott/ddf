@@ -16,7 +16,7 @@ public class Component<T> {
 
     private List<Component> children;
 
-    private List<String> errors;
+    private String error;
 
     private T value;
 
@@ -25,19 +25,18 @@ public class Component<T> {
     public Component(String id) {
         this.id = id;
         children = new ArrayList<>();
-        errors = new ArrayList<>();
         defaults = new ArrayList<>();
     }
 
     public void addError(String error) {
-        errors.add(error);
+        this.error = error;
     }
 
     /**
      * Clears all errors from this component and all sub components
      */
     public void clearAllErrors() {
-        errors = new ArrayList<>();
+        error = null;
 
         if (children != null) {
             for (Component subComponent : children) {
@@ -52,7 +51,7 @@ public class Component<T> {
      * @return
      */
     public boolean containsErrors() {
-        if (errors != null && !errors.isEmpty()) {
+        if (error != null) {
             return true;
         }
 

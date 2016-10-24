@@ -3,13 +3,14 @@ import React from 'react'
 import MenuItem from 'material-ui/MenuItem'
 import SelectField from 'material-ui/SelectField'
 import TextField from 'material-ui/TextField'
+import RaisedButton from 'material-ui/RaisedButton'
 
 import AutoComplete from 'material-ui/AutoComplete'
 
 import { CardActions, CardHeader } from 'material-ui/Card'
 import Flexbox from 'flexbox-react'
 
-import { edit } from '../actions'
+import { submit, edit } from '../actions'
 import { connect } from 'react-redux'
 
 import { isSubmitting } from '../reducer'
@@ -78,7 +79,7 @@ const Info = ({id, label, value}) => (
 
 const Panel = ({ id, path = [], label, description, children = [] }) => (
   <div>
-    <CardHeader title={label} subtitle={description} />
+    <CardHeader title={label || id} subtitle={description} />
     <CardActions>
       <Flexbox justifyContent='center'>
         <div>{children.map((c, i) =>
@@ -111,6 +112,17 @@ const Selector = ({ id, path = [], value, label, description, options = [] }) =>
   )
 }
 
+const ButtonAction = ({ path, label, submitting, onSubmit, ...rest }) => (
+  <div>
+    <RaisedButton
+      style={{ marginLeft: 10 }}
+      onClick={() => { onSubmit(rest) }}
+      label={label}
+      primary
+      disabled={submitting} />
+  </div>
+)
+
 const inputs = {
   PORT: PortInput,
   HOSTNAME: HostNameInput,
@@ -119,7 +131,8 @@ const inputs = {
   PASSWORD: PasswordInput,
   INFO: Info,
   BASE_CONTAINER: Panel,
-  SELECTOR: Selector
+  SELECTOR: Selector,
+  BUTTON_ACTION: ButtonAction
 }
 
 const StatelessComponent = ({ type, ...args }) => {
@@ -135,7 +148,7 @@ const StatelessComponent = ({ type, ...args }) => {
 
 const mapStateToProps = (state) => ({ submitting: isSubmitting(state) })
 
-Component = connect(mapStateToProps, { onEdit: edit })(StatelessComponent)
+Component = connect(mapStateToProps, { onEdit: edit, onSubmit: submit })(StatelessComponent)
 
 export default Component
 

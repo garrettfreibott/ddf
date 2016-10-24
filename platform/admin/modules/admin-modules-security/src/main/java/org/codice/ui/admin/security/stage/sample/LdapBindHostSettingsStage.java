@@ -5,6 +5,7 @@ import static org.codice.ui.admin.security.stage.components.Component.ComponentT
 import static org.codice.ui.admin.security.stage.components.Component.ComponentType.STRING;
 
 import java.util.Map;
+import java.util.Optional;
 
 import org.codice.ui.admin.security.config.Configuration;
 import org.codice.ui.admin.security.stage.Stage;
@@ -12,6 +13,8 @@ import org.codice.ui.admin.security.stage.StageFinder;
 import org.codice.ui.admin.security.stage.StageParameters;
 import org.codice.ui.admin.security.stage.components.ButtonActionComponent;
 import org.codice.ui.admin.security.stage.components.Component;
+import org.codice.ui.admin.security.stage.components.PasswordComponent;
+import org.codice.ui.admin.security.stage.components.StringComponent;
 
 public class LdapBindHostSettingsStage extends Stage {
 
@@ -37,9 +40,10 @@ public class LdapBindHostSettingsStage extends Stage {
     @Override
     public Component getDefaultRootComponent() {
         return Component.builder("LDAP Bind User Settings", Component.ComponentType.BASE_CONTAINER)
-                .subComponents(Component.builder(BIND_USER_DN, STRING)
+                .subComponents(
+                        new StringComponent(BIND_USER_DN)
                                 .label("LDAP Bind User DN"),
-                        Component.builder(BIND_USER_PASS, PASSWORD)
+                        new PasswordComponent(BIND_USER_PASS)
                                 .label("LDAP Bind User Password"),
                         new ButtonActionComponent().setMethod(POST)
                                 .setUrl(getWizardUrl() + "/" + getStageId())

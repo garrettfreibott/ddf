@@ -1,3 +1,5 @@
+import 'font-awesome-webpack'
+
 import inject from 'react-tap-event-plugin'
 import React from 'react'
 import { render } from 'react-dom'

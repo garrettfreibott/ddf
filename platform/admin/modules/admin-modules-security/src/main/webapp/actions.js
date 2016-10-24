@@ -4,6 +4,7 @@ import { getCurrentStage } from './reducer'
 
 export const setStage = (stage) => ({ type: 'SET_STAGE', stage })
 export const resetStage = (stage) => ({ type: 'RESET_STAGE', stage })
+export const resetLastStage = (stage) => ({ type: 'RESET_LAST_STAGE', stage })
 
 export const fetch = (stageId) => (dispatch) => {
   api.fetchStage(stageId).then(stage => {
@@ -29,9 +30,9 @@ export const networkError = () => ({
   message: 'Cannot submit form. Network error.'
 })
 
-export const dismissErrors = () => ({
-  type: 'DISMISS_ERRORS'
-})
+export const dismissErrors = () => ({ type: 'DISMISS_ERRORS' })
+
+export const clearLastErrors = () => ({ type: 'CLEAR_LAST_ERRORS' })
 
 export const submit = (action) => (dispatch, getState) => {
   const stage = getCurrentStage(getState())
@@ -39,10 +40,16 @@ export const submit = (action) => (dispatch, getState) => {
   dispatch(submittingStart())
 
   api.submit(stage, action)
-    .then(stage => {
+    .then(([status, stage]) => {
       dispatch(submittingEnd())
-      dispatch(setStage(stage))
-    }, () => {
+      if (status === 400) {
+        dispatch(resetLastStage(stage))
+      } else {
+        dispatch(clearLastErrors())
+        dispatch(setStage(stage))
+      }
+    }, (err) => {
+      debugger
       dispatch(submittingEnd())
       dispatch(networkError())
     })
