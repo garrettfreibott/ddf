@@ -20,6 +20,11 @@ public class Component<T> implements BaseComponent{
 
     private T value;
 
+    public Component<T> value(T value) {
+        this.value = value;
+        return this;
+    }
+
     private List<T> defaults;
 
     public Component(String id) {

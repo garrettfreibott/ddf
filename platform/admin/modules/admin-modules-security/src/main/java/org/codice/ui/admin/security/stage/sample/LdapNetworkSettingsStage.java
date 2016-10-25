@@ -105,9 +105,11 @@ public class LdapNetworkSettingsStage extends Stage {
         return Component.builder("LDAP Network Settings", BASE_CONTAINER)
                 .subComponents(new HostnameComponent(LDAP_HOST_NAME_ID).label("LDAP Host name"),
                         new PortComponent(LDAP_PORT_ID).defaults(389, 636)
+                                .value(389)
                                 .label("LDAP PortComponent"),
                         new StringEnumComponent(LDAP_ENCRYPTION_METHOD).defaults(
                                 LDAP_ENCRYPTION_METHODS)
+                                .value(LDAP_ENCRYPTION_METHODS[2])
                                 .label("Encryption method"),
                         (new ButtonActionComponent()).setUrl(getWizardUrl() + "/" + getStageId())
                                 .setMethod(POST)
