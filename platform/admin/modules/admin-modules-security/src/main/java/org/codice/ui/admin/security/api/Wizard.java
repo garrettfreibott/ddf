@@ -7,9 +7,9 @@ import org.codice.ui.admin.security.api.StageFactory;
 
 public interface Wizard {
 
-    String getContextPath();
-
     StageComposer getStageComposer(String contextPath, List<StageFactory> stages);
+
+    String getId();
 
     String getTitle();
 

@@ -1,9 +1,9 @@
-export const list = () => new Promise((resolve, reject) => {
-  resolve(['ldapNetworkSettingsStage'])
-})
+export const list = () =>
+  window.fetch('/admin/wizard', {credentials: 'same-origin'})
+    .then((res) => res.json())
 
 export const fetchStage = (id) =>
-  window.fetch('/admin/wizard/ldap/' + id, {credentials: 'same-origin'})
+  window.fetch('/admin/wizard/' + id, {credentials: 'same-origin'})
     .then((res) => res.json())
 
 export const submit = (stage, { method, url }) =>

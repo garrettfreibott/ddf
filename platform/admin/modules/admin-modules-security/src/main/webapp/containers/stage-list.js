@@ -9,16 +9,13 @@ import { List, ListItem } from 'material-ui/List'
 
 import { Link } from 'react-router'
 
-const format = (name) => name.split('-')
-  .map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
-
 const StageList = ({ list, onList }) => (
   <Mount on={onList}>
     <Paper style={{ margin: 20 }}>
       <List>
-        {list.map((stageName, i) =>
-          <Link key={i} to={'/stage/' + stageName}>
-            <ListItem>{format(stageName)}</ListItem>
+        {list.map(({ id, title }, i) =>
+          <Link key={i} to={'/stage/' + id}>
+            <ListItem>{title}</ListItem>
           </Link>)}
       </List>
     </Paper>

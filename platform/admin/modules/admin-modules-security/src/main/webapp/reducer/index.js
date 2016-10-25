@@ -80,6 +80,6 @@ const list = (state = fromJS([]), { type, list } = {}) => {
   }
 }
 
-export const getList = (state) => state.get('list')
+export const getList = (state) => state.get('list').toJS()
 
 export default combineReducers({ list, errors, submitting, stage })

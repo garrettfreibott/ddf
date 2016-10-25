@@ -13,10 +13,6 @@
 -->
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
 
-    <bean id="ldapWizardContextPath" class="java.lang.String">
-        <argument value="/admin/wizard/ldap"/>
-    </bean>
-
     <bean id="ldapBindHostStage" class="org.codice.ui.admin.security.stage.sample.LdapBindHostSettingsStage"/>
     <bean id="ldapDirStage" class="org.codice.ui.admin.security.stage.sample.LdapDirectorySettingsStage"/>
     <bean id="ldapNetworkStage" class="org.codice.ui.admin.security.stage.sample.LdapNetworkSettingsStage"/>
@@ -27,12 +23,15 @@
 
     <reference-list id="stages" interface="org.codice.ui.admin.security.api.StageFactory" availability="optional"/>
 
+    <reference-list id="wizards" interface="org.codice.ui.admin.security.api.Wizard" availability="optional"/>
 
     <bean id="ldapWiz" class="org.codice.ui.admin.security.LdapWizard">
-        <property name="contextPath" ref="ldapWizardContextPath"/>
+        <property name="contextPath" value="/admin/wizard"/>
         <property name="stages" ref="stages"/>
+        <property name="wizards" ref="wizards"/>
     </bean>
 
+    <service ref="ldapWiz" interface="org.codice.ui.admin.security.api.Wizard" />
 
     <bean id="sparkServlet" class="org.codice.ui.admin.security.SparkServlet">
         <property name="sparkApplications">
@@ -40,11 +39,12 @@
                 <ref component-id="ldapWiz"/>
             </list>
         </property>
-        <property name="filterMappingPattern" value="/admin/wizard/ldap/*"/>
+        <property name="filterMappingPattern" value="/admin/wizard/*"/>
     </bean>
+
     <service ref="sparkServlet" interface="javax.servlet.Servlet">
         <service-properties>
-            <entry key="urlPatterns" value="/admin/wizard/ldap/*"/>
+            <entry key="urlPatterns" value="/admin/wizard/*"/>
         </service-properties>
     </service>
 

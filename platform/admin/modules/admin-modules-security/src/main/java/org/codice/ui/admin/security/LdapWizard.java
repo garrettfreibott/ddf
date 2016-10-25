@@ -4,18 +4,20 @@ import static org.boon.HTTP.APPLICATION_JSON;
 import static org.codice.ui.admin.security.stage.sample.LdapBindHostSettingsStage.LDAP_BIND_HOST_SETTINGS_STAGE_ID;
 import static org.codice.ui.admin.security.stage.sample.LdapDirectorySettingsStage.LDAP_DIRECTORY_SETTINGS_STAGE_ID;
 import static org.codice.ui.admin.security.stage.sample.LdapNetworkSettingsStage.LDAP_NETWORK_SETTINGS_STAGE_ID;
-
-import java.util.List;
-
 import static spark.Spark.after;
 import static spark.Spark.get;
 import static spark.Spark.post;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.apache.http.HttpStatus;
-import org.codice.ui.admin.security.api.Wizard;
-import org.codice.ui.admin.security.stage.StageComposer;
-import org.codice.ui.admin.security.stage.Stage;
 import org.codice.ui.admin.security.api.StageFactory;
+import org.codice.ui.admin.security.api.Wizard;
+import org.codice.ui.admin.security.stage.Stage;
+import org.codice.ui.admin.security.stage.StageComposer;
 import org.codice.ui.admin.security.stage.StageParameters;
 import org.codice.ui.admin.security.stage.components.ButtonActionComponent;
 import org.codice.ui.admin.security.stage.components.Component;
@@ -25,6 +27,7 @@ import org.codice.ui.admin.security.stage.components.PortComponent;
 import org.codice.ui.admin.security.stage.components.StringComponent;
 import org.codice.ui.admin.security.stage.components.StringEnumComponent;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
@@ -40,6 +43,19 @@ public class LdapWizard implements SparkApplication, Wizard {
 
     private List<StageFactory> stages;
 
+    public void setWizards(List<Wizard> wizards) {
+        this.wizards = wizards;
+    }
+
+    private List<Wizard> wizards;
+
+    private Optional<Wizard> findWizard(String id) {
+        return wizards.stream()
+                .filter(w -> w.getId()
+                        .equals(id))
+                .findFirst();
+    }
+
     @Override
     public String getTitle() {
         return "LDAP Wizard";
@@ -50,7 +66,6 @@ public class LdapWizard implements SparkApplication, Wizard {
         return "Help setup that thing called LDAP!";
     }
 
-    @Override
     public String getContextPath() {
         return contextPath;
     }
@@ -60,19 +75,56 @@ public class LdapWizard implements SparkApplication, Wizard {
         return LDAP_NETWORK_SETTINGS_STAGE_ID;
     }
 
+    private static Map<String, Object> toMap(Wizard w) {
+        // @formatter:off
+        return ImmutableMap.of(
+                "id", w.getId(),
+                "title", w.getTitle(),
+                "description", w.getDescription());
+        // @formatter:on
+    }
+
     @Override
     public void init() {
 
         stageComposer = getStageComposer(contextPath, stages);
 
-        get("/:stageId", (req, res) -> {
+        get("/", (req, res) -> {
+            return wizards.stream()
+                    .map(LdapWizard::toMap)
+                    .collect(Collectors.toList());
+        }, new Gson()::toJson);
+
+        get("/:wizardId", (req, res) -> {
             // TODO: tbatie - 10/24/16 - When the stage is not found should we return the init stage by default?
-            return stageComposer.findStage(req.params(":stageId"),
-                    new StageParameters(getContextPath()));
+
+            Optional<Wizard> wizard = findWizard(req.params(":wizardId"));
+
+            if (!wizard.isPresent()) {
+                res.status(404);
+                return null;
+            }
+
+            return wizard.get()
+                    .getStageComposer(req.params(":wizardId"), stages)
+                    .findStage(wizard.get().initialStageId(),
+                            new StageParameters(getContextPath() + "/" + req.params(":wizardId")));
+
         }, getGsonParser()::toJson);
 
-        post("/:stageId", (req, res) -> {
-            Stage nextStage = stageComposer.processStage(getStageFromRequest(req), req.params());
+        post("/:wizardId/:stageId", (req, res) -> {
+
+            Optional<Wizard> wizard = findWizard(req.params(":wizardId"));
+
+            if (!wizard.isPresent()) {
+                res.status(404);
+                return null;
+            }
+
+            Stage nextStage = wizard.get()
+                    .getStageComposer(getContextPath() + "/" + req.params(":wizardId"), stages)
+                    .processStage(getStageFromRequest(req), req.params());
+
             if (nextStage.containsError()) {
                 res.status(HttpStatus.SC_BAD_REQUEST);
             }
@@ -86,6 +138,11 @@ public class LdapWizard implements SparkApplication, Wizard {
         return StageComposer.builder(contextPath, allStages)
                 .link(LDAP_NETWORK_SETTINGS_STAGE_ID, LDAP_BIND_HOST_SETTINGS_STAGE_ID)
                 .link(LDAP_BIND_HOST_SETTINGS_STAGE_ID, LDAP_DIRECTORY_SETTINGS_STAGE_ID);
+    }
+
+    @Override
+    public String getId() {
+        return "ldap";
     }
 
     public Stage getStageFromRequest(Request req) {
