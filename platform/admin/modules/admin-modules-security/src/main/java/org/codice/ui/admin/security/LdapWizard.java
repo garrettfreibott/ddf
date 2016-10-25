@@ -4,14 +4,18 @@ import static org.boon.HTTP.APPLICATION_JSON;
 import static org.codice.ui.admin.security.stage.sample.LdapBindHostSettingsStage.LDAP_BIND_HOST_SETTINGS_STAGE_ID;
 import static org.codice.ui.admin.security.stage.sample.LdapDirectorySettingsStage.LDAP_DIRECTORY_SETTINGS_STAGE_ID;
 import static org.codice.ui.admin.security.stage.sample.LdapNetworkSettingsStage.LDAP_NETWORK_SETTINGS_STAGE_ID;
+
+import java.util.List;
+
 import static spark.Spark.after;
 import static spark.Spark.get;
 import static spark.Spark.post;
 
 import org.apache.http.HttpStatus;
-import org.codice.ui.admin.security.stage.Stage;
+import org.codice.ui.admin.security.api.Wizard;
 import org.codice.ui.admin.security.stage.StageComposer;
-import org.codice.ui.admin.security.stage.StageFinder;
+import org.codice.ui.admin.security.stage.Stage;
+import org.codice.ui.admin.security.api.StageFactory;
 import org.codice.ui.admin.security.stage.StageParameters;
 import org.codice.ui.admin.security.stage.components.ButtonActionComponent;
 import org.codice.ui.admin.security.stage.components.Component;
@@ -30,16 +34,11 @@ import spark.servlet.SparkApplication;
 
 public class LdapWizard implements SparkApplication, Wizard {
 
-    public static final String LDAP_WIZARD_CONTEXT_PATH = "/admin/wizard/ldap";
+    public static String contextPath;
 
-    private StageComposer composer;
+    private StageComposer stageComposer;
 
-    private StageFinder stageFinder;
-
-    public LdapWizard(StageFinder stageFinder) {
-        this.stageFinder = stageFinder;
-        this.composer = getStageComposer(LDAP_WIZARD_CONTEXT_PATH, stageFinder);
-    }
+    private List<StageFactory> stages;
 
     @Override
     public String getTitle() {
@@ -53,7 +52,7 @@ public class LdapWizard implements SparkApplication, Wizard {
 
     @Override
     public String getContextPath() {
-        return LDAP_WIZARD_CONTEXT_PATH;
+        return contextPath;
     }
 
     @Override
@@ -63,13 +62,17 @@ public class LdapWizard implements SparkApplication, Wizard {
 
     @Override
     public void init() {
+
+        stageComposer = getStageComposer(contextPath, stages);
+
         get("/:stageId", (req, res) -> {
-            return stageFinder.getStage(req.params(":stageId"),
+            // TODO: tbatie - 10/24/16 - When the stage is not found should we return the init stage by default?
+            return stageComposer.findStage(req.params(":stageId"),
                     new StageParameters(getContextPath()));
         }, getGsonParser()::toJson);
 
         post("/:stageId", (req, res) -> {
-            Stage nextStage = composer.processStage(getStageFromRequest(req), req.params());
+            Stage nextStage = stageComposer.processStage(getStageFromRequest(req), req.params());
             if (nextStage.containsError()) {
                 res.status(HttpStatus.SC_BAD_REQUEST);
             }
@@ -79,31 +82,26 @@ public class LdapWizard implements SparkApplication, Wizard {
         after("/*", (req, res) -> res.type(APPLICATION_JSON));
     }
 
-    public StageComposer getStageComposer(String contextPath, StageFinder stageFinder) {
-        return StageComposer.builder(contextPath, stageFinder)
+    public StageComposer getStageComposer(String contextPath, List<StageFactory> allStages) {
+        return StageComposer.builder(contextPath, allStages)
                 .link(LDAP_NETWORK_SETTINGS_STAGE_ID, LDAP_BIND_HOST_SETTINGS_STAGE_ID)
                 .link(LDAP_BIND_HOST_SETTINGS_STAGE_ID, LDAP_DIRECTORY_SETTINGS_STAGE_ID);
     }
 
     public Stage getStageFromRequest(Request req) {
-        // TODO: tbatie - 10/19/16 - Clean this up, this is a really ugly way to get the class associated to the stageId
-        Stage stageFoundById = stageFinder.getStage(req.params(":stageId"),
-                new StageParameters(getContextPath()));
+        // TODO: tbatie - 10/24/16 - This is a sloppy workaround, can't call get class on this reference list, you'll get a proxy class back. Instead, calling newInstance and grabbing class from that
+        // TODO: tbatie - 10/24/16 - Null checks, logging, all that good stuff
+        Stage stageFoundById = stages.stream()
+                .filter(stageFactory -> stageFactory.getStageId()
+                        .equals(req.params(":stageId")))
+                .findFirst()
+                .get()
+                .getNewInstance(new StageParameters(null));
 
         return getGsonParser().fromJson(req.body(), stageFoundById.getClass());
     }
 
     private static Gson getGsonParser() {
-        //        // TODO: tbatie - 10/18/16 - This is for different types of components in a list. Any other types extending component will need to perform a switch on the ComponentType field to specificy the object to be converted to
-        // TODO: tbatie - 10/18/16uses gson-extras, see if it's okay to use. We should probably be copying the RuntimeTypeAdapterFactory into ddf instead
-        // This is
-        //        RuntimeTypeAdapterFactory rtaf = RuntimeTypeAdapterFactory.of(Component.class,
-        //                "componentType")
-        //                .registerSubtype(InputComponent.class, InputComponent.INPUT_TYPE)
-        //                .registerSubtype(Component.class, Component.BASE_TYPE);
-        //        return new GsonBuilder().registerTypeAdapterFactory(rtaf)
-        //                .create();
-
         RuntimeTypeAdapterFactory rtaf = RuntimeTypeAdapterFactory.of(Component.class, "type")
                 .registerSubtype(ButtonActionComponent.class, "BUTTON_ACTION")
                 .registerSubtype(HostnameComponent.class, "HOSTNAME")
@@ -115,5 +113,13 @@ public class LdapWizard implements SparkApplication, Wizard {
 
         return new GsonBuilder().registerTypeAdapterFactory(rtaf)
                 .create();
+    }
+
+    public void setContextPath(String contextPath) {
+        this.contextPath = contextPath;
+    }
+
+    public void setStages(List<StageFactory> stages) {
+        this.stages = stages;
     }
 }

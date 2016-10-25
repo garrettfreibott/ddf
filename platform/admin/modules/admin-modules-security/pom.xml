@@ -42,6 +42,17 @@
             <version>0.1.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>ddf.platform.error</groupId>
+            <artifactId>platform-error-servlet</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+        </dependency>
+
     </dependencies>
     <build>
         <resources>
@@ -63,7 +74,8 @@
                             spark-core,
                             boon,
                             gson,
-                            gson-extras
+                            gson-extras,
+                            platform-error-servlet
                         </Embed-Dependency>
                         <Import-Package>
                             org.eclipse.jetty.server,
@@ -76,7 +88,9 @@
                             !com.sun.management,
                             *
                         </Import-Package>
-                        <Export-Package/>
+                        <Export-Package>
+                            org.codice.ui.admin.security.api*
+                        </Export-Package>
                     </instructions>
                 </configuration>
             </plugin>

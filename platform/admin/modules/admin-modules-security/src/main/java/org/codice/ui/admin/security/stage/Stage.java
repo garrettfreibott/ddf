@@ -1,48 +1,83 @@
 package org.codice.ui.admin.security.stage;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.codice.ui.admin.security.api.StageFactory;
 import org.codice.ui.admin.security.config.Configuration;
 import org.codice.ui.admin.security.stage.components.Component;
 
-/**
- * Created by tbatie123 on 10/10/16.
- */
-public abstract class Stage {
+public abstract class Stage implements StageFactory {
 
+    /**
+     * Adding this id as a key to the state with a stageId as a value will result in dictating which stage the stage composer should look up next. Should be set during commitStage method
+     */
     public static final String NEXT_STAGE_ID = "nextStageId";
-
-    protected Configuration configuration;
-
-    private Component rootComponent;
-
-    private Map<String, String> state;
 
     private String wizardUrl;
 
-    public Stage(StageFinder stageFinder){
-        registerStage(stageFinder);
+    /**
+     * The configuration object that is built up and persisted between stages
+     */
+    protected Configuration configuration;
+
+    /**
+     * The component that will be rendered in the UI
+     */
+    private Component rootComponent;
+
+    /**
+     * A map used to indicate status of the wizard and any type of useful information along the lifecycle of the stages
+     */
+    private Map<String, String> state;
+
+
+    public Stage() {
+        state = new HashMap<>();
+        configuration = new Configuration();
+        rootComponent = getDefaultRootComponent();
     }
 
-    public Stage(StageParameters stageParameters){
+    public Stage(StageParameters stageParameters) {
         wizardUrl = stageParameters.getWizardUrl();
         state = stageParameters.getState();
         configuration = stageParameters.getConfiguration();
         rootComponent = getDefaultRootComponent();
     }
 
-    public abstract void registerStage(StageFinder stageFinder);
-
+    /**
+     * Invokes the components of the stage to validate themselves and performs any additional field validation
+     *
+     * @param stageToCheck - Instance of the stage object to validate
+     * @param params       - parameters of request
+     * @return stage that may contain component validation errors
+     */
     public abstract Stage validateStage(Stage stageToCheck, Map<String, String> params);
 
+    /**
+     * Tests the fields of the stage to provide default values and verify inputs
+     *
+     * @param stageToTest - Instance of the stage object to test
+     * @param params       - parameters of request
+     * @return stage that may contain test errors
+     */
     public abstract Stage testStage(Stage stageToTest, Map<String, String> params);
 
-    public abstract Stage commitStage(Stage currentStage, Map<String, String> params);
+    /**
+     * Persists the information from the stage to the stage configuration or to the backend
+     * @param stageToPersist - Instance of the stage to persist
+     * @param params         - parameters of request
+     * @return stage that may contain errors that resulted from persisting
+     */
+    public abstract Stage commitStage(Stage stageToPersist, Map<String, String> params);
 
+    /**
+     * The original root component that should be created on new instances of the stage
+     * @return root component
+     */
     public abstract Component getDefaultRootComponent();
-
-    public abstract String getStageId();
 
     public Map<String, String> getState() {
         return state;
@@ -52,7 +87,7 @@ public abstract class Stage {
         this.state = state;
     }
 
-    public Configuration getConfiguration(){
+    public Configuration getConfiguration() {
         return configuration;
     }
 
@@ -79,23 +114,15 @@ public abstract class Stage {
         return rootComponent.getComponent(componentId);
     }
 
-    public void setDefaultRootComponent(Component defaultRootComponent) {
-        this.rootComponent = defaultRootComponent;
-    }
-
     public String getWizardUrl() {
         return wizardUrl;
-    }
-
-    public void setWizardUrl(String wizardUrl) {
-        this.wizardUrl = wizardUrl;
     }
 
     public boolean containsError() {
         return rootComponent.containsErrors();
     }
 
-    public void clearErrors(){
+    public void clearErrors() {
         rootComponent.clearAllErrors();
     }
 }

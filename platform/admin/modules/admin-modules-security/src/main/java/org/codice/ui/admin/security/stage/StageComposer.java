@@ -3,30 +3,38 @@ package org.codice.ui.admin.security.stage;
 import static org.codice.ui.admin.security.stage.Stage.NEXT_STAGE_ID;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
+import org.codice.ui.admin.security.api.StageFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 public class StageComposer {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(StageComposer.class);
+
     private String wizardUrl;
 
-    StageFinder stageFinder;
+    List<StageFactory> stages;
 
     private Map<String, Function<Stage, String>> stageLinks = new HashMap<>();
 
-    public StageComposer(String wizardUrl, StageFinder stageFinder) {
+    public StageComposer(String wizardUrl, List<StageFactory> stages) {
         this.wizardUrl = wizardUrl;
-        this.stageFinder = stageFinder;
+        this.stages = stages;
         stageLinks = new HashMap<>();
     }
 
     /**
      * Validates fields of stage. If there are no errors from validation, then the fields are tested.
      * If there are no errors resulting from testing, then the state and configuration are persisted then the next stage is looked up
+     *
      * @param stageToProcess - Stage to be validated, tested and used as a look up for the
-     * @param params - Additional parameters used during validation and testing from the request
+     * @param params         - Additional parameters used during validation and testing from the request
      * @return Stage with errors that must be addressed or the next corresponding stage
      */
     public Stage processStage(Stage stageToProcess, Map<String, String> params) {
@@ -43,16 +51,22 @@ public class StageComposer {
         }
 
         Stage stageWithNewState = stageToProcess.commitStage(stageToProcess, params);
-        return persistAndlookUpNextStage(stageWithNewState, params);
+
+        if (testedStage.containsError()) {
+            return testedStage;
+        }
+
+        return lookUpNextStage(stageWithNewState, params);
     }
 
     /**
+     * Traverses the list of stages to find the next stage according to it's linked stage id's. If the nextStageId is present in the previousStage state, that will be used instead of the link look up
      *
-     * @param previousStage
+     * @param previousStage - The previous stage that is the link to the new stage
      * @param params
      * @return
      */
-    public Stage persistAndlookUpNextStage(Stage previousStage, Map<String, String> params) {
+    public Stage lookUpNextStage(Stage previousStage, Map<String, String> params) {
         String linkedStageId = null;
 
         if (previousStage.getState() != null && previousStage.getState()
@@ -62,18 +76,26 @@ public class StageComposer {
         }
 
         if (StringUtils.isEmpty(linkedStageId)) {
+            if (stageLinks.get(previousStage.getStageId()) == null) {
+                LOGGER.error("No follow up stage link or next stage id found for {}",
+                        previousStage.getStageId());
+            }
+
             linkedStageId = stageLinks.get(previousStage.getStageId())
                     .apply(previousStage);
         }
 
-        return stageFinder.getStage(linkedStageId,
+        return findStage(linkedStageId,
                 new StageParameters(wizardUrl,
                         previousStage.getState(),
                         previousStage.getConfiguration()));
     }
 
-    public static StageComposer builder(String wizardUrl, StageFinder stageFinder) {
-        return new StageComposer(wizardUrl, stageFinder);
+    //
+    //  Builder Methods
+    //
+    public static StageComposer builder(String wizardUrl, List<StageFactory> stages) {
+        return new StageComposer(wizardUrl, stages);
     }
 
     public StageComposer link(String origin, String destination) {
@@ -84,5 +106,19 @@ public class StageComposer {
     public StageComposer link(String origin, Function<Stage, String> nextStageCondition) {
         stageLinks.put(origin, nextStageCondition);
         return this;
+    }
+
+    public Stage findStage(String stageId, StageParameters stageParameters) {
+        Optional<StageFactory> linkedStage = stages.stream()
+                .filter(stage -> stage.getStageId()
+                        .equals(stageId))
+                .findFirst();
+
+        if (linkedStage.isPresent()) {
+            return linkedStage.get()
+                    .getNewInstance(stageParameters);
+        }
+
+        return null;
     }
 }

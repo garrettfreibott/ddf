@@ -2,14 +2,12 @@ package org.codice.ui.admin.security.stage.sample;
 
 import static org.codice.ui.admin.security.stage.components.ButtonActionComponent.Method.POST;
 import static org.codice.ui.admin.security.stage.components.Component.ComponentType.BASE_CONTAINER;
-import static org.codice.ui.admin.security.stage.components.Component.ComponentType.BUTTON;
 
 import java.util.Map;
 
+import org.codice.ui.admin.security.stage.StageParameters;
 import org.codice.ui.admin.security.config.Configuration;
 import org.codice.ui.admin.security.stage.Stage;
-import org.codice.ui.admin.security.stage.StageFinder;
-import org.codice.ui.admin.security.stage.StageParameters;
 import org.codice.ui.admin.security.stage.components.ButtonActionComponent;
 import org.codice.ui.admin.security.stage.components.Component;
 import org.codice.ui.admin.security.stage.components.StringComponent;
@@ -24,17 +22,12 @@ public class LdapDirectorySettingsStage extends Stage {
 
     public static final String BASE_GROUP_DN = "baseGroupDN";
 
-    public LdapDirectorySettingsStage(StageFinder stageFinder) {
-        super(stageFinder);
+    public LdapDirectorySettingsStage() {
+        super();
     }
 
     public LdapDirectorySettingsStage(StageParameters stageParameters) {
         super(stageParameters);
-    }
-
-    @Override
-    public void registerStage(StageFinder stageFinder) {
-        stageFinder.registerStage(getStageId(), LdapDirectorySettingsStage::new);
     }
 
     @Override
@@ -81,23 +74,23 @@ public class LdapDirectorySettingsStage extends Stage {
     }
 
     @Override
-    public Stage commitStage(Stage currentStage, Map<String, String> params) {
-        Configuration newConfiguration = currentStage.getConfiguration();
+    public Stage commitStage(Stage stageToPersist, Map<String, String> params) {
+        Configuration newConfiguration = stageToPersist.getConfiguration();
         if (newConfiguration == null) {
             newConfiguration = new Configuration();
         }
 
         newConfiguration.addValue(BASE_USER_DN,
-                currentStage.getComponent(BASE_USER_DN)
+                stageToPersist.getComponent(BASE_USER_DN)
                         .getValue());
         newConfiguration.addValue(BASE_GROUP_DN,
-                currentStage.getComponent(BASE_GROUP_DN)
+                stageToPersist.getComponent(BASE_GROUP_DN)
                         .getValue());
         newConfiguration.addValue(BASE_USERNAME_ATTRIBUTE,
-                currentStage.getComponent(BASE_USERNAME_ATTRIBUTE)
+                stageToPersist.getComponent(BASE_USERNAME_ATTRIBUTE)
                         .getValue());
-        currentStage.setConfiguration(newConfiguration);
-        return currentStage;
+        stageToPersist.setConfiguration(newConfiguration);
+        return stageToPersist;
     }
 
     @Override
@@ -115,5 +108,10 @@ public class LdapDirectorySettingsStage extends Stage {
     @Override
     public String getStageId() {
         return LDAP_DIRECTORY_SETTINGS_STAGE_ID;
+    }
+
+    @Override
+    public Stage getNewInstance(StageParameters stageParameters) {
+        return new LdapDirectorySettingsStage(stageParameters);
     }
 }

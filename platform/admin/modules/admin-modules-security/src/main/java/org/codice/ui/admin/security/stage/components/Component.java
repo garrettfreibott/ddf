@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Component<T> {
+public class Component<T> implements BaseComponent{
 
     public enum ComponentType {
         PORT, HOSTNAME, STRING_ENUM, STRING, PASSWORD, BUTTON, BASE_CONTAINER, ACTION
@@ -26,6 +26,11 @@ public class Component<T> {
         this.id = id;
         children = new ArrayList<>();
         defaults = new ArrayList<>();
+    }
+
+    @Override
+    public void validate() {
+        // No validation performed for the base component
     }
 
     public void addError(String error) {

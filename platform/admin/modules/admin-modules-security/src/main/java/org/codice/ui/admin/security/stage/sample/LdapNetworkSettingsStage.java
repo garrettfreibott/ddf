@@ -8,7 +8,6 @@ import java.util.Map;
 
 import org.codice.ui.admin.security.config.Configuration;
 import org.codice.ui.admin.security.stage.Stage;
-import org.codice.ui.admin.security.stage.StageFinder;
 import org.codice.ui.admin.security.stage.StageParameters;
 import org.codice.ui.admin.security.stage.components.ButtonActionComponent;
 import org.codice.ui.admin.security.stage.components.Component;
@@ -29,17 +28,12 @@ public class LdapNetworkSettingsStage extends Stage {
     public static final String[] LDAP_ENCRYPTION_METHODS =
             new String[] {"No encryption", "Use ldaps", "Use startTls"};
 
-    public LdapNetworkSettingsStage(StageFinder stageFinder) {
-        super(stageFinder);
+    public LdapNetworkSettingsStage() {
+        super();
     }
 
     public LdapNetworkSettingsStage(StageParameters stageParameters) {
         super(stageParameters);
-    }
-
-    @Override
-    public void registerStage(StageFinder stageFinder) {
-        stageFinder.registerStage(getStageId(), LdapNetworkSettingsStage::new);
     }
 
     @Override
@@ -87,23 +81,23 @@ public class LdapNetworkSettingsStage extends Stage {
     }
 
     @Override
-    public Stage commitStage(Stage currentStage, Map<String, String> params) {
-        Configuration newConfiguration = currentStage.getConfiguration();
+    public Stage commitStage(Stage stageToPersist, Map<String, String> params) {
+        Configuration newConfiguration = stageToPersist.getConfiguration();
         if (newConfiguration == null) {
             newConfiguration = new Configuration();
         }
 
         newConfiguration.addValue(LDAP_HOST_NAME_ID,
-                currentStage.getComponent(LDAP_HOST_NAME_ID)
+                stageToPersist.getComponent(LDAP_HOST_NAME_ID)
                         .getValue());
         newConfiguration.addValue(LDAP_PORT_ID,
-                currentStage.getComponent(LDAP_PORT_ID)
+                stageToPersist.getComponent(LDAP_PORT_ID)
                         .getValue());
         newConfiguration.addValue(LDAP_ENCRYPTION_METHOD,
-                currentStage.getComponent(LDAP_ENCRYPTION_METHOD)
+                stageToPersist.getComponent(LDAP_ENCRYPTION_METHOD)
                         .getValue());
-        currentStage.setConfiguration(newConfiguration);
-        return currentStage;
+        stageToPersist.setConfiguration(newConfiguration);
+        return stageToPersist;
     }
 
     @Override
@@ -123,5 +117,10 @@ public class LdapNetworkSettingsStage extends Stage {
     @Override
     public String getStageId() {
         return LDAP_NETWORK_SETTINGS_STAGE_ID;
+    }
+
+    @Override
+    public Stage getNewInstance(StageParameters stageParameters) {
+        return new LdapNetworkSettingsStage(stageParameters);
     }
 }

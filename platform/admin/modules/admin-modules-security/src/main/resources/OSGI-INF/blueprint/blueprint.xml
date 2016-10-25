@@ -12,25 +12,27 @@
  **/
 -->
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
-    <!--TODO: Really not a fan of the way we register stages with the stage finder. currently init a bean that registers the class and id with stage finder -->
-    <bean id="stageFinder" class="org.codice.ui.admin.security.stage.StageFinder"/>
-    <service ref="stageFinder" interface="org.codice.ui.admin.security.stage.IStageFinder"/>
 
-    <bean id="ldapBindHostStage" class="org.codice.ui.admin.security.stage.sample.LdapBindHostSettingsStage">
-        <argument ref="stageFinder"/>
+    <bean id="ldapWizardContextPath" class="java.lang.String">
+        <argument value="/admin/wizard/ldap"/>
     </bean>
 
-    <bean id="ldapDirStage" class="org.codice.ui.admin.security.stage.sample.LdapDirectorySettingsStage">
-        <argument ref="stageFinder"/>
-    </bean>
+    <bean id="ldapBindHostStage" class="org.codice.ui.admin.security.stage.sample.LdapBindHostSettingsStage"/>
+    <bean id="ldapDirStage" class="org.codice.ui.admin.security.stage.sample.LdapDirectorySettingsStage"/>
+    <bean id="ldapNetworkStage" class="org.codice.ui.admin.security.stage.sample.LdapNetworkSettingsStage"/>
 
-    <bean id="ldapNetworkStage" class="org.codice.ui.admin.security.stage.sample.LdapNetworkSettingsStage">
-        <argument ref="stageFinder"/>
-    </bean>
+    <service ref="ldapBindHostStage" interface="org.codice.ui.admin.security.api.StageFactory"/>
+    <service ref="ldapDirStage" interface="org.codice.ui.admin.security.api.StageFactory"/>
+    <service ref="ldapNetworkStage" interface="org.codice.ui.admin.security.api.StageFactory"/>
+
+    <reference-list id="stages" interface="org.codice.ui.admin.security.api.StageFactory" availability="optional"/>
+
 
     <bean id="ldapWiz" class="org.codice.ui.admin.security.LdapWizard">
-        <argument ref="stageFinder"/>
+        <property name="contextPath" ref="ldapWizardContextPath"/>
+        <property name="stages" ref="stages"/>
     </bean>
+
 
     <bean id="sparkServlet" class="org.codice.ui.admin.security.SparkServlet">
         <property name="sparkApplications">

@@ -1,16 +1,12 @@
 package org.codice.ui.admin.security.stage.sample;
 
 import static org.codice.ui.admin.security.stage.components.ButtonActionComponent.Method.POST;
-import static org.codice.ui.admin.security.stage.components.Component.ComponentType.PASSWORD;
-import static org.codice.ui.admin.security.stage.components.Component.ComponentType.STRING;
 
 import java.util.Map;
-import java.util.Optional;
 
+import org.codice.ui.admin.security.stage.StageParameters;
 import org.codice.ui.admin.security.config.Configuration;
 import org.codice.ui.admin.security.stage.Stage;
-import org.codice.ui.admin.security.stage.StageFinder;
-import org.codice.ui.admin.security.stage.StageParameters;
 import org.codice.ui.admin.security.stage.components.ButtonActionComponent;
 import org.codice.ui.admin.security.stage.components.Component;
 import org.codice.ui.admin.security.stage.components.PasswordComponent;
@@ -24,17 +20,12 @@ public class LdapBindHostSettingsStage extends Stage {
 
     public static final String BIND_USER_PASS = "bindUserPassword";
 
-    public LdapBindHostSettingsStage(StageFinder stageFinder) {
-        super(stageFinder);
+    public LdapBindHostSettingsStage() {
+        super();
     }
 
     public LdapBindHostSettingsStage(StageParameters stageParameters) {
         super(stageParameters);
-    }
-
-    @Override
-    public void registerStage(StageFinder stageFinder) {
-        stageFinder.registerStage(getStageId(), LdapBindHostSettingsStage::new);
     }
 
     @Override
@@ -88,23 +79,28 @@ public class LdapBindHostSettingsStage extends Stage {
     }
 
     @Override
-    public Stage commitStage(Stage currentStage, Map<String, String> params) {
-        Configuration newConfiguration = currentStage.getConfiguration();
+    public Stage commitStage(Stage stageToPersist, Map<String, String> params) {
+        Configuration newConfiguration = stageToPersist.getConfiguration();
         if (newConfiguration == null) {
             newConfiguration = new Configuration();
         }
         newConfiguration.addValue(BIND_USER_DN,
-                currentStage.getComponent(BIND_USER_DN)
+                stageToPersist.getComponent(BIND_USER_DN)
                         .getValue());
         newConfiguration.addValue(BIND_USER_PASS,
-                currentStage.getComponent(BIND_USER_PASS)
+                stageToPersist.getComponent(BIND_USER_PASS)
                         .getValue());
-        currentStage.setConfiguration(newConfiguration);
-        return currentStage;
+        stageToPersist.setConfiguration(newConfiguration);
+        return stageToPersist;
     }
 
     @Override
     public String getStageId() {
         return LDAP_BIND_HOST_SETTINGS_STAGE_ID;
+    }
+
+    @Override
+    public Stage getNewInstance(StageParameters stageParameters) {
+        return new LdapBindHostSettingsStage(stageParameters);
     }
 }
