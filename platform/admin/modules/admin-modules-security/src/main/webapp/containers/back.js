@@ -7,13 +7,13 @@ import { canGoBack, isSubmitting } from '../reducer'
 
 import FlatButton from 'material-ui/FlatButton'
 
-const Back = ({ canGoBack, submitting, label, onBack, ...rest }) => (
-  <FlatButton onClick={onBack} label='back' secondary disabled={submitting || !canGoBack} />
+const Back = ({ canGoBack, disabled, label, onBack, ...rest }) => (
+  <FlatButton onClick={onBack} label='back' secondary disabled={disabled || !canGoBack} />
 )
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state, ownProps) => ({
   canGoBack: canGoBack(state),
-  submitting: isSubmitting(state)
+  disabled: ownProps.disabled || isSubmitting(state)
 })
 
 export default connect(mapStateToProps, { onBack: back })(Back)

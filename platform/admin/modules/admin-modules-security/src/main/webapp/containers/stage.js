@@ -13,7 +13,7 @@ const AllStages = ({ stages = [], fetch, params }) => {
   return (
     <Mount key={params.stageId} on={() => fetch(params.stageId)}>
       <Errors />
-      {stages.map((stage, i) => <Stage key={i} {...stage} path={[ i ]} />).reverse()}
+      {stages.map((stage, i) => <Stage key={i} disabled={i > 0} {...stage} path={[ i ]} />).reverse()}
     </Mount>
   )
 }

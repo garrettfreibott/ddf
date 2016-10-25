@@ -17,24 +17,24 @@ import { isSubmitting } from '../reducer'
 
 var Component
 
-const PortInput = ({ submitting, path, value, error, defaults = [], onEdit }) => (
+const PortInput = ({ disabled, path, value, error, defaults = [], onEdit }) => (
   <AutoComplete
     dataSource={defaults.map((value) => ({ text: String(value), value: value }))}
     openOnFocus
     filter={AutoComplete.noFilter}
     type='number'
     errorText={error}
-    disabled={submitting}
+    disabled={disabled}
     floatingLabelText='Port'
     searchText={String(value || defaults[0])}
     onNewRequest={({ value }) => { onEdit(path, value) }}
     onUpdateInput={(value) => { onEdit(path, Number(value)) }} />
 )
 
-const StringEnumInput = ({ submitting, path, value, label, error, defaults = [], onEdit }) => (
+const StringEnumInput = ({ disabled, path, value, label, error, defaults = [], onEdit }) => (
   <SelectField
     value={value || defaults[0] || ''}
-    disabled={submitting}
+    disabled={disabled}
     errorText={error}
     floatingLabelText={label}
     onChange={(e, i, v) => onEdit(path, v)}>
@@ -42,18 +42,18 @@ const StringEnumInput = ({ submitting, path, value, label, error, defaults = [],
   </SelectField>
 )
 
-const HostNameInput = ({ submitting, path, value, error, onEdit }) => (
+const HostNameInput = ({ disabled, path, value, error, onEdit }) => (
   <TextField
-    disabled={submitting}
+    disabled={disabled}
     errorText={error}
     value={value || ''}
     floatingLabelText='Hostname'
     onChange={(e) => onEdit(path, e.target.value)} />
 )
 
-const PasswordInput = ({ submitting, path, label, error, value, onEdit }) => (
+const PasswordInput = ({ disabled, path, label, error, value, onEdit }) => (
   <TextField
-    disabled={submitting}
+    disabled={disabled}
     errorText={error}
     value={value || ''}
     floatingLabelText={label}
@@ -61,9 +61,9 @@ const PasswordInput = ({ submitting, path, label, error, value, onEdit }) => (
     onChange={(e) => onEdit(path, e.target.value)} />
 )
 
-const StringInput = ({ submitting, path, label, error, value, onEdit }) => (
+const StringInput = ({ disabled, path, label, error, value, onEdit }) => (
   <TextField
-    disabled={submitting}
+    disabled={disabled}
     errorText={error}
     value={value || ''}
     floatingLabelText={label}
@@ -77,13 +77,13 @@ const Info = ({id, label, value}) => (
   </div>
 )
 
-const Panel = ({ id, path = [], label, description, children = [] }) => (
+const Panel = ({ disabled, id, path = [], label, description, children = [] }) => (
   <div>
     <CardHeader title={label || id} subtitle={description} />
     <CardActions>
       <Flexbox justifyContent='center'>
         <div>{children.map((c, i) =>
-          <Component key={i} {...c} path={[ ...path, 'children', i ]} />)}</div>
+          <Component disabled={disabled} key={i} {...c} path={[ ...path, 'children', i ]} />)}</div>
       </Flexbox>
     </CardActions>
   </div>
@@ -112,14 +112,14 @@ const Selector = ({ id, path = [], value, label, description, options = [] }) =>
   )
 }
 
-const ButtonAction = ({ path, label, submitting, onSubmit, ...rest }) => (
+const ButtonAction = ({ path, label, disabled, onSubmit, ...rest }) => (
   <div>
     <RaisedButton
       style={{ marginLeft: 10 }}
       onClick={() => { onSubmit(rest) }}
       label={label}
       primary
-      disabled={submitting} />
+      disabled={disabled} />
   </div>
 )
 
@@ -146,7 +146,7 @@ const StatelessComponent = ({ type, ...args }) => {
   }
 }
 
-const mapStateToProps = (state) => ({ submitting: isSubmitting(state) })
+const mapStateToProps = (state, ownProps) => ({ disabled: ownProps.disabled || isSubmitting(state) })
 
 Component = connect(mapStateToProps, { onEdit: edit, onSubmit: submit })(StatelessComponent)
 
