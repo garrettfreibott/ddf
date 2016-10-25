@@ -13,6 +13,11 @@
 -->
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
 
+    <!-- LDAP Wizard -->
+    <bean id="ldapWizardContextPath" class="java.lang.String">
+        <argument value="/admin/wizard/ldap"/>
+    </bean>
+
     <bean id="ldapBindHostStage" class="org.codice.ui.admin.security.stage.sample.LdapBindHostSettingsStage"/>
     <bean id="ldapDirStage" class="org.codice.ui.admin.security.stage.sample.LdapDirectorySettingsStage"/>
     <bean id="ldapNetworkStage" class="org.codice.ui.admin.security.stage.sample.LdapNetworkSettingsStage"/>
@@ -31,8 +36,19 @@
         <property name="wizards" ref="wizards"/>
     </bean>
 
-    <service ref="ldapWiz" interface="org.codice.ui.admin.security.api.Wizard" />
+    <service ref="ldapWiz" interface="org.codice.ui.admin.security.api.Wizard"/>
 
+    <!-- Sources Wizard -->
+
+    <bean id="sourcesUrlStage" class="org.codice.ui.admin.sources.SourcesUrlStage"/>
+
+    <service ref="sourcesUrlStage" interface="org.codice.ui.admin.security.api.StageFactory"/>
+
+    <bean id="sourcesWiz" class="org.codice.ui.admin.sources.SourcesWizard"/>
+
+    <service ref="sourcesWiz" interface="org.codice.ui.admin.security.api.Wizard"/>
+
+    <!-- Spark Servlet(s) TODO: unify these servlets -->
     <bean id="sparkServlet" class="org.codice.ui.admin.security.SparkServlet">
         <property name="sparkApplications">
             <list>
@@ -48,6 +64,8 @@
         </service-properties>
     </service>
 
+
+    <!-- Admin Module Additions -->
     <bean id="securityModule" class="org.codice.ui.admin.security.SecurityModule"/>
     <service ref="securityModule" interface="org.codice.ddf.ui.admin.api.module.AdminModule"/>
 </blueprint>
