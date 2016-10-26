@@ -2,6 +2,7 @@ package org.codice.ui.admin.security.stage.components;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -111,6 +112,11 @@ public class Component<T> implements BaseComponent {
 
     public Component<T> defaults(T... defaults) {
         this.defaults.addAll(Arrays.asList(defaults));
+        return this;
+    }
+
+    public Component<T> defaults(Collection<T> defaults) {
+        this.defaults.addAll(defaults);
         return this;
     }
 

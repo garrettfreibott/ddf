@@ -82,4 +82,15 @@ const list = (state = fromJS([]), { type, list } = {}) => {
 
 export const getList = (state) => state.get('list').toJS()
 
-export default combineReducers({ list, errors, submitting, stage })
+
+const backendError = (state = {}, { type, err } = {}) => {
+    switch (type) {
+      case 'BACKEND_ERRORS':
+        return err;
+    default: return state
+    }
+}
+
+export const getBackendErrors = (state) => state.get('backendError')
+
+export default combineReducers({ list, errors, submitting, stage, backendError })

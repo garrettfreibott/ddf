@@ -17,6 +17,12 @@ public class LdapConfigurationHandler implements ConfigurationHandler {
         return LDAP_CONFIGURATION_HANDLER_ID;
     }
 
+    public static final String LDAPS = "ldaps";
+
+    public static final String TLS = "tls";
+
+    public static final String NONE = "none";
+
     // LDAP Network Configuration Ids
     public static final String LDAP_HOST_NAME_CONFIGURATION_ID = "ldapHostName";
 

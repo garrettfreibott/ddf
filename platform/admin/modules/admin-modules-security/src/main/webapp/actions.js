@@ -34,6 +34,8 @@ export const dismissErrors = () => ({ type: 'DISMISS_ERRORS' })
 
 export const clearLastErrors = () => ({ type: 'CLEAR_LAST_ERRORS' })
 
+export const backendError = (err) => ({ type: 'BACKEND_ERRORS', err })
+
 export const submit = (action) => (dispatch, getState) => {
   const stage = getCurrentStage(getState())
 
@@ -44,6 +46,8 @@ export const submit = (action) => (dispatch, getState) => {
       dispatch(submittingEnd())
       if (status === 400) {
         dispatch(resetLastStage(stage))
+      } else if (status === 500) {
+        dispatch(backendError(stage))
       } else {
         dispatch(clearLastErrors())
         dispatch(setStage(stage))

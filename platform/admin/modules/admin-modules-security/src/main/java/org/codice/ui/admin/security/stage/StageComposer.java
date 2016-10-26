@@ -85,7 +85,8 @@ public class StageComposer {
                         previousStage.getStageId());
             }
 
-            linkedStageId = stageLinks.get(previousStage.getStageId())
+
+        linkedStageId = stageLinks.get(previousStage.getStageId())
                     .apply(previousStage);
         }
          Stage foundStage = findStage(linkedStageId,

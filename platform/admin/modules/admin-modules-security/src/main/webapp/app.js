@@ -4,6 +4,7 @@ import store from './store'
 
 import Stage from './containers/stage'
 import StageList from './containers/stage-list'
+import Exception from './containers/exceptions'
 
 import { Router, Route, hashHistory } from 'react-router'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
@@ -13,6 +14,7 @@ import Flexbox from 'flexbox-react'
 const App = (props) => (
   <div>
     <AppBar title='Security UI' iconClassNameRight='muidocs-icon-navigation-expand-more' />
+
     <Flexbox>
       <Flexbox>
         <StageList />
@@ -21,6 +23,7 @@ const App = (props) => (
         {props.children}
       </Flexbox>
     </Flexbox>
+     <Exception />
   </div>
 )
 

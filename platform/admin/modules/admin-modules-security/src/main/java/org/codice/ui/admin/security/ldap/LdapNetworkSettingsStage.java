@@ -8,10 +8,15 @@ import static org.codice.ui.admin.security.config.LdapConfigurationHandler.LDAP_
 import static org.codice.ui.admin.security.stage.components.ButtonActionComponent.Method.POST;
 import static org.codice.ui.admin.security.stage.components.Component.ComponentType.BASE_CONTAINER;
 
+import static org.codice.ui.admin.security.config.LdapConfigurationHandler.NONE;
+import static org.codice.ui.admin.security.config.LdapConfigurationHandler.LDAPS;
+import static org.codice.ui.admin.security.config.LdapConfigurationHandler.TLS;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.codice.ui.admin.security.api.ConfigurationHandler;
 import org.codice.ui.admin.security.config.Configuration;
@@ -24,13 +29,18 @@ import org.codice.ui.admin.security.stage.components.HostnameComponent;
 import org.codice.ui.admin.security.stage.components.PortComponent;
 import org.codice.ui.admin.security.stage.components.StringEnumComponent;
 
+import com.google.common.collect.ImmutableMap;
+
 public class LdapNetworkSettingsStage extends Stage {
 
     public static final String LDAP_NETWORK_SETTINGS_STAGE_ID = "ldapNetworkSettingsStage";
 
-    // TODO: tbatie - 10/25/16 - This should be a pair once we know the proper values to put inside of the ldap configuration
-    public static final String[] LDAP_ENCRYPTION_METHODS =
-            new String[] {"No encryption", "Use ldaps", "Use startTls"};
+    public static final Map LDAP_ENCRYPTION_METHODS_MAP = ImmutableMap.of("No encryption",
+            NONE,
+            "Use ldaps",
+            LDAPS,
+            "Use startTls",
+            TLS);
 
     public LdapNetworkSettingsStage() {
         super();
@@ -62,8 +72,9 @@ public class LdapNetworkSettingsStage extends Stage {
             ldapPortQ.addError("LDAP port number cannot be empty.");
         }
 
-        if (ldapEncryptionMethodQ.getValue() == null || !Arrays.asList(LDAP_ENCRYPTION_METHODS)
-                .contains(ldapEncryptionMethodQ.getValue()
+        if (ldapEncryptionMethodQ.getValue() == null
+                || !mapKeysToArray(LDAP_ENCRYPTION_METHODS_MAP.keySet()).contains(
+                ldapEncryptionMethodQ.getValue()
                         .toString())) {
             ldapEncryptionMethodQ.addError("Invalid encryption method.");
         }
@@ -116,6 +127,7 @@ public class LdapNetworkSettingsStage extends Stage {
         newConfiguration.addValue(LDAP_PORT_CONFIGURATION_ID,
                 stageToPersist.getComponent(LDAP_PORT_CONFIGURATION_ID)
                         .getValue());
+
         newConfiguration.addValue(LDAP_ENCRYPTION_METHOD_CONFIGURATION_ID,
                 stageToPersist.getComponent(LDAP_ENCRYPTION_METHOD_CONFIGURATION_ID)
                         .getValue());
@@ -125,6 +137,9 @@ public class LdapNetworkSettingsStage extends Stage {
 
     @Override
     public Component getDefaultRootComponent() {
+        List encryptionMethods = Arrays.asList(LDAP_ENCRYPTION_METHODS_MAP.keySet()
+                .toArray());
+
         return Component.builder("LDAP Network Settings", BASE_CONTAINER)
                 .subComponents(new HostnameComponent(LDAP_HOST_NAME_CONFIGURATION_ID).label(
                         "LDAP Host name"), new PortComponent(LDAP_PORT_CONFIGURATION_ID).defaults(
@@ -132,12 +147,24 @@ public class LdapNetworkSettingsStage extends Stage {
                         636)
                         .value(389)
                         .label("LDAP PortComponent"), new StringEnumComponent(
-                        LDAP_ENCRYPTION_METHOD_CONFIGURATION_ID).defaults(LDAP_ENCRYPTION_METHODS)
-                        .value(LDAP_ENCRYPTION_METHODS[2])
+                        LDAP_ENCRYPTION_METHOD_CONFIGURATION_ID).defaults(
+                        LDAP_ENCRYPTION_METHODS_MAP.keySet())
+                        .value((String) encryptionMethods.get(1))
                         .label("Encryption method"), (new ButtonActionComponent()).setUrl(
                         getWizardUrl() + "/" + getStageId())
                         .setMethod(POST)
                         .label("check"));
+    }
+
+    public List<String> mapKeysToArray(Set<String> keys) {
+
+        List<String> array = new ArrayList<>();
+
+        for (String key : keys) {
+            array.add(key);
+        }
+
+        return array;
     }
 
     @Override

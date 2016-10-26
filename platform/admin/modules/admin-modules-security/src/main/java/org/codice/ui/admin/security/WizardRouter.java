@@ -131,7 +131,7 @@ public class WizardRouter implements SparkApplication {
     private String exToJSON(Exception ex) {
         Map<String, Object> e = new HashMap<>();
         e.put("stackTrace", ex.getStackTrace());
-        e.put("cause", ex.getCause());
+        e.put("cause", ex.toString());
         return new Gson().toJson(e);
     }
 
