@@ -40,15 +40,20 @@
 
     <!-- Sources Wizard -->
 
-    <bean id="sourcesUrlStage" class="org.codice.ui.admin.sources.SourcesUrlStage"/>
+    <bean id="sourcesSetupStage" class="org.codice.ui.admin.sources.stage.SourcesSetupStage"/>
+    <bean id="sourcesDiscoveryStage" class="org.codice.ui.admin.sources.stage.SourcesDiscoveryStage"/>
+    <bean id="sourcesAdvancedStage" class="org.codice.ui.admin.sources.stage.SourcesAdvancedStage"/>
 
-    <service ref="sourcesUrlStage" interface="org.codice.ui.admin.security.api.StageFactory"/>
+
+    <service ref="sourcesSetupStage" interface="org.codice.ui.admin.security.api.StageFactory"/>
+    <service ref="sourcesDiscoveryStage" interface="org.codice.ui.admin.security.api.StageFactory"/>
+    <service ref="sourcesAdvancedStage" interface="org.codice.ui.admin.security.api.StageFactory"/>
 
     <bean id="sourcesWiz" class="org.codice.ui.admin.sources.SourcesWizard"/>
 
     <service ref="sourcesWiz" interface="org.codice.ui.admin.security.api.Wizard"/>
 
-    <!-- Spark Servlet(s) TODO: unify these servlets -->
+    <!-- Spark Servlet -->
     <bean id="sparkServlet" class="org.codice.ui.admin.security.SparkServlet">
         <property name="sparkApplications">
             <list>

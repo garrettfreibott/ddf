@@ -1,6 +1,6 @@
 package org.codice.ui.admin.sources;
 
-import static org.codice.ui.admin.sources.SourcesUrlStage.SOURCES_URL_STAGE_ID;
+import static org.codice.ui.admin.sources.stage.SourcesSetupStage.SOURCES_SETUP_STAGE_ID;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ public class SourcesWizard implements Wizard {
 
     @Override
     public String initialStageId() {
-        return SOURCES_URL_STAGE_ID;
+        return SOURCES_SETUP_STAGE_ID;
     }
 
     @Override
@@ -32,6 +32,6 @@ public class SourcesWizard implements Wizard {
 
     @Override
     public String getId() {
-        return "HarryPotter";
+        return "sources";
     }
 }

@@ -22,6 +22,7 @@ import org.codice.ui.admin.security.stage.StageParameters;
 import org.codice.ui.admin.security.stage.components.ButtonActionComponent;
 import org.codice.ui.admin.security.stage.components.Component;
 import org.codice.ui.admin.security.stage.components.HostnameComponent;
+import org.codice.ui.admin.security.stage.components.InfoComponent;
 import org.codice.ui.admin.security.stage.components.PasswordComponent;
 import org.codice.ui.admin.security.stage.components.PortComponent;
 import org.codice.ui.admin.security.stage.components.StringComponent;
@@ -180,6 +181,7 @@ public class LdapWizard implements SparkApplication, Wizard {
                 .registerSubtype(PortComponent.class, "PORT")
                 .registerSubtype(StringEnumComponent.class, "STRING_ENUM")
                 .registerSubtype(StringComponent.class, "STRING")
+                .registerSubtype(InfoComponent.class, "INFO")
                 .registerSubtype(Component.class, "BASE_CONTAINER");
 
         return new GsonBuilder().registerTypeAdapterFactory(rtaf)
