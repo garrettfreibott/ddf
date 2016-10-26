@@ -50,6 +50,7 @@ public class SourcesSetupStage extends Stage {
                         new InfoComponent("OR").label("or"),
                         new ButtonActionComponent().setMethod(GET)
                                 .setUrl(getWizardUrl() + "/" + SOURCES_ADVANCED_STAGE_ID)
+                                .setDisabled(true)
                                 .label("Manually Enter Source Info"));
     }
 

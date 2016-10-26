@@ -6,6 +6,8 @@ public class ButtonActionComponent extends Component {
 
     private Method method = Method.GET;
 
+    private Boolean disabled = false;
+
     public ButtonActionComponent() {
         super(null);
     }
@@ -17,6 +19,11 @@ public class ButtonActionComponent extends Component {
 
     public ButtonActionComponent setMethod(Method method) {
         this.method = method;
+        return this;
+    }
+
+    public ButtonActionComponent setDisabled(boolean disabled) {
+        this.disabled = true;
         return this;
     }
 
