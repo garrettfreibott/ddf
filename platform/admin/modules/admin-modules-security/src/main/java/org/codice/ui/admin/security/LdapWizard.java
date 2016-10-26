@@ -112,6 +112,20 @@ public class LdapWizard implements SparkApplication, Wizard {
 
         }, getGsonParser()::toJson);
 
+        get("/:wizardId/:stageId", (req, res) -> {
+            Optional<Wizard> wizard = findWizard(req.params(":wizardId"));
+
+            if (!wizard.isPresent()) {
+                res.status(404);
+                return null;
+            }
+
+            return wizard.get()
+                    .getStageComposer(req.params(":wizardId"), stages)
+                    .findStage(req.params(":stageId"),
+                            new StageParameters(getContextPath() + "/" + req.params(":wizardId")));
+        }, getGsonParser()::toJson);
+
         post("/:wizardId/:stageId", (req, res) -> {
 
             Optional<Wizard> wizard = findWizard(req.params(":wizardId"));
