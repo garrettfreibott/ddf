@@ -3,8 +3,9 @@ package org.codice.ui.admin.security.stage.components;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class Component<T> implements BaseComponent{
+public class Component<T> implements BaseComponent {
 
     public enum ComponentType {
         PORT, HOSTNAME, STRING_ENUM, STRING, PASSWORD, BUTTON, BASE_CONTAINER, ACTION
@@ -46,8 +47,12 @@ public class Component<T> implements BaseComponent{
      * Clears all errors from this component and all sub components
      */
     public void clearAllErrors() {
-        error = null;
 
+        children = children.stream()
+                .filter(component -> !(component instanceof ErrorMessageComponent))
+                .collect(Collectors.toList());
+
+        error = null;
         if (children != null) {
             for (Component subComponent : children) {
                 subComponent.clearAllErrors();
@@ -74,7 +79,7 @@ public class Component<T> implements BaseComponent{
             return this;
         }
 
-        if(children != null) {
+        if (children != null) {
             for (Component subComponent : children) {
                 if (subComponent.getId() != null && componentId.equals(id)) {
                     return subComponent;
@@ -88,7 +93,6 @@ public class Component<T> implements BaseComponent{
         }
         return null;
     }
-
 
     public String getId() {
         return id;
@@ -104,7 +108,6 @@ public class Component<T> implements BaseComponent{
     public static Component builder(String id, ComponentType componentType) {
         return new Component(id);
     }
-
 
     public Component<T> defaults(T... defaults) {
         this.defaults.addAll(Arrays.asList(defaults));

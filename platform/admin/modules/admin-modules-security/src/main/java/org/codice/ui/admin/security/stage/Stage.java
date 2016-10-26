@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.codice.ui.admin.security.api.ConfigurationHandler;
 import org.codice.ui.admin.security.api.StageFactory;
 import org.codice.ui.admin.security.config.Configuration;
 import org.codice.ui.admin.security.stage.components.Component;
@@ -33,7 +34,6 @@ public abstract class Stage implements StageFactory {
      */
     private Map<String, String> state;
 
-
     public Stage() {
         state = new HashMap<>();
         configuration = new Configuration();
@@ -48,6 +48,14 @@ public abstract class Stage implements StageFactory {
     }
 
     /**
+     * This method is invoked when a new stage is returned from the stageComposer. This method should perform default value look and population as well as any any additional preconfiguration
+     *
+     * @param stageToCheck - The stage to configure before being return to the user
+     * @return Preconfigured stage
+     */
+    public abstract Stage preconfigureStage(Stage stageToCheck, List<ConfigurationHandler> configurationHandlers);
+
+    /**
      * Invokes the components of the stage to validate themselves and performs any additional field validation
      *
      * @param stageToCheck - Instance of the stage object to validate
@@ -60,13 +68,15 @@ public abstract class Stage implements StageFactory {
      * Tests the fields of the stage to provide default values and verify inputs
      *
      * @param stageToTest - Instance of the stage object to test
-     * @param params       - parameters of request
+     * @param params      - parameters of request
      * @return stage that may contain test errors
      */
-    public abstract Stage testStage(Stage stageToTest, Map<String, String> params);
+    public abstract Stage testStage(Stage stageToTest,
+            List<ConfigurationHandler> configurationHandlers, Map<String, String> params);
 
     /**
      * Persists the information from the stage to the stage configuration or to the backend
+     *
      * @param stageToPersist - Instance of the stage to persist
      * @param params         - parameters of request
      * @return stage that may contain errors that resulted from persisting
@@ -75,9 +85,21 @@ public abstract class Stage implements StageFactory {
 
     /**
      * The original root component that should be created on new instances of the stage
+     *
      * @return root component
      */
     public abstract Component getDefaultRootComponent();
+
+    public ConfigurationHandler getConfigurationHandler(
+            List<ConfigurationHandler> configurationHandlers, String configurationId) {
+        Optional<ConfigurationHandler> foundConfigHandler = configurationHandlers.stream()
+                .filter(handler -> handler.getConfigurationHandlerId()
+                        .equals(configurationId))
+                .findFirst();
+
+        // TODO: tbatie - 10/25/16 - Return null or throw exception?
+        return foundConfigHandler.isPresent() ? foundConfigHandler.get() : null;
+    }
 
     public Map<String, String> getState() {
         return state;

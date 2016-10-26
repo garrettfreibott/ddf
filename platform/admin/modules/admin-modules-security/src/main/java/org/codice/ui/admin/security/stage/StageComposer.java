@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
+import org.codice.ui.admin.security.api.ConfigurationHandler;
 import org.codice.ui.admin.security.api.StageFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,13 +20,16 @@ public class StageComposer {
 
     private String wizardUrl;
 
-    List<StageFactory> stages;
+    private List<StageFactory> stages;
+
+    private List<ConfigurationHandler> configurationHandlers;
 
     private Map<String, Function<Stage, String>> stageLinks = new HashMap<>();
 
-    public StageComposer(String wizardUrl, List<StageFactory> stages) {
+    public StageComposer(String wizardUrl, List<StageFactory> stages, List<ConfigurationHandler> configurationHandlers) {
         this.wizardUrl = wizardUrl;
         this.stages = stages;
+        this.configurationHandlers = configurationHandlers;
         stageLinks = new HashMap<>();
     }
 
@@ -45,7 +49,7 @@ public class StageComposer {
             return validatedStage;
         }
 
-        Stage testedStage = stageToProcess.testStage(stageToProcess, params);
+        Stage testedStage = stageToProcess.testStage(stageToProcess, configurationHandlers, params);
         if (testedStage.containsError()) {
             return testedStage;
         }
@@ -84,18 +88,19 @@ public class StageComposer {
             linkedStageId = stageLinks.get(previousStage.getStageId())
                     .apply(previousStage);
         }
+         Stage foundStage = findStage(linkedStageId,
+                 new StageParameters(wizardUrl,
+                         previousStage.getState(),
+                         previousStage.getConfiguration()));
 
-        return findStage(linkedStageId,
-                new StageParameters(wizardUrl,
-                        previousStage.getState(),
-                        previousStage.getConfiguration()));
+        return foundStage.preconfigureStage(foundStage, configurationHandlers);
     }
 
     //
     //  Builder Methods
     //
-    public static StageComposer builder(String wizardUrl, List<StageFactory> stages) {
-        return new StageComposer(wizardUrl, stages);
+    public static StageComposer builder(String wizardUrl, List<StageFactory> stages, List<ConfigurationHandler> configurationHandlers) {
+        return new StageComposer(wizardUrl, stages, configurationHandlers);
     }
 
     public StageComposer link(String origin, String destination) {

@@ -2,9 +2,11 @@ package org.codice.ui.admin.sources.stage;
 
 import static org.codice.ui.admin.security.stage.components.ButtonActionComponent.Method.POST;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.codice.ui.admin.security.api.ConfigurationHandler;
 import org.codice.ui.admin.security.stage.Stage;
 import org.codice.ui.admin.security.stage.StageParameters;
 import org.codice.ui.admin.security.stage.components.ButtonActionComponent;
@@ -33,6 +35,12 @@ public class SourcesDiscoveryStage extends Stage {
     }
 
     @Override
+    public Stage preconfigureStage(Stage stageToCheck,
+            List<ConfigurationHandler> configurationHandlers) {
+        return stageToCheck;
+    }
+
+    @Override
     public Stage validateStage(Stage stageToCheck, Map<String, String> params) {
         Component sourceHostname = stageToCheck.getComponent(SOURCE_HOSTNAME_ID);
         Component sourcePort = stageToCheck.getComponent(SOURCE_PORT_ID);
@@ -49,8 +57,8 @@ public class SourcesDiscoveryStage extends Stage {
     }
 
     @Override
-    public Stage testStage(Stage stageToTest, Map<String, String> params) {
-        //TODO: this
+    public Stage testStage(Stage stageToTest, List<ConfigurationHandler> configurationHandlers,
+            Map<String, String> params) {
         return stageToTest;
     }
 

@@ -4,6 +4,7 @@ import static org.codice.ui.admin.sources.stage.SourcesSetupStage.SOURCES_SETUP_
 
 import java.util.List;
 
+import org.codice.ui.admin.security.api.ConfigurationHandler;
 import org.codice.ui.admin.security.api.StageFactory;
 import org.codice.ui.admin.security.api.Wizard;
 import org.codice.ui.admin.security.stage.StageComposer;
@@ -26,12 +27,13 @@ public class SourcesWizard implements Wizard {
     }
 
     @Override
-    public StageComposer getStageComposer(String contextPath, List<StageFactory> allStages) {
-        return StageComposer.builder(contextPath, allStages);
+    public StageComposer getStageComposer(String contextPath, List<StageFactory> stages,
+            List<ConfigurationHandler> configurationHandlers) {
+        return StageComposer.builder(contextPath, stages, configurationHandlers);
     }
 
     @Override
-    public String getId() {
+    public String getWizardId() {
         return "sources";
     }
 }

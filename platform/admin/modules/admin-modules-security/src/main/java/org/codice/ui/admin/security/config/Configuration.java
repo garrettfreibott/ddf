@@ -14,4 +14,8 @@ public class Configuration {
     public void addValue(String key, Object value) {
         values.put(key, value);
     }
+
+    public Object getValue(String key) {
+        return values.get(key);
+    }
 }

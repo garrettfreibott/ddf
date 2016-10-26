@@ -2,8 +2,10 @@ package org.codice.ui.admin.sources.stage;
 
 import static org.codice.ui.admin.security.stage.components.ButtonActionComponent.Method.POST;
 
+import java.util.List;
 import java.util.Map;
 
+import org.codice.ui.admin.security.api.ConfigurationHandler;
 import org.codice.ui.admin.security.stage.Stage;
 import org.codice.ui.admin.security.stage.StageParameters;
 import org.codice.ui.admin.security.stage.components.ButtonActionComponent;
@@ -23,12 +25,19 @@ public class SourcesAdvancedStage extends Stage {
     }
 
     @Override
+    public Stage preconfigureStage(Stage stageToCheck,
+            List<ConfigurationHandler> configurationHandlers) {
+        return stageToCheck;
+    }
+
+    @Override
     public Stage validateStage(Stage stageToCheck, Map<String, String> params) {
         return stageToCheck;
     }
 
     @Override
-    public Stage testStage(Stage stageToTest, Map<String, String> params) {
+    public Stage testStage(Stage stageToTest, List<ConfigurationHandler> configurationHandlers,
+            Map<String, String> params) {
         return stageToTest;
     }
 
