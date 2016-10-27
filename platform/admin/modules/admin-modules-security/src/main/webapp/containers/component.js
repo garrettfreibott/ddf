@@ -92,11 +92,11 @@ const Panel = ({ disabled, id, path = [], label, description, children = [] }) =
   </div>
 )
 
-const RadioButtons = ({ id, path, value, options = [], onEdit }) => (
+const RadioButtons = ({ id, disabled, path, value, options = [], onEdit }) => (
   <div>
     <RadioButtonGroup name={id} onChange={(e, value) => onEdit(path, value)} valueSelected={value}>
       {options.map((c, i) =>
-        <RadioButton key={i} value={c} label={c} />)}
+        <RadioButton key={i} disabled={disabled} value={c} label={c} />)}
     </RadioButtonGroup>
   </div>
 )
