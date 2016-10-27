@@ -4,7 +4,7 @@ import MenuItem from 'material-ui/MenuItem'
 import SelectField from 'material-ui/SelectField'
 import TextField from 'material-ui/TextField'
 import RaisedButton from 'material-ui/RaisedButton'
-import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
+import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton'
 
 import AutoComplete from 'material-ui/AutoComplete'
 
@@ -16,7 +16,7 @@ import { connect } from 'react-redux'
 
 import { isSubmitting } from '../reducer'
 
-import errorStyles from "./errors.less"
+import errorStyles from './errors.less'
 
 var Component
 
@@ -96,10 +96,10 @@ const RadioButtons = ({ id, options = [], defaultSelected }) => (
   <div>
     <RadioButtonGroup name={id} defaultSelected={defaultSelected}>
       {options.map((c) =>
-      <RadioButton value={c} label={c} />)}
+        <RadioButton value={c} label={c} />)}
     </RadioButtonGroup>
   </div>
-);
+)
 
 // can be refactored to use findIndex, but don't want to shim it yet
 const findComponentIndex = (options, value) => {
