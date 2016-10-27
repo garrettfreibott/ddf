@@ -1,16 +1,16 @@
-package org.codice.ui.admin.ldap;
+package org.codice.ui.admin.ldap.stage;
 
-import static org.codice.ui.admin.wizard.config.LdapConfigurationHandler.LDAP_CONFIGURATION_HANDLER_ID;
-import static org.codice.ui.admin.wizard.config.LdapConfigurationHandler.LDAP_CONNECTION_TEST_ID;
-import static org.codice.ui.admin.wizard.config.LdapConfigurationHandler.LDAP_ENCRYPTION_METHOD_CONFIGURATION_ID;
-import static org.codice.ui.admin.wizard.config.LdapConfigurationHandler.LDAP_HOST_NAME_CONFIGURATION_ID;
-import static org.codice.ui.admin.wizard.config.LdapConfigurationHandler.LDAP_PORT_CONFIGURATION_ID;
+import static org.codice.ui.admin.ldap.config.LdapConfigurationHandler.LDAP_CONFIGURATION_HANDLER_ID;
+import static org.codice.ui.admin.ldap.config.LdapConfigurationHandler.LDAP_CONNECTION_TEST_ID;
+import static org.codice.ui.admin.ldap.config.LdapConfigurationHandler.LDAP_ENCRYPTION_METHOD_CONFIGURATION_ID;
+import static org.codice.ui.admin.ldap.config.LdapConfigurationHandler.LDAP_HOST_NAME_CONFIGURATION_ID;
+import static org.codice.ui.admin.ldap.config.LdapConfigurationHandler.LDAP_PORT_CONFIGURATION_ID;
 import static org.codice.ui.admin.wizard.stage.components.ButtonActionComponent.Method.POST;
 import static org.codice.ui.admin.wizard.stage.components.Component.ComponentType.BASE_CONTAINER;
 
-import static org.codice.ui.admin.wizard.config.LdapConfigurationHandler.NONE;
-import static org.codice.ui.admin.wizard.config.LdapConfigurationHandler.LDAPS;
-import static org.codice.ui.admin.wizard.config.LdapConfigurationHandler.TLS;
+import static org.codice.ui.admin.ldap.config.LdapConfigurationHandler.NONE;
+import static org.codice.ui.admin.ldap.config.LdapConfigurationHandler.LDAPS;
+import static org.codice.ui.admin.ldap.config.LdapConfigurationHandler.TLS;
 
 import java.util.ArrayList;
 import java.util.Arrays;

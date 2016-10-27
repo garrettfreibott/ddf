@@ -1,8 +1,8 @@
-package org.codice.ui.admin.wizard;
+package org.codice.ui.admin.ldap;
 
-import static org.codice.ui.admin.ldap.LdapBindHostSettingsStage.LDAP_BIND_HOST_SETTINGS_STAGE_ID;
-import static org.codice.ui.admin.ldap.LdapDirectorySettingsStage.LDAP_DIRECTORY_SETTINGS_STAGE_ID;
-import static org.codice.ui.admin.ldap.LdapNetworkSettingsStage.LDAP_NETWORK_SETTINGS_STAGE_ID;
+import static org.codice.ui.admin.ldap.stage.LdapBindHostSettingsStage.LDAP_BIND_HOST_SETTINGS_STAGE_ID;
+import static org.codice.ui.admin.ldap.stage.LdapDirectorySettingsStage.LDAP_DIRECTORY_SETTINGS_STAGE_ID;
+import static org.codice.ui.admin.ldap.stage.LdapNetworkSettingsStage.LDAP_NETWORK_SETTINGS_STAGE_ID;
 
 import java.util.List;
 

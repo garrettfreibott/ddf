@@ -1,4 +1,4 @@
-package org.codice.ui.admin.wizard;
+package org.codice.ui.admin.ldap;
 
 import java.net.URI;
 import java.net.URISyntaxException;

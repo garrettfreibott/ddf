@@ -1,10 +1,10 @@
-package org.codice.ui.admin.ldap;
+package org.codice.ui.admin.ldap.stage;
 
-import static org.codice.ui.admin.wizard.config.LdapConfigurationHandler.LDAP_BASE_GROUP_DN_CONFIGURATION_ID;
-import static org.codice.ui.admin.wizard.config.LdapConfigurationHandler.LDAP_BASE_USERNAME_ATTRIBUTE_CONFIGURATION_ID;
-import static org.codice.ui.admin.wizard.config.LdapConfigurationHandler.LDAP_BASE_USER_DN_CONFIGURATION_ID;
-import static org.codice.ui.admin.wizard.config.LdapConfigurationHandler.LDAP_CONFIGURATION_HANDLER_ID;
-import static org.codice.ui.admin.wizard.config.LdapConfigurationHandler.LDAP_DIRECTORY_STRUCT_TEST_ID;
+import static org.codice.ui.admin.ldap.config.LdapConfigurationHandler.LDAP_BASE_GROUP_DN_CONFIGURATION_ID;
+import static org.codice.ui.admin.ldap.config.LdapConfigurationHandler.LDAP_BASE_USERNAME_ATTRIBUTE_CONFIGURATION_ID;
+import static org.codice.ui.admin.ldap.config.LdapConfigurationHandler.LDAP_BASE_USER_DN_CONFIGURATION_ID;
+import static org.codice.ui.admin.ldap.config.LdapConfigurationHandler.LDAP_CONFIGURATION_HANDLER_ID;
+import static org.codice.ui.admin.ldap.config.LdapConfigurationHandler.LDAP_DIRECTORY_STRUCT_TEST_ID;
 import static org.codice.ui.admin.wizard.stage.components.ButtonActionComponent.Method.POST;
 import static org.codice.ui.admin.wizard.stage.components.Component.ComponentType.BASE_CONTAINER;
 

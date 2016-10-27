@@ -1,5 +1,6 @@
-package org.codice.ui.admin.wizard.config;
+package org.codice.ui.admin.ldap.config;
 
+import org.codice.ui.admin.wizard.config.Configuration;
 import org.forgerock.opendj.ldap.Connection;
 import org.forgerock.opendj.ldap.LDAPConnectionFactory;
 import org.forgerock.opendj.ldap.LDAPOptions;
@@ -58,6 +59,7 @@ public class LdapConfigurationHandler implements ConfigurationHandler {
 
     public static final String LDAP_DIRECTORY_STRUCT_TEST_ID = "testLdapDirStruct";
 
+    @Override
     public List<String> test(String testId, Configuration ldapConfiguration) {
         switch (testId) {
         case LDAP_CONNECTION_TEST_ID:
@@ -82,58 +84,55 @@ public class LdapConfigurationHandler implements ConfigurationHandler {
     }
 
     public List<String> testLdapConnection(Configuration ldapConfiguration) {
+return new ArrayList<>();
 
-        List<String> errors = cannotBeNullFields(ldapConfiguration.getValues(), new ArrayList<>());
-        if (!errors.isEmpty()) {
-            return errors;
-        }
-
-        String ldapHostname = (String) ldapConfiguration.getValue(LDAP_HOST_NAME_CONFIGURATION_ID);
-        int ldapPort = (int) ldapConfiguration.getValue(LDAP_PORT_CONFIGURATION_ID);
-        String encryptionMethod = (String) ldapConfiguration.getValue(
-                LDAP_ENCRYPTION_METHOD_CONFIGURATION_ID);
-
-        try {
-            Connection ldapConnection = getLdapConnection(ldapHostname, ldapPort, encryptionMethod);
-            ConnectionEntryReader result = ldapConnection.search(Requests.newSearchRequest(
-                    "dc=example,dc=com",
-                    SearchScope.WHOLE_SUBTREE,
-                    "(sn=Jensen)",
-                    "cn"));
-
-        } catch (Exception e) {
-            errors.add("Connection refused.");
-        }
-
-        return errors;
     }
 
-
-    public Connection getLdapConnection(String ldapHostName, int ldapPort, String encryptionMethod)
+    public Connection getLdapConnection(Configuration ldapConfiguration, List<String> errors)
             throws LdapException {
 
-        LDAPOptions ldapOptions = new LDAPOptions();
+//        errors = cannotBeNullFields(ldapConfiguration.getValues(), new ArrayList<>());
+//        if (!errors.isEmpty()) {
+//            return errors;
+//        }
+//
+//        String ldapHostname = (String) ldapConfiguration.getValue(LDAP_HOST_NAME_CONFIGURATION_ID);
+//        int ldapPort = (int) ldapConfiguration.getValue(LDAP_PORT_CONFIGURATION_ID);
+//        String encryptionMethod = (String) ldapConfiguration.getValue(
+//                LDAP_ENCRYPTION_METHOD_CONFIGURATION_ID);
+//
+//        LDAPOptions ldapOptions = new LDAPOptions();
+//
+//        if (encryptionMethod.equals(LDAPS)) {
+//            try {
+//                ldapOptions.setSSLContext(SSLContext.getDefault());
+//            } catch (Exception e) {
+//                System.out.println(e);
+//            }
+//        } else if(encryptionMethod.equals(TLS)) {
+//            ldapOptions.setUseStartTLS(true);
+//        }
+//
+//        ldapOptions.addEnabledCipherSuite(System.getProperty("https.cipherSuites")
+//                .split(","));
+//        ldapOptions.addEnabledProtocol(System.getProperty("https.protocols")
+//                .split(","));
+//        ldapOptions.setProviderClassLoader(LdapConfigurationHandler.class.getClassLoader());
+//
+//        Connection ldapConnection;
+//        try {
+//
+//            ldapConnection =  new LDAPConnectionFactory(ldapHostName,
+//                    ldapPort,
+//                    ldapOptions);
+//
+//
+//
+//        } catch (Exception e) {
+//            errors.add("Connection refused.");
+//        }
 
-        if (encryptionMethod.equals(LDAPS)) {
-            try {
-                ldapOptions.setSSLContext(SSLContext.getDefault());
-            } catch (Exception e) {
-                System.out.println(e);
-            }
-        } else if(encryptionMethod.equals(TLS)) {
-            ldapOptions.setUseStartTLS(true);
-        }
-
-        ldapOptions.addEnabledCipherSuite(System.getProperty("https.cipherSuites")
-                .split(","));
-        ldapOptions.addEnabledProtocol(System.getProperty("https.protocols")
-                .split(","));
-        ldapOptions.setProviderClassLoader(LdapConfigurationHandler.class.getClassLoader());
-        LDAPConnectionFactory ldapConnection = new LDAPConnectionFactory(ldapHostName,
-                ldapPort,
-                ldapOptions);
-
-        return ldapConnection.getConnection();
+        return null;
     }
 
     public List<String> testLdapBind() {

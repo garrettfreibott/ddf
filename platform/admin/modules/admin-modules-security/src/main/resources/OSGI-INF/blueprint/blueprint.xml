@@ -15,15 +15,15 @@
 
     <!-- LDAP Wizard and Configuration Handler -->
     <service id="ldapBindHostStage" interface="org.codice.ui.admin.wizard.api.StageFactory">
-        <bean class="org.codice.ui.admin.ldap.LdapBindHostSettingsStage"/>
+        <bean class="org.codice.ui.admin.ldap.stage.LdapBindHostSettingsStage"/>
     </service>
 
     <service id="ldapDirStage" interface="org.codice.ui.admin.wizard.api.StageFactory">
-        <bean class="org.codice.ui.admin.ldap.LdapDirectorySettingsStage"/>
+        <bean class="org.codice.ui.admin.ldap.stage.LdapDirectorySettingsStage"/>
     </service>
 
     <service id="ldapNetworkStage" interface="org.codice.ui.admin.wizard.api.StageFactory">
-        <bean class="org.codice.ui.admin.ldap.LdapNetworkSettingsStage"/>
+        <bean class="org.codice.ui.admin.ldap.stage.LdapNetworkSettingsStage"/>
     </service>
 
     <reference-list id="stages" interface="org.codice.ui.admin.wizard.api.StageFactory"
@@ -31,13 +31,13 @@
 
     <service id="ldapConfigurationHandler"
              interface="org.codice.ui.admin.wizard.api.ConfigurationHandler">
-        <bean class="org.codice.ui.admin.wizard.config.LdapConfigurationHandler"/>
+        <bean class="org.codice.ui.admin.ldap.config.LdapConfigurationHandler"/>
     </service>
 
     <reference-list id="configurationHandlers" interface="org.codice.ui.admin.wizard.api.ConfigurationHandler" availability="optional"/>
 
     <service id="ldapWiz" interface="org.codice.ui.admin.wizard.api.Wizard">
-        <bean class="org.codice.ui.admin.wizard.LdapWizard"/>
+        <bean class="org.codice.ui.admin.ldap.LdapWizard"/>
     </service>
 
     <!-- Sources Wizard -->
@@ -85,6 +85,6 @@
     </service>
 
     <!-- Admin Module Additions -->
-    <bean id="securityModule" class="org.codice.ui.admin.wizard.SecurityModule"/>
+    <bean id="securityModule" class="org.codice.ui.admin.ldap.SecurityModule"/>
     <service ref="securityModule" interface="org.codice.ddf.ui.admin.api.module.AdminModule"/>
 </blueprint>
