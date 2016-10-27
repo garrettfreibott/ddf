@@ -23,14 +23,6 @@ var config = {
         loader: 'style!css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!less'
       },
       {
-        test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-        loader: 'url?limit=10000&minetype=application/font-woff'
-      },
-      {
-        test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-        loader: 'file'
-      },
-      {
         test: /\.json$/,
         loader: 'json'
       }
@@ -38,8 +30,7 @@ var config = {
   },
   plugins: [
     new webpack.ProvidePlugin({
-      Promise: 'es6-promise',
-      fetch: 'imports?this=>global!exports?global.fetch!whatwg-fetch'
+      Promise: 'es6-promise'
     })
   ]
 }

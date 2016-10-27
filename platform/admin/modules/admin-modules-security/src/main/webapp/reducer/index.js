@@ -82,13 +82,12 @@ const list = (state = fromJS([]), { type, list } = {}) => {
 
 export const getList = (state) => state.get('list').toJS()
 
-
 const backendError = (state = {}, { type, err } = {}) => {
-    switch (type) {
-      case 'BACKEND_ERRORS':
-        return err;
+  switch (type) {
+    case 'BACKEND_ERRORS':
+      return err
     default: return state
-    }
+  }
 }
 
 export const getBackendErrors = (state) => state.get('backendError')

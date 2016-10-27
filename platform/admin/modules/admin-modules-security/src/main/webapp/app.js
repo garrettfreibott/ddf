@@ -11,11 +11,19 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import AppBar from 'material-ui/AppBar'
 import Flexbox from 'flexbox-react'
 
+const fixed = {
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  bottom: 0,
+  right: 0
+}
+
 const App = (props) => (
-  <div>
+  <Flexbox flexDirection='column' height='100vh' style={fixed}>
     <AppBar title='Security UI' iconClassNameRight='muidocs-icon-navigation-expand-more' />
 
-    <Flexbox>
+    <Flexbox flex='1' style={{ overflowY: 'scroll' }}>
       <Flexbox>
         <StageList />
       </Flexbox>
@@ -23,8 +31,9 @@ const App = (props) => (
         {props.children}
       </Flexbox>
     </Flexbox>
-     <Exception />
-  </div>
+
+    <Exception />
+  </Flexbox>
 )
 
 var DevTools

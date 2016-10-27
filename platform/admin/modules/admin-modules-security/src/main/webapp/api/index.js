@@ -1,3 +1,5 @@
+import 'whatwg-fetch'
+
 export const list = () =>
   window.fetch('/admin/wizard', {credentials: 'same-origin'})
     .then((res) => res.json())

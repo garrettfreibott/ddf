@@ -42,18 +42,17 @@ export const submit = (action) => (dispatch, getState) => {
   dispatch(submittingStart())
 
   api.submit(stage, action)
-    .then(([status, stage]) => {
+    .then(([status, res]) => {
       dispatch(submittingEnd())
       if (status === 400) {
-        dispatch(resetLastStage(stage))
+        dispatch(resetLastStage(res))
       } else if (status === 500) {
-        dispatch(backendError(stage))
+        dispatch(backendError({ ...res, url: action.url, method: action.method, body: stage }))
       } else {
         dispatch(clearLastErrors())
-        dispatch(setStage(stage))
+        dispatch(setStage(res))
       }
-    }, (err) => {
-      debugger
+    }, () => {
       dispatch(submittingEnd())
       dispatch(networkError())
     })

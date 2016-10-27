@@ -6,6 +6,7 @@ import { getErrors } from '../reducer'
 import { dismissErrors } from '../actions'
 
 import Flexbox from 'flexbox-react'
+import Close from 'material-ui/svg-icons/navigation/close'
 
 import styles from './errors.less'
 
@@ -17,7 +18,7 @@ const Errors = ({ errors, onDismiss }) => {
       <Flexbox justifyContent='space-between'>
         {errors}
         <div className={styles.dismiss} onClick={onDismiss}>
-          <i className='fa fa-times' />
+          <Close color='white' />
         </div>
       </Flexbox>
     </div>

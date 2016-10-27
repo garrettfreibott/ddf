@@ -10,6 +10,6 @@ export default ({ disabled, rootComponent = {}, actions = [], path = [] }) => (
   <Card style={{ width: 600, margin: 20, padding: 20, boxSizing: 'border-box' }}>
     <Loading />
     <Component path={[ ...path, 'rootComponent' ]} {...rootComponent} disabled={disabled} />
-    <Back disabled={disabled}/>
+    <Back disabled={disabled} />
   </Card>
 )
