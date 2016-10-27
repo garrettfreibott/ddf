@@ -1,20 +1,21 @@
 package org.codice.ui.admin.sources.stage;
 
-import static org.codice.ui.admin.security.stage.components.ButtonActionComponent.Method.POST;
+import static org.codice.ui.admin.wizard.stage.components.ButtonActionComponent.Method.POST;
 
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.codice.ui.admin.security.api.ConfigurationHandler;
-import org.codice.ui.admin.security.stage.Stage;
-import org.codice.ui.admin.security.stage.StageParameters;
-import org.codice.ui.admin.security.stage.components.ButtonActionComponent;
-import org.codice.ui.admin.security.stage.components.Component;
-import org.codice.ui.admin.security.stage.components.HostnameComponent;
-import org.codice.ui.admin.security.stage.components.InfoComponent;
-import org.codice.ui.admin.security.stage.components.PortComponent;
-import org.codice.ui.admin.security.stage.components.StringComponent;
+import org.codice.ui.admin.wizard.api.ConfigurationHandler;
+import org.codice.ui.admin.wizard.stage.Stage;
+import org.codice.ui.admin.wizard.stage.StageParameters;
+import org.codice.ui.admin.wizard.stage.components.ButtonActionComponent;
+import org.codice.ui.admin.wizard.stage.components.Component;
+import org.codice.ui.admin.wizard.stage.components.HostnameComponent;
+import org.codice.ui.admin.wizard.stage.components.InfoComponent;
+import org.codice.ui.admin.wizard.stage.components.PasswordComponent;
+import org.codice.ui.admin.wizard.stage.components.PortComponent;
+import org.codice.ui.admin.wizard.stage.components.StringComponent;
 
 public class SourcesDiscoveryStage extends Stage {
 
@@ -45,11 +46,11 @@ public class SourcesDiscoveryStage extends Stage {
         Component sourceHostname = stageToCheck.getComponent(SOURCE_HOSTNAME_ID);
         Component sourcePort = stageToCheck.getComponent(SOURCE_PORT_ID);
 
-        if (StringUtils.isNotBlank((String)sourceHostname.getValue())) {
+        if (StringUtils.isBlank((String)sourceHostname.getValue())) {
             sourceHostname.addError("Invalid Hostname");
         }
 
-        if (sourcePort.getValue() == null && (int)sourcePort.getValue() > 0) {
+        if (sourcePort.getValue() == null || (int)sourcePort.getValue() < 0) {
             sourcePort.addError("Invalid Port");
         }
 
@@ -64,7 +65,15 @@ public class SourcesDiscoveryStage extends Stage {
 
     @Override
     public Stage commitStage(Stage stageToCommit, Map<String, String> params) {
-        //TODO: this
+        /*
+        String host = (String)stageToCommit.getComponent(SOURCE_HOSTNAME_ID).getValue();
+        int port = (int)stageToCommit.getComponent(SOURCE_PORT_ID).getValue();
+
+        String[] urls = {"https://" + host + ":" + port + "/services/csw",
+                "https://" + host + ":" + port + "/services/opensearch",
+                "https://" + host + ":" + port + "/services/somethingelse"};
+        stageToCommit.getConfiguration().addValue("sources", urls);
+        */
         return stageToCommit;
     }
 
@@ -75,7 +84,7 @@ public class SourcesDiscoveryStage extends Stage {
                         new HostnameComponent(SOURCE_HOSTNAME_ID).label("Hostname"),
                         new PortComponent(SOURCE_PORT_ID).label("Port").defaults(8993).value(8993),
                         new StringComponent(SOURCE_USERNAME).label("Username (optional)"),
-                        new StringComponent(SOURCE_PASSWORD).label("Password (optional)"),
+                        new PasswordComponent(SOURCE_PASSWORD).label("Password (optional)"),
                         new ButtonActionComponent().setMethod(POST)
                                 .setUrl(getWizardUrl() + "/" + getStageId())
                                 .label("Check"));

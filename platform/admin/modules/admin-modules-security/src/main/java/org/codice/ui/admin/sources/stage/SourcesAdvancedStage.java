@@ -1,16 +1,16 @@
 package org.codice.ui.admin.sources.stage;
 
-import static org.codice.ui.admin.security.stage.components.ButtonActionComponent.Method.POST;
+import static org.codice.ui.admin.wizard.stage.components.ButtonActionComponent.Method.POST;
 
 import java.util.List;
 import java.util.Map;
 
-import org.codice.ui.admin.security.api.ConfigurationHandler;
-import org.codice.ui.admin.security.stage.Stage;
-import org.codice.ui.admin.security.stage.StageParameters;
-import org.codice.ui.admin.security.stage.components.ButtonActionComponent;
-import org.codice.ui.admin.security.stage.components.Component;
-import org.codice.ui.admin.security.stage.components.InfoComponent;
+import org.codice.ui.admin.wizard.api.ConfigurationHandler;
+import org.codice.ui.admin.wizard.stage.Stage;
+import org.codice.ui.admin.wizard.stage.StageParameters;
+import org.codice.ui.admin.wizard.stage.components.ButtonActionComponent;
+import org.codice.ui.admin.wizard.stage.components.Component;
+import org.codice.ui.admin.wizard.stage.components.InfoComponent;
 
 public class SourcesAdvancedStage extends Stage {
 

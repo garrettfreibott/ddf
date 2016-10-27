@@ -53,6 +53,39 @@
             <artifactId>spring-core</artifactId>
         </dependency>
 
+        <!--ldap connection dependencies-->
+
+        <dependency>
+            <groupId>org.codice.org.forgerock.opendj</groupId>
+            <artifactId>opendj-core</artifactId>
+            <version>3.0.0.ALPHA2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.forgerock.commons</groupId>
+            <artifactId>i18n-slf4j</artifactId>
+            <version>1.4.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.forgerock.commons</groupId>
+            <artifactId>i18n-core</artifactId>
+            <version>1.4.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codice.org.forgerock.commons</groupId>
+            <artifactId>forgerock-util</artifactId>
+            <version>2.0.0.ALPHA1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codice.org.forgerock.opendj</groupId>
+            <artifactId>opendj-grizzly</artifactId>
+            <version>3.0.0.ALPHA2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.grizzly</groupId>
+            <artifactId>grizzly-framework</artifactId>
+            <version>2.3.14</version>
+        </dependency>
+
     </dependencies>
     <build>
         <resources>
@@ -75,7 +108,15 @@
                             boon,
                             gson,
                             gson-extras,
-                            platform-error-servlet
+                            platform-error-servlet,
+
+                            <!--ldap connection dependencies-->
+                            opendj-grizzly,
+                            forgerock-util,
+                            grizzly-framework,
+                            opendj-core,
+                            i18n-slf4j,
+                            i18n-core
                         </Embed-Dependency>
                         <Import-Package>
                             org.eclipse.jetty.server,
@@ -89,7 +130,7 @@
                             *
                         </Import-Package>
                         <Export-Package>
-                            org.codice.ui.admin.security.api*
+                            org.codice.ui.admin.wizard.api*
                         </Export-Package>
                     </instructions>
                 </configuration>

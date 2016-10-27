@@ -14,58 +14,62 @@
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
 
     <!-- LDAP Wizard and Configuration Handler -->
-    <service id="ldapBindHostStage" interface="org.codice.ui.admin.security.api.StageFactory">
-        <bean class="org.codice.ui.admin.security.ldap.LdapBindHostSettingsStage"/>
+    <service id="ldapBindHostStage" interface="org.codice.ui.admin.wizard.api.StageFactory">
+        <bean class="org.codice.ui.admin.ldap.LdapBindHostSettingsStage"/>
     </service>
 
-    <service id="ldapDirStage" interface="org.codice.ui.admin.security.api.StageFactory">
-        <bean class="org.codice.ui.admin.security.ldap.LdapDirectorySettingsStage"/>
+    <service id="ldapDirStage" interface="org.codice.ui.admin.wizard.api.StageFactory">
+        <bean class="org.codice.ui.admin.ldap.LdapDirectorySettingsStage"/>
     </service>
 
-    <service id="ldapNetworkStage" interface="org.codice.ui.admin.security.api.StageFactory">
-        <bean class="org.codice.ui.admin.security.ldap.LdapNetworkSettingsStage"/>
+    <service id="ldapNetworkStage" interface="org.codice.ui.admin.wizard.api.StageFactory">
+        <bean class="org.codice.ui.admin.ldap.LdapNetworkSettingsStage"/>
     </service>
 
-    <reference-list id="stages" interface="org.codice.ui.admin.security.api.StageFactory"
+    <reference-list id="stages" interface="org.codice.ui.admin.wizard.api.StageFactory"
                     availability="optional"/>
 
     <service id="ldapConfigurationHandler"
-             interface="org.codice.ui.admin.security.api.ConfigurationHandler">
-        <bean class="org.codice.ui.admin.security.config.LdapConfigurationHandler"/>
+             interface="org.codice.ui.admin.wizard.api.ConfigurationHandler">
+        <bean class="org.codice.ui.admin.wizard.config.LdapConfigurationHandler"/>
     </service>
 
-    <reference-list id="configurationHandlers" interface="org.codice.ui.admin.security.api.ConfigurationHandler" availability="optional"/>
+    <reference-list id="configurationHandlers" interface="org.codice.ui.admin.wizard.api.ConfigurationHandler" availability="optional"/>
 
-    <service id="ldapWiz" interface="org.codice.ui.admin.security.api.Wizard">
-        <bean class="org.codice.ui.admin.security.LdapWizard"/>
+    <service id="ldapWiz" interface="org.codice.ui.admin.wizard.api.Wizard">
+        <bean class="org.codice.ui.admin.wizard.LdapWizard"/>
     </service>
 
     <!-- Sources Wizard -->
     <bean id="sourcesSetupStage" class="org.codice.ui.admin.sources.stage.SourcesSetupStage"/>
     <bean id="sourcesDiscoveryStage" class="org.codice.ui.admin.sources.stage.SourcesDiscoveryStage"/>
     <bean id="sourcesAdvancedStage" class="org.codice.ui.admin.sources.stage.SourcesAdvancedStage"/>
+    <bean id="sourcesPollingStage" class="org.codice.ui.admin.sources.stage.SourcesPollingStage"/>
+    <bean id="sourcesConfirmationPage" class="org.codice.ui.admin.sources.stage.SourcesConfirmationStage"/>
 
 
-    <service ref="sourcesSetupStage" interface="org.codice.ui.admin.security.api.StageFactory"/>
-    <service ref="sourcesDiscoveryStage" interface="org.codice.ui.admin.security.api.StageFactory"/>
-    <service ref="sourcesAdvancedStage" interface="org.codice.ui.admin.security.api.StageFactory"/>
+    <service ref="sourcesSetupStage" interface="org.codice.ui.admin.wizard.api.StageFactory"/>
+    <service ref="sourcesDiscoveryStage" interface="org.codice.ui.admin.wizard.api.StageFactory"/>
+    <service ref="sourcesAdvancedStage" interface="org.codice.ui.admin.wizard.api.StageFactory"/>
+    <service ref="sourcesPollingStage" interface="org.codice.ui.admin.wizard.api.StageFactory"/>
+    <service ref="sourcesConfirmationPage" interface="org.codice.ui.admin.wizard.api.StageFactory"/>
 
     <bean id="sourcesWiz" class="org.codice.ui.admin.sources.SourcesWizard"/>
 
-    <service ref="sourcesWiz" interface="org.codice.ui.admin.security.api.Wizard"/>
+    <service ref="sourcesWiz" interface="org.codice.ui.admin.wizard.api.Wizard"/>
 
     <!--Wizard router and Sparklet -->
-    <reference-list id="wizards" interface="org.codice.ui.admin.security.api.Wizard"
+    <reference-list id="wizards" interface="org.codice.ui.admin.wizard.api.Wizard"
                     availability="optional"/>
 
-    <bean id="wizardRouter" class="org.codice.ui.admin.security.WizardRouter">
+    <bean id="wizardRouter" class="org.codice.ui.admin.wizard.WizardRouter">
         <property name="contextPath" value="/admin/wizard"/>
         <property name="stages" ref="stages"/>
         <property name="wizards" ref="wizards"/>
         <property name="configurationHandlers" ref="configurationHandlers"/>
     </bean>
 
-    <bean id="sparkServlet" class="org.codice.ui.admin.security.SparkServlet">
+    <bean id="sparkServlet" class="org.codice.ui.admin.wizard.SparkServlet">
         <property name="sparkApplications">
             <list>
                 <ref component-id="wizardRouter"/>
@@ -81,6 +85,6 @@
     </service>
 
     <!-- Admin Module Additions -->
-    <bean id="securityModule" class="org.codice.ui.admin.security.SecurityModule"/>
+    <bean id="securityModule" class="org.codice.ui.admin.wizard.SecurityModule"/>
     <service ref="securityModule" interface="org.codice.ddf.ui.admin.api.module.AdminModule"/>
 </blueprint>
