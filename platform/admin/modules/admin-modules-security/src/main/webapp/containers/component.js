@@ -4,7 +4,7 @@ import MenuItem from 'material-ui/MenuItem'
 import SelectField from 'material-ui/SelectField'
 import TextField from 'material-ui/TextField'
 import RaisedButton from 'material-ui/RaisedButton'
-import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton'
+import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton'
 
 import AutoComplete from 'material-ui/AutoComplete'
 
@@ -92,11 +92,11 @@ const Panel = ({ disabled, id, path = [], label, description, children = [] }) =
   </div>
 )
 
-const RadioButtons = ({ id, options = [], defaultSelected }) => (
+const RadioButtons = ({ id, path, value, options = [], onEdit }) => (
   <div>
-    <RadioButtonGroup name={id} defaultSelected={defaultSelected}>
-      {options.map((c) =>
-        <RadioButton value={c} label={c} />)}
+    <RadioButtonGroup name={id} onChange={(e, value) => onEdit(path, value)} valueSelected={value}>
+      {options.map((c, i) =>
+        <RadioButton key={i} value={c} label={c} />)}
     </RadioButtonGroup>
   </div>
 )
