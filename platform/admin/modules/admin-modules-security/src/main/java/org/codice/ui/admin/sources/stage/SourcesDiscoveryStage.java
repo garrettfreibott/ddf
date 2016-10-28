@@ -1,5 +1,10 @@
 package org.codice.ui.admin.sources.stage;
 
+import static org.codice.ui.admin.sources.stage.SourcesSetupStage.SOURCES_CONFIG_CSW_EVENT_URL_KEY;
+import static org.codice.ui.admin.sources.stage.SourcesSetupStage.SOURCES_CONFIG_CSW_URL_KEY;
+import static org.codice.ui.admin.sources.stage.SourcesSetupStage.SOURCES_CONFIG_OPENSEARCH_URL_KEY;
+import static org.codice.ui.admin.sources.stage.SourcesSetupStage.SOURCES_CONFIG_PASSWORD_KEY;
+import static org.codice.ui.admin.sources.stage.SourcesSetupStage.SOURCES_CONFIG_USERNAME_KEY;
 import static org.codice.ui.admin.wizard.stage.components.ButtonActionComponent.Method.POST;
 
 import java.util.List;
@@ -7,6 +12,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.codice.ui.admin.wizard.api.ConfigurationHandler;
+import org.codice.ui.admin.wizard.config.Configuration;
 import org.codice.ui.admin.wizard.stage.Stage;
 import org.codice.ui.admin.wizard.stage.StageParameters;
 import org.codice.ui.admin.wizard.stage.components.ButtonActionComponent;
@@ -65,21 +71,27 @@ public class SourcesDiscoveryStage extends Stage {
 
     @Override
     public Stage commitStage(Stage stageToCommit, Map<String, String> params) {
-        /*
-        String host = (String)stageToCommit.getComponent(SOURCE_HOSTNAME_ID).getValue();
-        int port = (int)stageToCommit.getComponent(SOURCE_PORT_ID).getValue();
+        String hostname = (String)stageToCommit.getComponent(SOURCE_HOSTNAME_ID).getValue();
+        String port = stageToCommit.getComponent(SOURCE_PORT_ID).getValue().toString();
+        String username = (String)stageToCommit.getComponent(SOURCE_USERNAME).getValue();
+        String password = (String)stageToCommit.getComponent(SOURCE_PASSWORD).getValue();
 
-        String[] urls = {"https://" + host + ":" + port + "/services/csw",
-                "https://" + host + ":" + port + "/services/opensearch",
-                "https://" + host + ":" + port + "/services/somethingelse"};
-        stageToCommit.getConfiguration().addValue("sources", urls);
-        */
+        String cswUrl = "https://" + hostname + ":" + port + "/services/csw";
+        String cswEventUrl = "https://" + hostname + ":" + port + "/services/csw/subscribe";
+        String openSearchUrl = "https://" + hostname + ":" + port + "/services/opensearch";
+
+        stageToCommit.getConfiguration().addValue(SOURCES_CONFIG_CSW_URL_KEY, cswUrl);
+        stageToCommit.getConfiguration().addValue(SOURCES_CONFIG_CSW_EVENT_URL_KEY, cswEventUrl);
+        stageToCommit.getConfiguration().addValue(SOURCES_CONFIG_OPENSEARCH_URL_KEY , openSearchUrl);
+        stageToCommit.getConfiguration().addValue(SOURCES_CONFIG_USERNAME_KEY, username);
+        stageToCommit.getConfiguration().addValue(SOURCES_CONFIG_PASSWORD_KEY, password);
+
         return stageToCommit;
     }
 
     @Override
     public Component getDefaultRootComponent() {
-        return Component.builder("Sources", Component.ComponentType.BASE_CONTAINER)
+        return Component.builder("2", Component.ComponentType.BASE_CONTAINER)
                 .subComponents(new InfoComponent("Title").label("Discover Sources").value("Enter source information to scan for available sources."),
                         new HostnameComponent(SOURCE_HOSTNAME_ID).label("Hostname"),
                         new PortComponent(SOURCE_PORT_ID).label("Port").defaults(8993).value(8993),

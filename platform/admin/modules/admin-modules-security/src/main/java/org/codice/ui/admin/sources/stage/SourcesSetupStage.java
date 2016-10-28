@@ -18,6 +18,15 @@ public class SourcesSetupStage extends Stage {
 
     public static final String SOURCES_SETUP_STAGE_ID = "sourcesSetupStage";
 
+    public static final String SOURCES_CONFIG_PASSWORD_KEY = "SourcesPassword";
+    public static final String SOURCES_CONFIG_USERNAME_KEY = "SourcesUsername";
+
+    public static final String SOURCES_CONFIG_OPENSEARCH_URL_KEY = "SourcesOpensearchUrl";
+
+    public static final String SOURCES_CONFIG_CSW_URL_KEY = "SourcesCswUrl";
+    public static final String SOURCES_CONFIG_CSW_EVENT_URL_KEY = "SourcesCswEventUrl";
+
+
     public SourcesSetupStage(){
         super();
     }
@@ -50,7 +59,7 @@ public class SourcesSetupStage extends Stage {
 
     @Override
     public Component getDefaultRootComponent() {
-        return Component.builder("Sources", Component.ComponentType.BASE_CONTAINER)
+        return Component.builder("1", Component.ComponentType.BASE_CONTAINER)
                 .subComponents(
                         new ButtonActionComponent().setMethod(GET)
                                 .setUrl(getWizardUrl() + "/" + SOURCES_DISCOVERY_STAGE_ID)

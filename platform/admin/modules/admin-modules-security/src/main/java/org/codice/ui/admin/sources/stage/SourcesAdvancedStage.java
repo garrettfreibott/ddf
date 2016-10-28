@@ -48,7 +48,7 @@ public class SourcesAdvancedStage extends Stage {
 
     @Override
     public Component getDefaultRootComponent() {
-        return Component.builder("Sources", Component.ComponentType.BASE_CONTAINER)
+        return Component.builder("", Component.ComponentType.BASE_CONTAINER)
                 .subComponents(new InfoComponent("Title").label("The Advanced Configuration Page").value("It's advaaaaaanced!"),
                         new ButtonActionComponent().setMethod(POST)
                                 .setUrl(getWizardUrl() + "/" + getStageId())

@@ -16,7 +16,12 @@ import { connect } from 'react-redux'
 
 import { isSubmitting } from '../reducer'
 
+import CheckIcon from 'material-ui/svg-icons/action/check-circle'
+import CloseIcon from 'material-ui/svg-icons/navigation/cancel'
+
 import errorStyles from './errors.less'
+import statusStyles from './status.less'
+import {green500, red500} from 'material-ui/styles/colors'
 
 var Component
 
@@ -101,6 +106,18 @@ const RadioButtons = ({ id, disabled, path, value, options = [], onEdit }) => (
   </div>
 )
 
+const StatusPage = ({ succeeded }) => {
+  if (succeeded) {
+    return (
+        <CheckIcon className={statusStyles.fadeInDown} style={{width: "400px", height: "400px"}} color={green500} />
+    )
+  }
+  return (
+      <CloseIcon  className={statusStyles.bounceIn}style={{width: "400px", height: "400px"}} color={red500} />
+  )
+}
+
+
 // can be refactored to use findIndex, but don't want to shim it yet
 const findComponentIndex = (options, value) => {
   for (var i = 0; i < options.length; i++) {
@@ -154,7 +171,8 @@ const inputs = {
   SELECTOR: Selector,
   BUTTON_ACTION: ButtonAction,
   RADIO_BUTTONS: RadioButtons,
-  ERROR_INFO: ErrorInfo
+  ERROR_INFO: ErrorInfo,
+  STATUS_PAGE: StatusPage
 }
 
 const StatelessComponent = ({ type, ...args }) => {

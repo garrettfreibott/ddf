@@ -25,6 +25,7 @@ import org.codice.ui.admin.wizard.stage.components.InfoComponent;
 import org.codice.ui.admin.wizard.stage.components.PasswordComponent;
 import org.codice.ui.admin.wizard.stage.components.PortComponent;
 import org.codice.ui.admin.wizard.stage.components.RadioButtonsComponent;
+import org.codice.ui.admin.wizard.stage.components.StatusPageComponent;
 import org.codice.ui.admin.wizard.stage.components.StringComponent;
 import org.codice.ui.admin.wizard.stage.components.StringEnumComponent;
 import org.slf4j.Logger;
@@ -172,7 +173,8 @@ public class WizardRouter implements SparkApplication {
                 .registerSubtype(Component.class, "BASE_CONTAINER")
                 .registerSubtype(InfoComponent.class, "INFO")
                 .registerSubtype(RadioButtonsComponent.class, "RADIO_BUTTONS")
-                .registerSubtype(ErrorInfoComponent.class, "ERROR_INFO");
+                .registerSubtype(ErrorInfoComponent.class, "ERROR_INFO")
+                .registerSubtype(StatusPageComponent.class, "STATUS_PAGE");
 
         return new GsonBuilder().registerTypeAdapterFactory(rtaf)
                 .create();

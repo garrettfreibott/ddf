@@ -46,6 +46,7 @@
     <bean id="sourcesAdvancedStage" class="org.codice.ui.admin.sources.stage.SourcesAdvancedStage"/>
     <bean id="sourcesPollingStage" class="org.codice.ui.admin.sources.stage.SourcesPollingStage"/>
     <bean id="sourcesConfirmationPage" class="org.codice.ui.admin.sources.stage.SourcesConfirmationStage"/>
+    <bean id="sourcesPersistedPage" class="org.codice.ui.admin.sources.stage.SourcesPersistedStage"/>
 
 
     <service ref="sourcesSetupStage" interface="org.codice.ui.admin.wizard.api.StageFactory"/>
@@ -53,6 +54,7 @@
     <service ref="sourcesAdvancedStage" interface="org.codice.ui.admin.wizard.api.StageFactory"/>
     <service ref="sourcesPollingStage" interface="org.codice.ui.admin.wizard.api.StageFactory"/>
     <service ref="sourcesConfirmationPage" interface="org.codice.ui.admin.wizard.api.StageFactory"/>
+    <service ref="sourcesPersistedPage" interface="org.codice.ui.admin.wizard.api.StageFactory"/>
 
     <bean id="sourcesWiz" class="org.codice.ui.admin.sources.SourcesWizard"/>
 

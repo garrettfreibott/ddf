@@ -4,8 +4,6 @@ public class RadioButtonsComponent extends Component<String>{
 
     private String[] options;
 
-    private String defaultSelected;
-
     public RadioButtonsComponent(String id) {
         super(id);
     }
@@ -16,7 +14,7 @@ public class RadioButtonsComponent extends Component<String>{
     }
 
     public RadioButtonsComponent setDefault(String defaultValue){
-        this.defaultSelected = defaultValue;
+        this.value(defaultValue);
         return this;
     }
 }
