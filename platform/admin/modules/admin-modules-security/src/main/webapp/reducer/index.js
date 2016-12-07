@@ -25,6 +25,7 @@ export const isSubmitting = (state, id) => ldap.isSubmitting(state.get('wizard')
 export const getMessages = (state, id) => ldap.getMessages(state.get('wizard'), id)
 export const getDisplayedLdapStages = (state) => ldap.getDisplayedLdapStages(state.get('wizard'))
 
-export const getPolicies = (state) => webContext.getPolicies(state.get('wcpm'))
+export const getBins = (state) => webContext.getBins(state.get('wcpm'))
+export const getNewBins = (state) => webContext.getNewBins(state.get('wcpm'))
 
 export default combineReducers({ wizard, backendError, sourceWizard, sourcesHome, wcpm })
