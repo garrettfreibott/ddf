@@ -67,7 +67,7 @@ public class ContextPolicyManagerHandler
         case POLICY_OPTIONS_ID:
             Object claims = new Configurator().getConfig("ddf.security.sts.client.configuration")
                     .get("claims");
-            return new ProbeReport().addProbeResult("authTypes", authenticationTypes)
+            return new ProbeReport().addProbeResult("authenticationTypes", authenticationTypes)
                     .addProbeResult("realms", realms)
                     .addProbeResult("claims", claims);
         }
@@ -84,7 +84,7 @@ public class ContextPolicyManagerHandler
     public TestReport persist(ContextPolicyConfiguration configuration) {
         Configurator configurator = new Configurator();
         // TODO: tbatie - 12/10/16
-        return null;
+        return new TestReport();
     }
 
     @Override
