@@ -15,6 +15,7 @@ export const getBackendErrors = (state) => state.get('backendError')
 import wizard, * as ldap from '../wizards/ldap/reducer'
 import sourceWizard from '../wizards/sources/reducer'
 import sourcesHome from '../wizards/sourcesHome/index'
+import wcpm, * as webContext from '../adminTools/webContextPolicyManager/reducer'
 
 export const getAllConfig = (state) => ldap.getAllConfig(state.get('wizard'))
 export const getConfig = (state, id) => ldap.getConfig(state.get('wizard'), id)
@@ -24,4 +25,6 @@ export const isSubmitting = (state, id) => ldap.isSubmitting(state.get('wizard')
 export const getMessages = (state, id) => ldap.getMessages(state.get('wizard'), id)
 export const getDisplayedLdapStages = (state) => ldap.getDisplayedLdapStages(state.get('wizard'))
 
-export default combineReducers({ wizard, backendError, sourceWizard, sourcesHome })
+export const getPolicies = (state) => webContext.getPolicies(state.get('wcpm'))
+
+export default combineReducers({ wizard, backendError, sourceWizard, sourcesHome, wcpm })
