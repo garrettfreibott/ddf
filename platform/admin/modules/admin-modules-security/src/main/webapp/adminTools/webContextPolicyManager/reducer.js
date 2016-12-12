@@ -3,7 +3,6 @@ import { fromJS, List } from 'immutable'
 
 const mockPolicies = [
   {
-    name: 'Admin',
     realm: 'Karaf',
     authTypes: [
       'authType1',
@@ -20,7 +19,6 @@ const mockPolicies = [
     ]
   },
   {
-    name: 'Default',
     realm: 'LDAP',
     authTypes: [
       'authType3',
@@ -35,7 +33,6 @@ const mockPolicies = [
     ],
   },
   {
-    name: 'Whitelist',
     realm: 'IDP',
     authTypes: [
       'authType5',
@@ -51,6 +48,27 @@ const mockPolicies = [
     ]
   }
 ]
+
+const mockClaims = ({
+  realms: [
+    'Karaf',
+    'LDAP',
+    'IDP'
+  ],
+  authTypes:[
+    'Karaf',
+    'Basic',
+    'Guest',
+    'LDAP',
+    'IDP',
+    'SAML'
+  ],
+  claims: [
+    '{http://schemas.xmlsoap.org/ws/2005/05/identity/claims/role=system-user}',
+    '{http://schemas.xmlsoap.org/ws/2005/05/identity/claims/role=system-admin}',
+    '{http://schemas.xmlsoap.org/ws/2005/05/identity/claims/role=system-other}'
+  ]
+})
 
 const emptyEditBin = fromJS({
   name: 'untitled',
@@ -80,10 +98,6 @@ const bins = (state = fromJS(mockPolicies), { type, bin, path, binNumber, pathNu
     case 'WCPM_EDIT_MODE_SAVE':
       return state.update(binNumber, (bin) => bin.delete('beforeEdit').merge({ editing: false }))
 
-    // Name
-    case 'WCPM_EDIT_NAME':
-      return state.setIn([binNumber, 'name'], value)
-
     // Realm
     case 'WCPM_EDIT_REALM':
       return state.setIn([binNumber, 'realm'], value)
@@ -101,6 +115,18 @@ const bins = (state = fromJS(mockPolicies), { type, bin, path, binNumber, pathNu
   }
 }
 
-export const getBins = (state) => state.getIn(['bins']).toJS()
+const options = (state = fromJS(mockClaims), { type, claims }) => {
+  switch (type) {
+    case 'WCPM_SET_OPTIONS':
+      return fromJS(claims)
+    default:
+      return state
+  }
+}
 
-export default combineReducers({ bins })
+export const getOptions = (state) => state.get('options').toJS()
+export const getBins = (state) => state.get('bins').toJS()
+
+
+
+export default combineReducers({ bins, options })

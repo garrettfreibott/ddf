@@ -3,7 +3,11 @@ import Paper from 'material-ui/Paper';
 
 import { connect } from 'react-redux'
 
-import { getBins, getEditBins } from '../../reducer'
+import {
+  getBins,
+  getEditBins,
+  getOptions
+} from '../../reducer'
 
 import {
   removeBin,
@@ -43,21 +47,22 @@ import {
   infoContextPaths,
   policyBinStyle,
   policyBinOuterStyle,
-  policyBinInnerStyle
+  policyBinInnerStyle,
+  editPaneStyle
 } from './styles.less'
 
 let Info = ({id, name, realm, authTypes, reqAttr, binNumber, editModeOn}) => (
   <div style={{ width: '100%' }}>
     <p id={id} className={infoTitle}>{name}</p>
-      <div style={{ position: 'absolute', top: 0, right: 0 }}>
-      <IconButton tooltip={'Edit Attributes'} tooltipPosition='bottom-center' onClick={editModeOn}><EditModeIcon /></IconButton>
-    </div>
+    <Flexbox className={editPaneStyle} justifyContent='center' alignItems='center' onClick={editModeOn}>
+      <IconButton tooltip={'Edit Attributes'} tooltipPosition='bottom-center'><EditModeIcon /></IconButton>
+    </Flexbox>
   </div>
 )
 Info = connect(null, (dispatch, { binNumber }) => ({ editModeOn: () => dispatch(editModeOn(binNumber)) }))(Info)
 
 let EditInfo = ({id, bin, binNumber, editModeCancel}) => {
-  const title = (bin.beforeEdit !== undefined) ? '*Editing bin: '+ bin.name + '*' : '*Creating New Bin*'
+  const title = (bin.beforeEdit !== undefined) ? '*Editing bin: '+ bin.beforeEdit.name + '*' : '*Creating New Bin*'
   return (
     <div style={{ width: '100%', backgroundColor: '#DDD' }}>
       <p id={id} className={infoTitle}>{title}</p>
@@ -85,7 +90,7 @@ let NewContextPathItem = ({ binNumber, addPath, onEdit, newPath, attribute }) =>
   <div>
     <Divider />
     <Flexbox flexDirection='row' justifyContent='space-between'>
-      <TextField style={{ paddingLeft: '10px' }} id='name' hintText='Add New Path' onChange={(event, value) => onEdit(value)} value={newPath || ''} />
+      <TextField fullWidth style={{ paddingLeft: '10px' }} id='name' hintText='Add New Path' onChange={(event, value) => onEdit(value)} value={newPath || ''} />
       <IconButton tooltip={'Add This Path'} tooltipPosition='top-center' onClick={addPath}><AddIcon /></IconButton>
     </Flexbox>
   </div>
@@ -94,6 +99,22 @@ NewContextPathItem = connect(null, (dispatch, { binNumber, attribute }) => ({
   addPath: () => dispatch(addAttribute(attribute)(binNumber)),
   onEdit: (value) => dispatch(editAttribute(attribute)(binNumber, value))
 }))(NewContextPathItem)
+
+let NewSelectItem = ({ binNumber, addPath, onEdit, newPath, attribute, options }) => (
+  <div>
+    <Divider />
+    <Flexbox flexDirection='row' justifyContent='space-between'>
+      <SelectField fullWidth style={{ paddingLeft: '10px' }} id='name' hintText='Add New Path' onChange={(event, i, value) => onEdit(value)} value={newPath || ''}>
+        { options.map((item, key) => (<MenuItem value={item} key={key} primaryText={item} />)) }
+      </SelectField>
+      <IconButton tooltip={'Add This Path'} tooltipPosition='top-center' onClick={addPath}><AddIcon /></IconButton>
+    </Flexbox>
+  </div>
+)
+NewSelectItem = connect(null, (dispatch, { binNumber, attribute }) => ({
+  addPath: () => dispatch(addAttribute(attribute)(binNumber)),
+  onEdit: (value) => dispatch(editAttribute(attribute)(binNumber, value))
+}))(NewSelectItem)
 
 const PolicyBin = ({ policyBin, binNumber }) => (
   <Paper className={policyBinOuterStyle} >
@@ -106,32 +127,36 @@ const PolicyBin = ({ policyBin, binNumber }) => (
   </Paper>
 )
 
-let EditPolicyBin = ({ policyBin, binNumber, removeBin, editModeSave, editRealm, editName }) => (
+let EditPolicyBin = ({ policyBin, policyOptions, binNumber, removeBin, editModeSave, editRealm, editName }) => (
   <Paper className={policyBinOuterStyle}>
     <Paper className={policyBinInnerStyle}>
       <Flexbox flexDirection='column' style={{ width: '100%' }} alignItems='center'>
         <EditInfo binNumber={binNumber} bin={policyBin} />
         <TextField id='name' floatingLabelText='Bin Name' value={policyBin.name} onChange={(event, value) => editName(value)}/>
         <SelectField id='realm' floatingLabelText='Realm' value={policyBin.realm} onChange={(event, i, value) => editRealm(value)}>
-          <MenuItem value='Karaf' primaryText='Karaf' />
-          <MenuItem value='LDAP' primaryText='LDAP' />
-          <MenuItem value='IDP' primaryText='IDP' />
+          {policyOptions.realms.map((realm, i) => (<MenuItem value={realm} primaryText={realm} key={i} />))}
         </SelectField>
       </Flexbox>
-      <p  className={infoContextPaths}>Context Paths</p>
-      <Flexbox flexDirection='column'>
-        {policyBin.contextPaths.map((contextPath, pathNumber) => (<ContextPathItem editing={true} attribute='contextPaths' contextPath={contextPath} key={pathNumber} binNumber={binNumber} pathNumber={pathNumber} />))}
-        <NewContextPathItem binNumber={binNumber} attribute='contextPaths' newPath={policyBin['newcontextPaths']} />
-      </Flexbox>
-      <p  className={infoContextPaths}>Authentication Types</p>
+      <div style={{ backgroundColor: '#EEE' }}>
+        <p  className={infoContextPaths}>Authentication Types</p>
+      </div>
       <Flexbox flexDirection='column'>
         {policyBin.authTypes.map((contextPath, pathNumber) => (<ContextPathItem editing={true} attribute='authTypes' contextPath={contextPath} key={pathNumber} binNumber={binNumber} pathNumber={pathNumber} />))}
-        <NewContextPathItem binNumber={binNumber} attribute='authTypes' newPath={policyBin['newauthTypes']} />
+        <NewSelectItem binNumber={binNumber} attribute='authTypes' options={policyOptions.authTypes} newPath={policyBin['newauthTypes']} />
       </Flexbox>
-      <p  className={infoContextPaths}>Required Attributes</p>
+      <div style={{ backgroundColor: '#EEE' }}>
+        <p  className={infoContextPaths}>Required Attributes</p>
+      </div>
       <Flexbox flexDirection='column'>
         {policyBin.reqAttr.map((contextPath, pathNumber) => (<ContextPathItem editing={true} attribute='reqAttr' contextPath={contextPath} key={pathNumber} binNumber={binNumber} pathNumber={pathNumber} />))}
         <NewContextPathItem binNumber={binNumber} attribute='reqAttr' newPath={policyBin['newreqAttr']} />
+      </Flexbox>
+      <div style={{ backgroundColor: '#EEE' }}>
+        <p  className={infoContextPaths}>Context Paths</p>
+      </div>
+      <Flexbox flexDirection='column'>
+        {policyBin.contextPaths.map((contextPath, pathNumber) => (<ContextPathItem editing={true} attribute='contextPaths' contextPath={contextPath} key={pathNumber} binNumber={binNumber} pathNumber={pathNumber} />))}
+        <NewContextPathItem binNumber={binNumber} attribute='contextPaths' newPath={policyBin['newcontextPaths']} />
       </Flexbox>
       <Divider />
       <Flexbox flexDirection='row' justifyContent='center' style={{ padding: '10px 0px 5px' }}>
@@ -141,11 +166,15 @@ let EditPolicyBin = ({ policyBin, binNumber, removeBin, editModeSave, editRealm,
     </Paper>
   </Paper>
 )
-EditPolicyBin = connect(null, (dispatch, { binNumber }) => ({
-  removeBin: () => dispatch(removeBin(binNumber)),
-  editModeSave: () => dispatch(editModeSave(binNumber)),
-  editName: (value) => dispatch(editName(binNumber, value)),
-  editRealm: (value) => dispatch(editRealm(binNumber, value)),
+EditPolicyBin = connect(
+  (state) => ({
+    policyOptions: getOptions(state)
+  }),
+  (dispatch, { binNumber }) => ({
+    removeBin: () => dispatch(removeBin(binNumber)),
+    editModeSave: () => dispatch(editModeSave(binNumber)),
+    editName: (value) => dispatch(editName(binNumber, value)),
+    editRealm: (value) => dispatch(editRealm(binNumber, value)),
 }))(EditPolicyBin)
 
 let PolicyBins = ({ policies }) => (
@@ -163,9 +192,9 @@ PolicyBins = connect((state) => ({ policies: getBins(state) }))(PolicyBins)
 
 
 let NewBin = ({ policies, addNewBin }) => (
-  <Paper style={{ position: 'relative', width: '250px', height: '250px', padding: '5px', margin: '5px', textAlign: 'center', backgroundColor: "#EEE" }}>
-    <Flexbox style={{ height: '100%', }} flexDirection='column' justifyContent='center' alignItems='center'>
-      <FloatingActionButton onClick={addNewBin}>
+  <Paper style={{ position: 'relative', width: '390px', height: '390px', padding: '5px', margin: '5px', textAlign: 'center', backgroundColor: "#EEE" }} onClick={addNewBin}>
+    <Flexbox style={{ height: '100%' }} flexDirection='column' justifyContent='center' alignItems='center'>
+      <FloatingActionButton>
         <ContentAdd />
       </FloatingActionButton>
     </Flexbox>

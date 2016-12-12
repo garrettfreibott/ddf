@@ -26,5 +26,6 @@ export const getMessages = (state, id) => ldap.getMessages(state.get('wizard'), 
 export const getDisplayedLdapStages = (state) => ldap.getDisplayedLdapStages(state.get('wizard'))
 
 export const getBins = (state) => webContext.getBins(state.get('wcpm'))
+export const getOptions = (state) => webContext.getOptions(state.get('wcpm'))
 
 export default combineReducers({ wizard, backendError, sourceWizard, sourcesHome, wcpm })
