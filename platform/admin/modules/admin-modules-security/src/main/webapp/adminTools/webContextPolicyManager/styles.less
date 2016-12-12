@@ -19,6 +19,14 @@
 .infoSubtitle {
   font-size: 14px;
   position: relative;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.541176);
+  margin: 10px 10px;
+}
+
+.infoSubtitleLeft {
+  font-size: 14px;
+  position: relative;
   text-align: left;
   color: rgba(0, 0, 0, 0.541176);
   margin: 10px 10px;
@@ -34,16 +42,10 @@
 
 .policyBinOuterStyle {
   position: relative;
-  min-width: 390px;
-  max-width: 600px;
-  margin: 5px;
+  width: 100%;
+  margin: 5px 0px;
   padding: 0px;
   background-color: blue;
-}
-
-.policyBinInnerStyle {
-  margin: 0px;
-  padding: 0px;
 }
 
 .editPaneStyle {
@@ -59,4 +61,19 @@
 .editPaneStyle:hover {
   background-color: rgba(0,0,0,0.1);
   opacity: 1;
+}
+
+.newBinStyle {
+  position: relative;
+  height: 100%;
+  text-align: center;
+  background-color: #EEE;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.5s ease;
+}
+
+.newBinStyle:hover {
+  background-color: #FFF;
+  transition: background-color 0.5s ease;
 }
