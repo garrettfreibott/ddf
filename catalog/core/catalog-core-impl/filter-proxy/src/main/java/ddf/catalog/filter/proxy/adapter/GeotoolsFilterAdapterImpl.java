@@ -669,6 +669,10 @@ public class GeotoolsFilterAdapterImpl implements FilterAdapter, FilterVisitor, 
         sb.append(FilterDelegate.SINGLE_CHAR);
       } else if (c == wildcard.charAt(0)) {
         sb.append(FilterDelegate.WILDCARD_CHAR);
+      } else if (c == '"') {
+        int endQuoteIndex = skipQuotedSection(pattern, i);
+        sb.append(pattern.substring(i, endQuoteIndex + 1));
+        i = endQuoteIndex;
       } else {
         sb.append(c);
       }
@@ -933,6 +937,27 @@ public class GeotoolsFilterAdapterImpl implements FilterAdapter, FilterVisitor, 
   public Object visit(TOverlaps contains, Object delegate) {
     throw new UnsupportedOperationException(
         TOverlaps.NAME + " filter not supported by Filter Adapter.");
+  }
+
+  /**
+   * * Given a start index, returns the index of the next unescaped quotation mark. If the end of
+   * the string is reached without finding another closing quotation mark, the start index is
+   * returned unchanged.
+   *
+   * @param pattern The string containing quotations to be read.
+   * @param startIndex Index to begin looking for a closing quotation.
+   * @return The index of the closing quotation in the given pattern, or startIndex if none exists
+   */
+  private int skipQuotedSection(String pattern, int startIndex) {
+    for (int i = startIndex + 1; i < pattern.length(); i++) {
+      switch (pattern.charAt(i)) {
+        case '"':
+          return i;
+        case '\\':
+          i++;
+      }
+    }
+    return startIndex;
   }
 
   private ExpressionValues getExpressions(BinarySpatialOperator filter, Object delegate) {
