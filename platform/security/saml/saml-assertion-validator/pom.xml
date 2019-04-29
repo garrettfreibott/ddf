@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0"?>
 <!--
 /**
  * Copyright (c) Codice Foundation
@@ -12,40 +12,39 @@
  *
  **/
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>saml</artifactId>
+        <groupId>ddf.security.saml</groupId>
+        <version>2.14.0-SNAPSHOT</version>
+    </parent>
     <modelVersion>4.0.0</modelVersion>
+    <artifactId>saml-assertion-validator</artifactId>
+    <packaging>bundle</packaging>
+    <name>DDF :: Security :: SAML Assertion Validator</name>
+
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
                 <configuration>
-                    <source>7</source>
-                    <target>7</target>
+                    <instructions>
+                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                        <Export-Package>
+                            com.connexta.ddf.security.saml.assertion.validator
+                        </Export-Package>
+                    </instructions>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-    <parent>
-        <groupId>ddf.platform.util</groupId>
-        <artifactId>util</artifactId>
-        <version>2.15.0-SNAPSHOT</version>
-    </parent>
-    <artifactId>platform-util-unavailableurls</artifactId>
-    <name>DDF :: Platform :: Util :: Unavailable Urls</name>
-    <packaging>jar</packaging>
     <dependencies>
         <dependency>
-            <groupId>com.github.stefanbirkner</groupId>
-            <artifactId>system-rules</artifactId>
-            <version>1.16.1</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
+            <groupId>ddf.security.handler</groupId>
+            <artifactId>security-handler-api</artifactId>
         </dependency>
     </dependencies>
 </project>
