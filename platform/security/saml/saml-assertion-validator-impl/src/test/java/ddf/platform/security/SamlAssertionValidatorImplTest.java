@@ -13,13 +13,34 @@
  */
 package ddf.platform.security;
 
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 /** Unit test for simple App. */
 public class SamlAssertionValidatorImplTest {
- //
+
+  @BeforeClass
+  public static void init() {}
+
+  @Before
+  public void setup() throws Exception {}
+
+  @Test
+  public void testNoAuth() throws Exception {}
+
+  @Test
+  public void testNoToken() throws Exception {}
+
+  @Test
+  public void testBadToken() throws Exception {}
+
+  @Test
+  public void testGoodToken() throws Exception {}
+
+  @Test
+  public void testValidReference() throws Exception {}
+
+  @Test
+  public void testInvalidReference() throws Exception {}
 }

@@ -121,7 +121,8 @@ public class SamlAssertionValidatorImpl implements SamlAssertionValidator {
   String signatureProperties = null;
 
   /**
-   * Validates a SAMLAuthenticationToken by checking it's signature against the configured system certs.
+   * Validates a SAMLAuthenticationToken by checking it's signature against the configured system
+   * certs.
    *
    * @param token token to validate
    * @throws AuthenticationFailureException thrown when the cert fails to validate
@@ -206,7 +207,6 @@ public class SamlAssertionValidatorImpl implements SamlAssertionValidator {
       }
     }
   }
-
 
   private void addSamlToSession(
       HttpServletRequest httpRequest, String realm, SecurityToken securityToken) {
