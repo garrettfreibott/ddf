@@ -282,7 +282,7 @@ public class SamlAssertionValidatorImpl implements SamlAssertionValidator {
    *
    * @return Crypto
    */
-  private Crypto getSignatureCrypto() {
+  Crypto getSignatureCrypto() {
     if (signatureCrypto == null && signatureProperties != null) {
       Properties sigProperties = PropertiesLoader.loadProperties(signatureProperties);
       if (sigProperties == null) {
